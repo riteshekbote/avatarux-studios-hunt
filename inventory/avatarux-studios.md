@@ -74,3 +74,12 @@ www.avatarux.com
 - NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
 - NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
 - NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+
+## 2026-09-03 23:50:02 UTC
+- NEW affiliates.betpanda.io: Vite SPA single bundle main.ef021e68.js confirmed — zero API routes, apiBaseUrl, GraphQL, or affiliate_id patterns in bundle; API subdomain hunt required
+- NEW help.desk.avatarux.com: Confluence /wiki/ now 303 (was 200), JSM portal 303, JSM REST 401, Confluence REST /rest/api/space 404, /wiki/rest/api/user 303 — all behind Atlassian Edge
+- NEW cpanel.avatarux.com: CNAME chain confirmed cpanel → avatarux.com → 162.159.136.54 (Cloudflare IP); Cloudflare 1001 = dangling DNS to prohibited Cloudflare IP
+- NEW BetPanda API subdomains api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io — all NXDOMAIN
+- NEW cable.betpanda.io: custom Node service "BB CABLE 🔌" banner, 200 OK, Cloudflare-fronted; WS mounts /socket /ws /events return 404
+- NEW betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL unknown
+- CHANGED help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer

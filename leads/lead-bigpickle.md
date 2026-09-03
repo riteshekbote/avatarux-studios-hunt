@@ -176,3 +176,48 @@ impact: Potential casino/affiliate API access if unauthenticated surface exists 
 testability: PASSIVE
 [NEXT] PROBE: Fetch https://betpandacasino.io/ and https://affiliates.betpanda.io/ HTML, extract all JS bundle URLs, grep bundles for `https?://\S*api\S*` and `/graphql` to locate the real API base URL; then read-only GET that base + /graphql + /api/v1.
 [RISK] AvatarUX Studios: 40 — propensity to hunt only perimeter/config misconfigs; top authentic leads (BetPanda cable WS service, SPA-shadowed API) remain unconfirmed with no credentialed access, so depth (real IDOR/AUTH breaks) is still blocked. No auth-bypass or mutating tests performed; passive GET/HEAD/OPTIONS + WS handshake only.
+## 2026-09-03 23:47:16 UTC [target] (model bigpickle)
+[PRIO] cpanel.avatarux.com,9.2,MISCONFIG takeover|gate_ease=9|cloud_surface=CLOUDFLARE
+[PRIO] affiliates.betpanda.io,7.0,IDOR affiliate|business_value=commissions|gate_ease=6
+[PRIO] help.desk.avatarux.com,7.5,JSM_confluence|business_value=tenant|tech_exposure=ATLASSIAN
+[PRIO] betpandacasino.io,6.5,SPA_API_shadow|business_value=gambling|gate_ease=5
+[PRIO] cable.betpanda.io,6.0,WEBSOCKET_service|business_value=realtime|gate_ease=4
+[HYP] cpanel_subdomain_takeover_cloudflare_1001
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 78
+reasoning: Cloudflare error 1001 (DNS points to prohibited IP) is textbook subdomain takeover indicator. CNAME → avatarux.com → Cloudflare IP 162.159.136.54. If Cloudflare zone is orphaned or CNAME dangling, attacker can claim subdomain. cPanel ports (2082/2083) not directly accessible, confirming no active hosting behind.
+evidence_needed: Confirm origin serves no valid content; verify Cloudflare zone status; check if certificate is claimable.
+verify_steps: 1. GET https://cpanel.avatarux.com - confirm error page details. 2. dig cpanel.avatarux.com NS to check nameserver delegation. 3. Check if Cloudflare zone for avatarux.com exists via certificate transparency or DNS history.
+impact: Full subdomain takeover → phishing, credential theft, XSS injection on *.avatarux.com | severity=CRITICAL
+testability: PASSIVE/VERIFICATION_NEEDED
+[HYP] betpanda_affiliate_idor
+class: IDOR
+asset: affiliates.betpanda.io
+confidence: 65
+reasoning: BetPanda affiliate portal is live Vite SPA with Cloudflare fronting. Affiliate portals typically expose affiliate IDs, commission data, and referral stats. If API endpoints are discoverable and lack authorization, IDOR on affiliate_id or referral_id parameters could leak commission data.
+evidence_needed: Discover API subdomain (api.betpanda.io, affiliates-api.betpanda.io, etc.) and test for unauthenticated access to affiliate data.
+verify_steps: 1. Try common API subdomains: api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io. 2. If API found, test GET /api/affiliates/{id} or /api/referrals/{id} with incrementing IDs. 3. Check for Authorization header requirements.
+impact: Cross-affiliate commission data exposure, PII leak | severity=MEDIUM-HIGH
+testability: AUTH_HELPED
+[HYP] jsm_tenant_id_enumeration
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 60
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON. If tenant IDs can be enumerated or used in API calls, cross-tenant data access may be possible.
+evidence_needed: Confirm tenant IDs can be used for enumeration or cross-tenant access via API endpoints.
+verify_steps: 1. Extract tenant IDs from page source. 2. Test tenant IDs in API calls (GET /api/v2/tenants/{id}). 3. Check for IDOR on tenant-scoped endpoints.
+impact: Tenant enumeration, potential cross-tenant data access | severity=MEDIUM
+testability: PASSIVE
+[PARKED] betpanda_cable_unauth_realtime: confidence 45, no concrete endpoint discovered, only root path known.
+[PARKED] betpandacasino_spa_graphql_shadow: confidence 42, no real API endpoint confirmed, only SPA shell observed.
+[FINAL] 1. cpanel_subdomain_takeover_cloudflare_1001 (78) - HIGH priority, requires verification
+[FINAL] 2. betpanda_affiliate_idor (65) - MEDIUM priority, needs API subdomain discovery
+[FINAL] 3. jsm_tenant_id_enumeration (60) - MEDIUM priority, needs API testing
+[NEXT] PROBE: Attempt BetPanda API subdomain discovery by testing common patterns (api.betpanda.io, backend.betpanda.io, app-api.betpanda.io) with DNS lookups and HTTP GET to identify the real API backend for the affiliate portal.
+[LEARN] ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/2083) not accessible via standard HTTPS
+[LEARN] ACCEPTED MISCONFIG @ help.desk: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered, Vite SPA with no API in bundle — API subdomain hunt required
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+[RISK] AvatarUX Studios: 40 — passive recon only, focus on perimeter misconfiguration. No auth bypass or mutating tests performed. Depth (real IDOR/AUTH breaks) still blocked by missing API endpoints. Top leads (cpanel takeover, BetPanda affiliate IDOR) need active verification.
