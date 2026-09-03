@@ -1,0 +1,69 @@
+## 2026-09-03 16:42:29 UTC [target] (model bigpickle)
+[PRIO] help.desk.avatarux.com,7.5,HTTP 302 redirect to unknown target|business_value=helpdesk_tenant_data|gate_ease=8 (redirect may expose app)
+[PRIO] cpanel.avatarux.com,8.0,unprobed_cPanel|tech_exposure=hosting_panel|gate_ease=9 (if exposed = critical)
+[PRIO] cpcalendars.avatarux.com,5.5,HTTP_500_error|tech_exposure=misconfigured_webdav|gate_easy=7
+[PRIO] cpcontacts.avatarux.com,5.0,HTTP_500_error|tech_exposure=misconfigured_webdav
+[HYP] helpdesk_redirect_to_managed_app
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 65
+reasoning: HTTP 302 from help.desk subdomain suggests redirect to hosted helpdesk (Zendesk/Freshdesk/etc). If tenant is unclaimed or misconfigured, subdomain takeover possible.
+evidence_needed: Follow redirect chain to determine target application and tenant status.
+verify_steps: curl -sI https://help.desk.avatarux.com to capture Location header and response details.
+impact: Subdomain takeover -> impersonate support portal -> phishing credential theft | severity=HIGH
+testability: PASSIVE
+[HYP] cpanel_exposed_admin
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 70
+reasoning: cPanel hostname unprobed; if serving HTTP on standard ports, could expose hosting control panel without authentication.
+evidence_needed: HTTP response from cpanel.avatarux.com to confirm service type and auth requirements.
+verify_steps: curl -sI http://cpanel.avatarux.com and https://cpanel.avatarux.com
+impact: Server compromise, data exfiltration, code execution | severity=CRITICAL
+testability: PASSIVE
+[HYP] webdav_calendar_misconfig
+class: MISCONFIG
+asset: cpcalendars.avatarux.com
+confidence: 45
+reasoning: HTTP 500 on cpcalendars/cpcontacts suggests misconfigured WebDAV or cPanel calendar service. May leak server info in error response.
+evidence_needed: Full response headers and body from the 500 error to identify software/version.
+verify_steps: curl -sv https://cpcalendars.avatarux.com to capture headers and error body.
+impact: Information disclosure, potential file access if WebDAV exposed | severity=MEDIUM
+testability: PASSIVE
+[PARKED] webdav_calendar_misconfig: confidence 45 < 50 threshold; HTTP 500 on cPanel services often just disabled features, low exploitability.
+[FINAL] 1. cpanel_exposed_admin (70) 2. helpdesk_redirect_to_managed_app (65)
+[NEXT] PROBE: curl -sI https://help.desk.avatarux.com && curl -sI http://cpanel.avatarux.com && curl -sI https://cpanel.avatarux.com
+[LEARN] ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+[RISK] AvatarUX Studios: 40 — passive recon only, no auth-bypass attempted, focused on perimeter misconfiguration discovery.
+[NEW] help.desk.avatarux.com: Atlassian Jira Service Desk (live, customer portal active)
+[NEW] cpanel.avatarux.com: Cloudflare error 1001 - DNS to prohibited IP (subdomain takeover candidate)
+[NEW] MX records: Google Workspace, Zoho, Mandrill, ProtonMail
+[NEW] TXT reveals: Slack, Atlassian, Google verifications
+[PRIO] cpanel.avatarux.com, 9.0, subdomain_takeover_cloudflare_1001|gate_ease=10|cloud_surface=CLOUDFLARE
+[PRIO] help.desk.avatarux.com, 7.5, JSM_customer_portal|business_value=tenant_data|tech_exposure=ATLASSIAN
+[PRIO] cpcalendars.avatarux.com, 4.0, Apache_500_info_disclosure|admin_email_exposed
+[HYP] cpanel_subdomain_takeover
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 75
+reasoning: Cloudflare error 1001 (DNS points to prohibited IP) indicates the subdomain is configured in Cloudflare DNS but origin server is not properly set up. IP resolves to 162.159.136.54 (Cloudflare edge). Classic subdomain takeover indicator.
+evidence_needed: Verify if origin is truly abandoned; attempt CNAME takeover if Cloudflare zone deleted.
+verify_steps: 1. Check if origin IP serves content. 2. Attempt to claim subdomain via Cloudflare if zone orphaned. 3. Verify no active service on origin.
+impact: Full subdomain takeover → phishing, credential theft, XSS on *.avatarux.com | severity=CRITICAL
+testability: PASSIVE/VERIFICATION_NEEDED
+[HYP] jsm_tenant_id_enumeration
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 60
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON.
+evidence_needed: Confirm tenant IDs can be used for enumeration or cross-tenant access.
+verify_steps: 1. Extract all tenant IDs from page source. 2. Test if tenant IDs can be used in API calls. 3. Check for IDOR on tenant-scoped endpoints.
+impact: Tenant enumeration, potential cross-tenant data access | severity=MEDIUM
+testability: PASSIVE
+[FINAL] 1. cpanel_subdomain_takeover (75) - HIGH priority, requires verification
+[FINAL] 2. jsm_tenant_id_enumeration (60) - MEDIUM priority, needs API testing
+[NEXT] PROBE: Verify cpanel.avatarux.com takeover feasibility by checking if origin serves content or is abandoned.
+[LEARN] ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+[LEARN] ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+[RISK] AvatarUX Studios: 35 — passive recon only, focus on perimeter misconfiguration. No auth bypass or mutating tests performed.

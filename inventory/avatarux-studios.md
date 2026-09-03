@@ -41,3 +41,14 @@ www.avatarux.com
 ## 2026-09-03 07:56:17 UTC
 
 ## 2026-09-03 12:38:20 UTC
+
+## 2026-09-03 16:48:27 UTC
+- NEW help.desk.avatarux.com: Atlassian Jira Service Desk (live, customer portal active)
+- NEW cpanel.avatarux.com: Cloudflare error 1001 - DNS to prohibited IP (subdomain takeover candidate)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail
+- NEW TXT reveals: Slack, Atlassian, Google verifications
+- NEW `affiliates.betpanda.io` — BetPanda affiliate portal (Vite SPA, Cloudflare-fronted), in-scope brand asset discovered
+- NEW `help.desk.avatarux.com` confirmed as Atlassian Edge (Jira/Confluence help desk), AvatarUX infrastructure
+- NEW `autoconfig.avatarux.com` [200], `autodiscover.avatarux.com` [400], `cpcalendars.avatarux.com` [500], `cpcontacts.avatarux.com` [500] — dedicated hosts with live HTTP status
+- CHANGED `www.avatarux.com` CNAME → `secure.cloudways.cloud` (shared hosting edge), not direct AvatarUX infra
+- NEW Out-of-scope noise identified: alfaview (OpenAPI spec), BASF (Azure Functions), daimlertruck (locked), elringklinger — all unrelated to AvatarUX Studios program
