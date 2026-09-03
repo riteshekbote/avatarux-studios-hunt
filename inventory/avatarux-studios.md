@@ -52,3 +52,14 @@ www.avatarux.com
 - NEW `autoconfig.avatarux.com` [200], `autodiscover.avatarux.com` [400], `cpcalendars.avatarux.com` [500], `cpcontacts.avatarux.com` [500] — dedicated hosts with live HTTP status
 - CHANGED `www.avatarux.com` CNAME → `secure.cloudways.cloud` (shared hosting edge), not direct AvatarUX infra
 - NEW Out-of-scope noise identified: alfaview (OpenAPI spec), BASF (Azure Functions), daimlertruck (locked), elringklinger — all unrelated to AvatarUX Studios program
+
+## 2026-09-03 19:46:06 UTC
+- NEW `help.desk.avatarux.com` probe: root 200, `/servicedesk/customer/portal/` 303 (active customer portal), `/rest/servicedeskapi/servicedesk` 401 (auth required), `/wiki/` 200 (Confluence accessible)
+- NEW `cpanel.avatarux.com`: SSL handshake failure on :2083, wrong version on :2082, root SSL failure — cPanel ports not directly accessible via HTTPS; Cloudflare 1001 persists
+- NEW `cpcalendars.avatarux.com` confirmed HTTP 500 (benign disabled feature per knowledge)
+- NEW `affiliates.betpanda.io` confirmed Vite SPA (main.1ae50aab.js), Cloudflare-fronted, **no API routes in JS bundle** — API likely on separate subdomain (e.g., api.betpanda.io, affiliates-api.betpanda.io
+- CHANGED `help.desk.avatarux.com` was 302, now 200 with active portal/wiki — higher attack surface than redirect suggested
+- NEW `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+- NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+- NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
