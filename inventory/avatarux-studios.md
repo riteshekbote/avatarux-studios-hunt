@@ -63,3 +63,14 @@ www.avatarux.com
 - NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
 - NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
 - NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+
+## 2026-09-03 21:57:36 UTC
+- NEW `affiliates.betpanda.io` Vite SPA confirmed: single bundle `main.ef021e68.js`, no API routes/endpoints in bundle — API subdomain hunt required
+- NEW `help.desk.avatarux.com` Confluence wiki `/wiki/` returns 303 (not 200), JSM portal `/servicedesk/customer/portal/` 303, JSM REST `/rest/servicedeskapi/servicedesk` 401, Confluence REST `/rest/api/spa
+- NEW `cpanel.avatarux.com` CNAME → `avatarux.com` → `162.159.136.54` (Cloudflare IP), confirming Cloudflare 1001 = DNS points to prohibited Cloudflare IP (dangling DNS)
+- NEW BetPanda API subdomains `api.betpanda.io`, `affiliates-api.betpanda.io`, `api.affiliates.betpanda.io` — no DNS records (NXDOMAIN)
+- CHANGED Previous probe showed `/wiki/` 200, now 303 — Confluence behind Atlassian Edge redirect
+- NEW `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+- NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+- NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered

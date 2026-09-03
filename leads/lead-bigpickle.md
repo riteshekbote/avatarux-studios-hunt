@@ -114,3 +114,65 @@ testability: PASSIVE/AUTH_HELPED
 [LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
 [LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
 [RISK] AvatarUX Studios: 35 — passive recon only, focus on perimeter misconfiguration. No auth bypass or mutating tests performed.
+## 2026-09-03 21:55:07 UTC [target] (model bigpickle)
+asset: help.desk.avatarux.com
+confidence: 60
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON.
+evidence_needed: Confirm tenant IDs can be used for enumeration or cross-tenant access.
+verify_steps: 1. Extract all tenant IDs from page source. 2. Test if tenant IDs can be used in API calls. 3. Check for IDOR on tenant-scoped endpoints.
+impact: Tenant enumeration, potential cross-tenant data access | severity=MEDIUM
+testability: PASSIVE
+[FINAL] 1. cpanel_subdomain_takeover (75) - HIGH priority, requires verification
+[FINAL] 2. jsm_tenant_id_enumeration (60) - MEDIUM priority, needs API testing
+[NEXT] PROBE: Verify cpanel.avatarux.com takeover feasibility by checking if origin serves content or is abandoned.
+[LEARN] ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+[LEARN] ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+[RISK] AvatarUX Studios: 35 — passive recon only, focus on perimeter misconfiguration. No auth bypass or mutating tests performed.
+[NEW] `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+[NEW] `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+[NEW] `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+[NEW] MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+[PRIO] cpanel.avatarux.com, 9.2, subdomain_takeover_cloudflare_1001|gate_ease=10|cloud_surface=CLOUDFLARE
+[PRIO] help.desk.avatarux.com, 7.5, JSM_customer_portal|business_value=tenant_data|tech_exposure=ATLASSIAN
+[PRIO] affiliates.betpanda.io, 7.0, SPA_with_API|business_value=affiliate_commissions|gate_ease=6
+[HYP] cpanel_subdomain_takeover_cloudflare_1001
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 78
+reasoning: Cloudflare error 1001 (DNS points to prohibited IP) is textbook subdomain takeover indicator. Origin IP resolves to 162.159.136.54 (Cloudflare edge). If Cloudflare zone is orphaned or CNAME dangling, attacker can claim subdomain.
+evidence_needed: Confirm origin serves no valid content; attempt Cloudflare zone claim if orphaned; verify no active CNAME to third-party.
+verify_steps: 1. GET https://cpanel.avatarux.com - confirm error page details. 2. Check DNS records for dangling CNAME. 3. Verify if Cloudflare zone exists for avatarux.com.
+impact: Full subdomain takeover → phishing, credential theft, XSS injection on *.avatarux.com | severity=CRITICAL
+testability: PASSIVE/VERIFICATION_NEEDED
+[HYP] jsm_tenant_id_enumeration
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 62
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON.
+evidence_needed: Confirm tenant IDs can be used for enumeration or cross-tenant access via API endpoints.
+verify_steps: 1. Extract tenant IDs from page source. 2. Test tenant IDs in API calls (GET /api/v2/tenants/{id}). 3. Check for IDOR on tenant-scoped endpoints.
+impact: Tenant enumeration, potential cross-tenant data access | severity=MEDIUM
+testability: PASSIVE
+[HYP] betpanda_affiliate_idor
+class: IDOR
+asset: affiliates.betpanda.io
+[HYP] betpanda_cable_unauth_realtime
+class: MISCONFIG
+asset: cable.betpanda.io
+confidence: 45
+reasoning: Custom Node service on BetPanda surface, publicly 200 with "BB CABLE 🔌" banner, live and Cloudflare-fronted. Websocket/cable services often mount channel/pubsub endpoints requiring auth; exposure of the service root with no auth gate is a real in-scope asset, but no non-root path is discoverable passively.
+evidence_needed: Discover the actual realtime/websocket endpoint and confirm it exposes data or allows subscription without auth.
+verify_steps: 1. GET https://cable.betpanda.io/ (banner, no auth). 2. POST/GET common mounts with JSON error to map router (done: /socket /ws /events -> 404). 3. Attempt WS upgrade on discovered path and observe auth response.
+impact: Unauthorized access to realtime/notification/casino event streams if any channel is unauthenticated | severity=LOW-MEDIUM
+testability: PASSIVE
+[HYP] betpandacasino_spa_graphql_shadow
+class: OTHER
+asset: betpandacasino.io
+confidence: 42
+reasoning: /graphql/ and /api/ return 200 SPA shell (catch-all), meaning an SPA router shadows all paths; a real API/GraphQL could exist on a different path or backend not yet mapped. Casino is high-value (money flows). No api subdomain resolves so far.
+evidence_needed: Find the real API base URL used by the casino/affiliate SPA (from JS bundle or DNS) and test for auth/IDOR on it.
+verify_steps: 1. Fetch https://betpandacasino.io/ JS bundles, grep for api base URL/graphql URL. 2. Probe discovered base for /graphql and /api with GET introspection. 3. Only passive/read-only unless scoped API confirmed.
+impact: Potential casino/affiliate API access if unauthenticated surface exists | severity=MEDIUM (unconfirmed)
+testability: PASSIVE
+[NEXT] PROBE: Fetch https://betpandacasino.io/ and https://affiliates.betpanda.io/ HTML, extract all JS bundle URLs, grep bundles for `https?://\S*api\S*` and `/graphql` to locate the real API base URL; then read-only GET that base + /graphql + /api/v1.
+[RISK] AvatarUX Studios: 40 — propensity to hunt only perimeter/config misconfigs; top authentic leads (BetPanda cable WS service, SPA-shadowed API) remain unconfirmed with no credentialed access, so depth (real IDOR/AUTH breaks) is still blocked. No auth-bypass or mutating tests performed; passive GET/HEAD/OPTIONS + WS handshake only.

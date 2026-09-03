@@ -13,3 +13,6 @@
 - 2026-09-03 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
 - 2026-09-03 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, but cPanel ports (2082/2083) not accessible via standard HTTPS (SSL failures)
 - 2026-09-03 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+- 2026-09-03 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed live with active JSM customer portal (303) and Confluence wiki (303), in-scope AvatarUX infrastructure; standard REST paths return 404/303
+- 2026-09-03 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/2083) not accessible via standard HTTPS
+- 2026-09-03 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
