@@ -50,3 +50,4 @@
 - 2026-09-04 ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
 - 2026-09-04 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
 - 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId=1, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+- 2026-09-04 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand or infrastructure)

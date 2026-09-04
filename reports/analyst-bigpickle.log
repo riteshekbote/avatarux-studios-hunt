@@ -3411,3 +3411,979 @@ testability: PASSIVE
 
 ## STEP 7 — RISK
 [RISK] AvatarUX Studios: 47 — BetPanda affiliate API is proven auth-gated and schema-closed; betpandacasino.io degraded to an empty Spring Boot stub (surface narrowed). cpanel takeover remains the only CRITICAL-class passive lead and is stalled at verification (crt.sh unreachable, claim is not read-only). IDOR depth testing remains blocked on an auth session; progress now depends on authorized credential provision or a new passive surface win.
+===== ANALYST bigpickle 2026-09-04 21:36:26 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && ls art/ 2>/dev/null | head -50
+total 156
+drwxr-xr-x 12 runner runner  4096 Sep  4 21:33 .
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:33 ..
+drwxr-xr-x  7 runner runner  4096 Sep  4 21:33 .git
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:33 .github
+-rw-r--r--  1 runner runner  1738 Sep  4 21:33 README.md
+-rw-r--r--  1 runner runner    32 Sep  4 21:33 analyst-out.txt
+-rw-r--r--  1 runner runner 35970 Sep  4 21:33 analyst-prompt.txt
+-rw-r--r--  1 runner runner 32134 Sep  4 21:33 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 leads
+-rw-r--r--  1 runner runner  3082 Sep  4 21:33 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 reports
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 reposcan-raw
+-rw-r--r--  1 runner runner  3249 Sep  4 21:33 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 scripts
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 triage
+[0m
+[0m$ [0mgit log --oneline -5 2>/dev/null; git status --short 2>/dev/null | head -20
+5e6d875 triage 2026-09-04-19-54
+?? analyst-out.txt
+?? analyst-prompt.txt
+?? ctx.txt
+[0m
+[0m$ [0mcat scope.yml
+programs:
+  avatarux-studios:
+    name: AvatarUX Studios Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "Brands: Roobet, Stake, Gamdom, BetPanda, RainBet. All infrastructure, game services, APIs and systems operated by AvatarUX Studios and its distributed gaming integrations"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+[0m
+[0m$ [0mcat state_bigpickle.json state_nemotron3.json state_laguna.json state_longcat.json state_mimo.json state_ling3.json
+{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mcat analyst-out.txt && echo "---" && ls leads knowledge inventory recon-notes reports triage scripts
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && ls art/ 2>/dev/null | head -50
+total 156
+drwxr-xr-x 12 runner runner  4096 Sep  4 21:33 .
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:33 ..
+drwxr-xr-x  7 runner runner  4096 Sep  4 21:33 .git
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:33 .github
+-rw-r--r--  1 runner runner  1738 Sep  4 21:33 README.md
+-rw-r--r--  1 runner runner    32 Sep  4 21:33 analyst-out.txt
+-rw-r--r--  1 runner runner 35970 Sep  4 21:33 analyst-prompt.txt
+-rw-r--r--  1 runner runner 32134 Sep  4 21:33 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 leads
+-rw-r--r--  1 runner runner  3082 Sep  4 21:33 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 reports
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 reposcan-raw
+-rw-r--r--  1 runner runner  3249 Sep  4 21:33 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 scripts
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:33 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:33 triage
+[0m
+[0m$ [0mgit log --oneline -5 2>/dev/null; git status --short 2>/dev/null | head -20
+5e6d875 triage 2026-09-04-19-54
+?? analyst-out.txt
+?? analyst-prompt.txt
+?? ctx.txt
+[0m
+[0m$ [0mcat scope.yml
+programs:
+  avatarux-studios:
+    name: AvatarUX Studios Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "Brands: Roobet, Stake, Gamdom, BetPanda, RainBet. All infrastructure, game services, APIs and systems operated by AvatarUX Studios and its distributed gaming integrations"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+[0m
+[0m$ [0mcat state_bigpickle.json state_nemotron3.json state_laguna.json state_longcat.json state_mimo.json state_ling3.json
+{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}
+[0m
+---
+inventory:
+avatarux-studios.md
+
+knowledge:
+index.md
+
+leads:
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-avatarux-studios.md
+
+recon-notes:
+DEDICATED-DEEP.md
+DEEPER-FINDINGS.md
+
+reports:
+analyst-bigpickle.log
+analyst-laguna.log
+analyst-ling3.log
+analyst-longcat.log
+analyst-nemotron3.log
+hypotheses-bigpickle.txt
+hypotheses-laguna.txt
+hypotheses-ling3.txt
+hypotheses-longcat.txt
+hypotheses-nemotron3.txt
+hypotheses.md
+valid-bugs.md
+
+scripts:
+sync-issues.py
+
+triage:
+run-2026-09-02-21-54.md
+run-2026-09-02-23-56.md
+run-2026-09-03-04-10.md
+run-2026-09-03-09-01.md
+run-2026-09-03-13-31.md
+run-2026-09-03-17-13.md
+run-2026-09-03-19-56.md
+run-2026-09-03-22-29.md
+run-2026-09-04-00-29.md
+run-2026-09-04-05-06.md
+run-2026-09-04-09-47.md
+run-2026-09-04-14-07.md
+run-2026-09-04-17-40.md
+run-2026-09-04-19-54.md
+[0m
+[0m$ [0mcat triage/run-2026-09-04-19-54.md
+===== TRIAGE 2026-09-04 19:54:27 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. Please paste the probe results or lead details to evaluate.
+[0m
+[0m$ [0mcat leads/lead-bigpickle.md reports/hypotheses-bigpickle.txt 2>/dev/null | head -120
+## 2026-09-03 16:42:29 UTC [target] (model bigpickle)
+[PRIO] help.desk.avatarux.com,7.5,HTTP 302 redirect to unknown target|business_value=helpdesk_tenant_data|gate_ease=8 (redirect may expose app)
+[PRIO] cpanel.avatarux.com,8.0,unprobed_cPanel|tech_exposure=hosting_panel|gate_ease=9 (if exposed = critical)
+[PRIO] cpcalendars.avatarux.com,5.5,HTTP_500_error|tech_exposure=misconfigured_webdav|gate_easy=7
+[PRIO] cpcontacts.avatarux.com,5.0,HTTP_500_error|tech_exposure=misconfigured_webdav
+[HYP] helpdesk_redirect_to_managed_app
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 65
+reasoning: HTTP 302 from help.desk subdomain suggests redirect to hosted helpdesk (Zendesk/Freshdesk/etc). If tenant is unclaimed or misconfigured, subdomain takeover possible.
+evidence_needed: Follow redirect chain to determine target application and tenant status.
+verify_steps: curl -sI https://help.desk.avatarux.com to capture Location header and response details.
+impact: Subdomain takeover -> impersonate support portal -> phishing credential theft | severity=HIGH
+testability: PASSIVE
+[HYP] cpanel_exposed_admin
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 70
+reasoning: cPanel hostname unprobed; if serving HTTP on standard ports, could expose hosting control panel without authentication.
+evidence_needed: HTTP response from cpanel.avatarux.com to confirm service type and auth requirements.
+verify_steps: curl -sI http://cpanel.avatarux.com and https://cpanel.avatarux.com
+impact: Server compromise, data exfiltration, code execution | severity=CRITICAL
+testability: PASSIVE
+[HYP] webdav_calendar_misconfig
+class: MISCONFIG
+asset: cpcalendars.avatarux.com
+confidence: 45
+reasoning: HTTP 500 on cpcalendars/cpcontacts suggests misconfigured WebDAV or cPanel calendar service. May leak server info in error response.
+evidence_needed: Full response headers and body from the 500 error to identify software/version.
+verify_steps: curl -sv https://cpcalendars.avatarux.com to capture headers and error body.
+impact: Information disclosure, potential file access if WebDAV exposed | severity=MEDIUM
+testability: PASSIVE
+[PARKED] webdav_calendar_misconfig: confidence 45 < 50 threshold; HTTP 500 on cPanel services often just disabled features, low exploitability.
+[FINAL] 1. cpanel_exposed_admin (70) 2. helpdesk_redirect_to_managed_app (65)
+[NEXT] PROBE: curl -sI https://help.desk.avatarux.com && curl -sI http://cpanel.avatarux.com && curl -sI https://cpanel.avatarux.com
+[LEARN] ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+[RISK] AvatarUX Studios: 40 — passive recon only, no auth-bypass attempted, focused on perimeter misconfiguration discovery.
+[NEW] help.desk.avatarux.com: Atlassian Jira Service Desk (live, customer portal active)
+[NEW] cpanel.avatarux.com: Cloudflare error 1001 - DNS to prohibited IP (subdomain takeover candidate)
+[NEW] MX records: Google Workspace, Zoho, Mandrill, ProtonMail
+[NEW] TXT reveals: Slack, Atlassian, Google verifications
+[PRIO] cpanel.avatarux.com, 9.0, subdomain_takeover_cloudflare_1001|gate_ease=10|cloud_surface=CLOUDFLARE
+[PRIO] help.desk.avatarux.com, 7.5, JSM_customer_portal|business_value=tenant_data|tech_exposure=ATLASSIAN
+[PRIO] cpcalendars.avatarux.com, 4.0, Apache_500_info_disclosure|admin_email_exposed
+[HYP] cpanel_subdomain_takeover
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 75
+reasoning: Cloudflare error 1001 (DNS points to prohibited IP) indicates the subdomain is configured in Cloudflare DNS but origin server is not properly set up. IP resolves to 162.159.136.54 (Cloudflare edge). Classic subdomain takeover indicator.
+evidence_needed: Verify if origin is truly abandoned; attempt CNAME takeover if Cloudflare zone deleted.
+verify_steps: 1. Check if origin IP serves content. 2. Attempt to claim subdomain via Cloudflare if zone orphaned. 3. Verify no active service on origin.
+impact: Full subdomain takeover → phishing, credential theft, XSS on *.avatarux.com | severity=CRITICAL
+testability: PASSIVE/VERIFICATION_NEEDED
+[HYP] jsm_tenant_id_enumeration
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 60
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON.
+evidence_needed: Confirm tenant IDs can be used for enumeration or cross-tenant access.
+verify_steps: 1. Extract all tenant IDs from page source. 2. Test if tenant IDs can be used in API calls. 3. Check for IDOR on tenant-scoped endpoints.
+impact: Tenant enumeration, potential cross-tenant data access | severity=MEDIUM
+testability: PASSIVE
+[FINAL] 1. cpanel_subdomain_takeover (75) - HIGH priority, requires verification
+[FINAL] 2. jsm_tenant_id_enumeration (60) - MEDIUM priority, needs API testing
+[NEXT] PROBE: Verify cpanel.avatarux.com takeover feasibility by checking if origin serves content or is abandoned.
+[LEARN] ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+[LEARN] ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+[RISK] AvatarUX Studios: 35 — passive recon only, focus on perimeter misconfiguration. No auth bypass or mutating tests performed.
+## 2026-09-03 19:39:24 UTC [target] (model bigpickle)
+[NEW] `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+[NEW] `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+[NEW] `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+[NEW] MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+[PRIO] cpanel.avatarux.com, 9.2, subdomain_takeover_cloudflare_1001|gate_ease=10|cloud_surface=CLOUDFLARE
+[PRIO] help.desk.avatarux.com, 7.5, JSM_customer_portal|business_value=tenant_data|tech_exposure=ATLASSIAN
+[PRIO] affiliates.betpanda.io, 7.0, SPA_with_API|business_value=affiliate_commissions|gate_ease=6
+[HYP] cpanel_subdomain_takeover_cloudflare_1001
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 78
+reasoning: Cloudflare error 1001 (DNS points to prohibited IP) is textbook subdomain takeover indicator. Origin IP resolves to 162.159.136.54 (Cloudflare edge). If Cloudflare zone is orphaned or CNAME dangling, attacker can claim subdomain.
+evidence_needed: Confirm origin serves no valid content; attempt Cloudflare zone claim if orphaned; verify no active CNAME to third-party.
+verify_steps: 1. GET https://cpanel.avatarux.com - confirm error page details. 2. Check DNS records for dangling CNAME. 3. Verify if Cloudflare zone exists for avatarux.com.
+impact: Full subdomain takeover → phishing, credential theft, XSS injection on *.avatarux.com | severity=CRITICAL
+testability: PASSIVE/VERIFICATION_NEEDED
+[HYP] jsm_tenant_id_enumeration
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 62
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON.
+evidence_needed: Confirm tenant IDs can be used for enumeration or cross-tenant access via API endpoints.
+verify_steps: 1. Extract tenant IDs from page source. 2. Test tenant IDs in API calls (GET /api/v2/tenants/{id}). 3. Check for IDOR on tenant-scoped endpoints.
+impact: Tenant enumeration, potential cross-tenant data access | severity=MEDIUM
+testability: PASSIVE
+[HYP] betpanda_affiliate_idor
+class: IDOR
+asset: affiliates.betpanda.io
+confidence: 58
+reasoning: Affiliate portals typically expose affiliate_id in URLs, API calls, or local storage. If sequential or guessable, could allow cross-affiliate data access including commission details and personal information.
+evidence_needed: Identify affiliate_id parameter in API calls; test sequential IDs for unauthorized data access.
+verify_steps: 1. GET https://affiliates.betpanda.io/ - analyze page source and JS bundles. 2. Identify API endpoints with affiliate_id params. 3. Test IDOR on identified endpoints.
+impact: Cross-affiliate PII dump, commission data theft | severity=HIGH
+testability: PASSIVE/AUTH_HELPED
+[PARKED] betpanda_affiliate_idor: confidence 58 → needs authenticated access to confirm; can't test without login. Hypothesis valid but testability limited in current phase.
+[FINAL] 1. cpanel_subdomain_takeover_cloudflare_1001 (78) - HIGH priority, requires verification
+[FINAL] 2. jsm_tenant_id_enumeration (62) - MEDIUM priority, needs API testing
+[NEXT] PROBE: Verify cpanel.avatarux.com takeover feasibility - GET https://cpanel.avatarux.com && dig cpanel.avatarux.com CNAME && dig cpanel.avatarux.com A
+[LEARN] ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+[LEARN] ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+[LEARN] REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+[LEARN] REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+[LEARN] REJECTED daimlertruck/elringklinger: out of scope
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
+[RISK] AvatarUX Studios: 35 — passive recon only, focus on perimeter misconfiguration. No auth bypass or mutating tests performed.
+## 2026-09-03 21:55:07 UTC [target] (model bigpickle)
+asset: help.desk.avatarux.com
+confidence: 60
+reasoning: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML. Multiple tenant IDs visible in dynamic_configs JSON.
+[0m
+[0m$ [0mcat probe-results.md reports/valid-bugs.md knowledge/index.md 2>/dev/null | head -200
+## 2026-09-02 21:53:50 UTC
+
+
+## 2026-09-02 23:52:05 UTC
+
+
+## 2026-09-03 02:58:07 UTC
+
+
+## 2026-09-03 07:56:17 UTC
+
+
+## 2026-09-03 12:38:20 UTC
+
+
+## 2026-09-03 16:48:40 UTC
+https://help.desk.avatarux.com/ -> 200 len=?
+https://help.desk.avatarux.com/servicedesk/customer/portal/ -> HTTP 303
+https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401
+https://help.desk.avatarux.com/wiki/ -> 200 len=?
+https://cpanel.avatarux.com:2083/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpanel.avatarux.com:2082/ -> ERR <urlopen error [SSL: WRONG_VERSION_NUMBER] wrong v
+https://help.desk.avatarux.com -> 200 len=?
+https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpcalendars.avatarux.com -> HTTP 500
+
+## 2026-09-03 19:46:17 UTC
+https://help.desk.avatarux.com/wiki/ -> 200 len=?
+https://help.desk.avatarux.com/rest/api/space -> HTTP 404
+https://help.desk.avatarux.com/rest/api/content -> HTTP 404
+https://help.desk.avatarux.com/servicedesk/customer/portal/ -> HTTP 303
+https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-03 21:57:49 UTC
+https://help.desk.avatarux.com/wiki/rest/api/space -> 200 len=?
+https://help.desk.avatarux.com/confluence/rest/api/space -> HTTP 404
+https://help.desk.avatarux.com/rest/space -> HTTP 404
+https://help.desk.avatarux.com/wiki/rest/api/content?limit=10 -> 200 len=?
+https://help.desk.avatarux.com/servicedesk/customer/portal/ -> HTTP 303
+https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-03 23:50:04 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-04 03:03:07 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-04 07:48:20 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-04 12:42:06 UTC
+https://help.desk.avatarux.com -> 200 len=?
+https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpcalendars.avatarux.com -> HTTP 500
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-04 16:39:44 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> 200 len=?
+
+## 2026-09-04 19:15:03 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out
+https://api.certspotter.com/v1/issuances?domain=avatarux.com&include_subdomains=true&expand=dns_names` -> 200 len=?
+# Validated findings (running count 0)
+# Knowledge Base (seed)
+- 2026-09-03 ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+- 2026-09-03 REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+- 2026-09-03 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-03 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-03 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand or infrastructure)
+- 2026-09-03 REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+- 2026-09-03 REJECTED daimlertruck/elringklinger: out of scope
+- 2026-09-03 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+- 2026-09-03 ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
+- 2026-09-03 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed live with active JSM customer portal (303) and Confluence wiki (200), in-scope AvatarUX infrastructure
+- 2026-09-03 ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered, Vite SPA with no API in bundle — API subdomain hunt required
+- 2026-09-03 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-03 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, but cPanel ports (2082/2083) not accessible via standard HTTPS (SSL failures)
+- 2026-09-03 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+- 2026-09-03 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed live with active JSM customer portal (303) and Confluence wiki (303), in-scope AvatarUX infrastructure; standard REST paths return 404/303
+- 2026-09-03 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/2083) not accessible via standard HTTPS
+- 2026-09-03 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-03 ACCEPTED MISCONFIG @ help.desk: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML
+- 2026-09-03 ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- 2026-09-03 ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+- 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered, Vite SPA with no API in bundle — API subdomain hunt required
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed live with active JSM customer portal (303) and Confluence wiki (303), in-scope AvatarUX infrastructure; standard REST paths return 404/303
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/2083) not accessible via standard HTTPS
+- 2026-09-04 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-04 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-04 ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: Vite SPA with zero API routes in bundle — API subdomain hunt remains blocked after NXDOMAIN on common patterns
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API undiscovered
+- 2026-09-04 ACCEPTED MISCONFIG @ cable.betpanda.io: Custom Node "BB CABLE" service live, WS paths /socket /ws /events all 404
+- 2026-09-04 ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+- 2026-09-04 REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-04 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+- 2026-09-04 REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+- 2026-09-04 REJECTED daimlertruck/elringklinger: out of scope
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML
+- 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+- 2026-09-04 ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limiting unverified
+- 2026-09-04 ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link, and full currency list
+- 2026-09-04 ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- 2026-09-04 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId=1, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+[0m
+[0m$ [0mcat recon-notes/DEDICATED-DEEP.md recon-notes/DEEPER-FINDINGS.md 2>/dev/null | head -150
+# Dedicated deep surface (wildcard-cleaned) 2026-09-03
+**Root zone:** `avatarux.com` | **dedicated hosts after wildcard-filter: 6**
+> Audit: brute+passive subfinder produced 10,083 resolving hostnames; zone-wildcard + IP-fingerprint filtering dropped 9,973 (98.9%) DNS-wildcard noise (random labels resolving to shared wildcard IPs e.g. account.cineplex.de, a.hypofriend.de, account.live-manager.de, docker.jtl-software.de, *.ggamdom.com, *.dev.alfaview.com). Only genuine dedicated hosts listed below. These are surface-map observations; live HTTP status captured read-only (GET / via curl). No findings claimed; scope must be confirmed with the program.
+- `autoconfig.avatarux.com`  [HTTP 200]
+- `autodiscover.avatarux.com`  [HTTP 400]
+- `cpanel.avatarux.com`  [HTTP unprobed]
+- `cpcalendars.avatarux.com`  [HTTP 500]
+- `cpcontacts.avatarux.com`  [HTTP 500]
+- `help.desk.avatarux.com`  [HTTP 302]
+# Deeper findings — session 2026-09-03
+
+_Generated 2026-09-03 | read-only passive enumeration | no active testing_
+
+## 1. alfaview — OpenAPI spec exposed (HIGH VALUE)
+
+**Location:** `https://apis.alfaview.com/v2/docs/openapi.yaml` (159KB)
+**Discovery:** Stoplight Elements UI at `https://apis.alfaview.com/docs` loads the spec via `apiDescriptionUrl="/v2/docs/openapi.yaml"`.
+
+### Endpoints (35+)
+
+**Authentication:**
+- `/v2/auth/api-key` — API key auth (companyId + clientId + key)
+- `/v2/auth/password` — Password auth
+- `/v2/auth/group-link` — Guest auth via group link (accessKey)
+- `/v2/auth/guest-link` — Guest auth via guest link
+- `/v2/auth/token-info` — Token introspection
+
+**Rooms & Meetings:**
+- `/v2/rooms` — List rooms
+- `/v2/rooms/{id}` — Get room
+- `/v2/rooms/{roomId}/participants` — List participants
+- `/v2/rooms/{roomId}/permissions` — Room permissions
+- `/v2/rooms/{roomId}/permissions/{userId}` — Per-user permissions (IDOR potential)
+- `/v2/rooms/{roomId}/passcode` — Room passcode
+- `/v2/rooms/{roomId}/features` — Room features
+- `/v2/rooms/{roomId}/group-links` / `guest-links` — Guest access management
+- `/v2/rooms/{roomId}/file-share-settings` / `file-share-limits`
+- `/v2/rooms/{roomId}/subrooms` — Subroom management
+- `/v2/meetings` — List/Create meetings
+- `/v2/meetings/{id}` — Get/Update meeting
+- `/v2/meetings/{id}/cancellation` — Cancel meeting
+
+**Users & Admin:**
+- `/v2/users` — List users
+- `/v2/users/{id}` — Get user
+- `/v2/users/me` — Current user
+- `/v2/users/invitation` — Invite user
+- `/v2/permission-groups` — Permission groups
+- `/v2/room-types` — Room types
+- `/v2/stats` — Statistics
+- `/v2/languages` — Available languages
+
+### Auth model
+- API keys: `companyId` + `clientId` + `key` (in request body)
+- Bearer tokens: base64-encoded `accessToken` in `Authorization` header
+- Guest access: `accessKey` from group-link or guest-link
+
+### Attack-relevant observations
+- `/v2/rooms/{roomId}/permissions/{userId}` — classic IDOR pattern (room ID + user ID in path)
+- Guest auth via `accessKey` — if keys are predictable/brute-forceable, guest impersonation possible
+- `/v2/users/invitation` — user invitation endpoint (potential user enumeration or abuse)
+- `/v2/stats` — statistics endpoint (potential info disclosure)
+- `/v2/rooms/{roomId}/passcode` — passcode management (potential bypass)
+
+### Additional alfaview observations
+- All hosts behind `edge-proxy` (reverse proxy fingerprint)
+- CSP on `app.alfaview.com` allows `omega-lectures.com` as frame-ancestor (third-party integration)
+- No X-Frame-Options on ANY alfaview host (potential clickjacking, mitigated by CSP frame-ancestors on app)
+- `internal.alfaview.com` and `beta-app.alfaview.com` use HTTP Basic auth
+
+---
+
+## 2. BASF — Azure Function Apps exposed (MEDIUM VALUE)
+
+**Hosts:** `ap-digitalconnect.api.basf.com`, `ap-eupf.api.basf.com`
+**Fingerprint:** Azure Function Apps (default page: "Your Azure Function App is up and running")
+
+### Exposed admin endpoints
+- `/admin/functions` → 401 (Bearer auth required)
+- `/admin/host/status` → 401 (Bearer auth required)
+- `/admin/host/keys` → 401 (Bearer auth required)
+- `/.env` → 403 (exists, blocked)
+
+### Attack surface
+- Azure Functions admin API requires function master key or system key
+- If key is weak/default/leaked, full admin access to Function App
+- Common Azure Functions key patterns: `<hex>-<hex>`, default keys in `host.json`
+- Dev endpoints (`dev-clientcert-sap`, `dev-ext001`) require client certificates (400)
+
+---
+
+## 3. daimlertruck — Lockdown confirmed (NO UNAUTH FINDING)
+
+- APIM gateways: all paths return `OperationNotFound` (no unauth surface)
+- Developer portals: Next.js, login-gated (307 → callbackUrl)
+- Authz services: empty 404 at root
+- Management/capacitor hosts: unreachable (NAT64/IPv6 only)
+
+**Honest assessment: surface is properly locked down against unauthenticated attackers.**
+
+---
+
+## 4. betpanda — Vite SPA with affiliate portal
+
+- `affiliates.betpanda.io` — Vite-built SPA (main.1ae50aab.js)
+- Cloudflare-fronted
+- No API routes found in JS bundle
+- Standard affiliate portal structure
+
+---
+
+## 5. elringklinger — Third-party integrations
+
+- `go.events.elringklinger.com` — 302 redirect (event management platform)
+- `ir.elringklinger.com` — Apache, investor relations page
+
+---
+
+## 6. avatarux — Atlassian + cPanel
+
+- `help.desk.avatarux.com` — Atlassian Edge (Jira/Confluence help desk)
+- `autoconfig.avatarux.com` — Apache autoconfig
+- `cpanel.avatarux.com` — cPanel (if accessible)
+
+---
+
+_Honest framing: all observations from read-only passive enumeration. No vulnerability claimed. Scope must be confirmed before active testing on any of these live production assets._
+[0m
+[0m$ [0mcat reports/hypotheses.md 2>/dev/null | tail -80
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered, Vite SPA with no API in bundle — API subdomain hunt required
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed live with active JSM customer portal (303) and Confluence wiki (303), in-scope AvatarUX in
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+
+## RANKED HYPOTHESES 2026-09-04 12:42:00 UTC
+- [78] cpanel.avatarux.com: cpanel_subdomain_takeover_cloudflare_1001 (from art/lead_bigpickle.txt)
+- [65] help.desk.avatarux.com: helpdesk_redirect_to_managed_app (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Fetch https://affiliates.betpanda.io/ — extract all <script> bundle URLs from HTML, then GET the primary bundle and grep for `baseURL`, `apiUrl`, `VITE_`
+- NEXT(hypotheses-nemotron3.txt): PROBE: curl -sI https://help.desk.avatarux.com && curl -sI http://cpanel.avatarux.com && curl -sI https://cpanel.avatarux.com
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: Vite SPA with zero API routes in bundle — API subdomain hunt remains blocked after NXDOMAIN on common patterns
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API undiscovered
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: Custom Node "BB CABLE" service live, WS paths /socket /ws /events all 404
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature
+- LEARN: ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- LEARN: REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+- LEARN: REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+- LEARN: REJECTED daimlertruck/elringklinger: out of scope
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered, Vite SPA with no API in bundle — API subdomain hunt required
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered, Vite SPA with no API in bundle — API subdomain hunt required
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed live with active JSM customer portal (303) and Confluence wiki (303), in-scope AvatarUX in
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — subdomain takeover candidate, CNAME → avatarux.com → Cloudflare IP (162.159.136.54), cPanel ports (2082/
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+
+## RANKED HYPOTHESES 2026-09-04 16:39:41 UTC
+- [72] affiliates.betpanda.io/rest/player/uid/{id}: betpanda_affiliate_idor_on_player_uid (from art/lead_bigpickle.txt)
+- [70] affiliates.betpanda.io: BetPanda Affiliate Portal API Subdomain Discovery + IDOR on Affiliate IDs (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Test password reset timing differential — GET /rest/public/recover-password/email/admin@betpanda.io vs /rest/public/recover-password/email/nonexistent_xy
+- NEXT(hypotheses-nemotron3.txt): PROBE: Passive DNS enumeration for *.betpanda.io via crt.sh (https://crt.sh/?q=%.betpanda.io) and subfinder; concurrent GET https://affiliates.betpanda.io/main.
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operator
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limitin
+- LEARN: ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link,
+- LEARN: ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- LEARN: ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: Vite SPA with zero API routes in bundle — API subdomain hunt remains blocked after NXDOMAIN on common patterns
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature
+
+## RANKED HYPOTHESES 2026-09-04 19:14:47 UTC
+- [78] cpanel.avatarux.com: cpanel_subdomain_takeover_cloudflare_1001 (from art/lead_bigpickle.txt)
+- [72] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on /rest/player/uid/{id} with Auth Session (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Reconfirm cpanel.avatarux.com Cloudflare 1001 persistence (curl status page) and concurrently run passive CT enumeration via certspotter API for avatarux
+- NEXT(hypotheses-nemotron3.txt): PROBE: Test password reset timing differential — GET https://affiliates.betpanda.io/rest/public/recover-password/email/admin@betpanda.io vs GET https://affiliat
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operator
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limitin
+- LEARN: ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link,
+- LEARN: ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- LEARN: ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API undiscovered
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: Custom Node "BB CABLE" service live, WS paths /socket /ws /events all 404
+[0m
+[0m$ [0mcat leads/lead-nemotron3.md 2>/dev/null | head -80
+## 2026-09-03 16:48:16 UTC [target] (model nemotron3)
+[NEW] `affiliates.betpanda.io` — BetPanda affiliate portal (Vite SPA, Cloudflare-fronted), in-scope brand asset discovered
+[NEW] `help.desk.avatarux.com` confirmed as Atlassian Edge (Jira/Confluence help desk), AvatarUX infrastructure
+[NEW] `autoconfig.avatarux.com` [200], `autodiscover.avatarux.com` [400], `cpcalendars.avatarux.com` [500], `cpcontacts.avatarux.com` [500] — dedicated hosts with live HTTP status
+[CHANGED] `www.avatarux.com` CNAME → `secure.cloudways.cloud` (shared hosting edge), not direct AvatarUX infra
+[NEW] Out-of-scope noise identified: alfaview (OpenAPI spec), BASF (Azure Functions), daimlertruck (locked), elringklinger — all unrelated to AvatarUX Studios program
+[PRIO] `affiliates.betpanda.io`,7.8,attack_surface=7,business_value=9,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] `help.desk.avatarux.com`,6.5,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=10,cloud_surface=5,freshness=6
+[PRIO] `cpanel.avatarux.com`,6.2,attack_surface=8,business_value=8,tech_exposure=6,gate_ease=5,cloud_surface=6,freshness=5
+[PRIO] `autoconfig.avatarux.com`,4.1,attack_surface=4,business_value=3,tech_exposure=4,gate_ease=10,cloud_surface=5,freshness=5
+[PRIO] `api.roobet.com` (undiscovered),9.5,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] `api.stake.com` (undiscovered),9.5,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] `api.gamdom.com` (undiscovered),9.5,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] `api.rainbet.com` (undiscovered),9.5,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[HYP] BetPanda Affiliate Portal IDOR/BOLA on Affiliate IDs
+class: IDOR
+asset: affiliates.betpanda.io
+confidence: 65
+reasoning: Vite SPA affiliate portal for in-scope brand BetPanda; affiliate systems typically use numeric/sequential affiliate_id or campaign_id in API calls; no API routes found in JS bundle suggests API is on separate subdomain or obfuscated
+evidence_needed: API endpoint discovery via JS bundle analysis or network interception showing affiliate_id/campaign_id parameters; unauthorized access to other affiliates' stats/commissions/payouts
+verify_steps: GET https://affiliates.betpanda.io/ (analyze JS bundles for API base URLs); GET https://api.betpanda.io/ or similar (passive DNS for API subdomains); if API found, test IDOR on /affiliates/{id}/stats, /campaigns/{id}/commissions with different affiliate IDs
+impact: Cross-affiliate PII dump (email, payment details), commission theft, campaign manipulation — HIGH
+testability: PASSIVE
+[HYP] Atlassian Help Desk Information Disclosure / Anonymous Access
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 55
+reasoning: Atlassian Edge (Jira Service Management/Confluence) at help.desk.avatarux.com [302]; public help desks often leak project names, issue types, component names, or allow anonymous issue creation/viewing; 302 suggests redirect to login or portal front
+evidence_needed: Anonymous access to /servicedesk/customer/portal/, /rest/servicedeskapi/ endpoints, or Confluence spaces; enumeration of internal project keys, component names, or customer emails
+verify_steps: GET https://help.desk.avatarux.com/ (follow 302); GET https://help.desk.avatarux.com/servicedesk/customer/portal/; GET https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk; GET https://help.desk.avatarux.com/wiki/ (Confluence); check for unauthenticated REST API responses
+impact: Internal project/infrastructure disclosure, customer ticket data exposure, AvatarUX employee enumeration — MEDIUM
+testability: PASSIVE
+[HYP] cPanel Hosting Control Panel Exposure / Credential Reuse
+class: AUTH
+asset: cpanel.avatarux.com
+confidence: 45
+reasoning: cPanel subdomain exists but unprobed (HTTP unprobed); cPanel on Cloudways shared hosting; if accessible, default/weak credentials or credential reuse from other breaches could grant hosting control; cPanel exposes file manager, databases, email accounts, SSL certs
+evidence_needed: Live HTTP service on cpanel.avatarux.com:2083 (HTTPS) or :2082; login panel accessibility; version disclosure
+verify_steps: GET https://cpanel.avatarux.com:2083/ (HEAD first); GET https://cpanel.avatarux.com:2082/; check for cPanel login page, version in headers/html; passive SSL cert check for cpanel.avatarux.com
+impact: Full hosting compromise — file access, DB access, email takeover, subdomain takeover, SSL key theft — CRITICAL
+testability: PASSIVE
+[PARKED] cPanel Hosting Control Panel Exposure / Credential Reuse: confidence<50 (45), cpanel.avatarux.com unprobed — may not be live or may be Cloudways-managed with no direct access; verify_steps passive-only but need live confirmation first
+[FINAL] 1. BetPanda Affiliate Portal IDOR/BOLA on Affiliate IDs (65)
+[FINAL] 2. Atlassian Help Desk Information Disclosure / Anonymous Access (55)
+[NEXT] PROBE: GET https://affiliates.betpanda.io/ — fetch main page + all referenced JS bundles (main.*.js, chunk.*.js) for API endpoint discovery; analyze for affiliate_id, campaign_id, user_id, apiBaseUrl, or GraphQL endpoints
+[LEARN] REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand or infrastructure)
+[LEARN] REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+[LEARN] REJECTED daimlertruck/elringklinger: out of scope
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
+[RISK] avatarux-studios: 75 — High-value gaming brands (Roobet, Stake, Gamdom, BetPanda, RainBet) with undiscovered game/API infrastructure; discovered BetPanda affiliate portal shows brand assets exist and are testable; AvatarUX corporate infra (Atlassian, cPanel) exposes secondary risk; main game API attack surface likely large but unmapped
+## 2026-09-03 19:45:57 UTC [target] (model nemotron3)
+[NEW] `help.desk.avatarux.com` probe: root 200, `/servicedesk/customer/portal/` 303 (active customer portal), `/rest/servicedeskapi/servicedesk` 401 (auth required), `/wiki/` 200 (Confluence accessible)
+[NEW] `cpanel.avatarux.com`: SSL handshake failure on :2083, wrong version on :2082, root SSL failure — cPanel ports not directly accessible via HTTPS; Cloudflare 1001 persists
+[NEW] `cpcalendars.avatarux.com` confirmed HTTP 500 (benign disabled feature per knowledge)
+[NEW] `affiliates.betpanda.io` confirmed Vite SPA (main.1ae50aab.js), Cloudflare-fronted, **no API routes in JS bundle** — API likely on separate subdomain (e.g., api.betpanda.io, affiliates-api.betpanda.io)
+[CHANGED] `help.desk.avatarux.com` was 302, now 200 with active portal/wiki — higher attack surface than redirect suggested
+[PRIO] `affiliates.betpanda.io`,7.7,attack_surface=7,business_value=9,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] `cpanel.avatarux.com`,6.5,attack_surface=8,business_value=8,tech_exposure=6,gate_ease=3,cloud_surface=6,freshness=5
+[PRIO] `help.desk.avatarux.com`,6.4,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=8,cloud_surface=5,freshness=6
+[PRIO] `autoconfig.avatarux.com`,4.9,attack_surface=4,business_value=3,tech_exposure=4,gate_ease=10,cloud_surface=5,freshness=5
+[PRIO] `api.roobet.com` (undiscovered),8.8,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] `api.stake.com` (undiscovered),8.8,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] `api.gamdom.com` (undiscovered),8.8,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] `api.rainbet.com` (undiscovered),8.8,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[HYP] BetPanda Affiliate Portal API Subdomain Discovery + IDOR on Affiliate IDs
+class: IDOR
+asset: affiliates.betpanda.io
+confidence: 70
+reasoning: Vite SPA affiliate portal for in-scope brand BetPanda; no API routes in JS bundle indicates separate API subdomain; affiliate systems typically use numeric/sequential affiliate_id or campaign_id in API calls; Cloudflare-fronted suggests API also behind Cloudflare
+evidence_needed: API subdomain discovery (api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io); API endpoint showing affiliate_id/campaign_id parameters; unauthorized access to other affiliates' stats/commissions/payouts
+verify_steps: GET https://affiliates.betpanda.io/ (re-fetch JS bundles for apiBaseUrl, GraphQL endpoint, websocket URLs); passive DNS for *.betpanda.io subdomains (crt.sh, subfinder); GET https://api.betpanda.io/ (HEAD); GET https://affiliates-api.betpanda.io/ (HEAD); if API found, test IDOR on /affiliates/{id}/stats, /campaigns/{id}/commissions with different affiliate IDs
+impact: Cross-affiliate PII dump (email, payment details), commission theft, campaign manipulation — HIGH
+testability: PASSIVE
+[HYP] Atlassian Confluence Wiki Anonymous Space Enumeration / Internal Project Disclosure
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 60
+reasoning: Probe confirms `/wiki/` returns 200 (Confluence accessible); `/servicedesk/customer/portal/` returns 303 (active customer portal); `/rest/servicedeskapi/servicedesk` returns 401 (REST API auth required); public Confluence wikis often expose space names, page titles, user mentions, or allow anonymous space listing via `/rest/api/space` or `/spaces/viewdefaultdecorator.action`
+evidence_needed: Anonymous access to Confluence REST API `/rest/api/space`, `/rest/api/content`, `/rest/api/user`; enumeration of space keys, page titles, user accounts; JSM customer portal project enumeration via `/servicedesk/customer/portal/` or `/rest/servicedeskapi/servicedesk/{id}/requesttype`
+[0m
+[0m$ [0mdig +short cpanel.avatarux.com CNAME 2>/dev/null; echo "---"; dig +short cpanel.avatarux.com A 2>/dev/null; echo "---"; dig +short avatarux.com A 2>/dev/null; echo "---"; dig +short affiliates.betpanda.io A 2>/dev/null; echo "---"; dig +short custom-lp.betpanda.io A 2>/dev/null; echo "---"; dig +short fp.betpanda.io A 2>/dev/null; echo "---"; dig +short betpandacasino.io A 2>/dev/null
+avatarux.com.
+---
+avatarux.com.
+162.159.136.54
+---
+162.159.136.54
+---
+104.20.24.24
+172.66.161.135
+---
+104.20.24.24
+172.66.161.135
+---
+104.20.24.24
+172.66.161.135
+---
+172.66.175.171
+104.20.21.21
+[0m
+[0m$ [0mcurl -sk -o /dev/null -w "cpanel HTTP:%{http_code} size:%{size_download}\n" --max-time 15 https://cpanel.avatarux.com/ ; curl -s -o /dev/null -w "confighost HTTP:%{http_code}\n" --max-time 15 https://api.certspotter.com/v1/issuances?domain=avatarux.com\&include_subdomains=true\&expand=dns_names
+cpanel HTTP:000 size:0
+confighost HTTP:200
+[0m
+[0m$ [0mcurl -s --max-time 20 "https://api.certspotter.com/v1/issuances?domain=avatarux.com&include_subdomains=true&expand=dns_names" | python3 -c "import sys,json; d=json.load(sys.stdin); names=set(); [names.update(e.get('dns_names',[])) for e in d]; print('\n'.join(sorted(names)))" 2>/dev/null | sort -u
+autoconfig.avatarux.com
+autodiscover.avatarux.com
+avatarux.com
+cpcalendars.avatarux.com
+cpcontacts.avatarux.com
+help.desk.avatarux.com
+mail.avatarux.com
+parlaybay-flow.avatarux.com
+parlaybay.avatarux.com
+webdisk.avatarux.com
+www.avatarux.com
+www.parlaybay-flow.avatarux.com
+www.parlaybay.avatarux.com
+[0m
+[0m$ [0mcurl -s --max-time 20 "https://api.certspotter.com/v1/issuances?domain=betpanda.io&include_subdomains=true&expand=dns_names" | python3 -c "import sys,json; d=json.load(sys.stdin); names=set(); [names.update(e.get('dns_names',[])) for e in d]; print('\n'.join(sorted(names)))" 2>/dev/null | sort -u | head -60
+*.betpanda.io
+*.betpanda1.io
+*.betpanda99.io
+betpanda.io
+betpanda1.io
+betpanda99.io
+cable.betpanda.io
+custom-lp.betpanda.io
+fp.betpanda.io
+stage.betpanda.io
+[0m
+[0m$ [0mfor h in stage.betpanda.io parlaybay.avatarux.com parlaybay-flow.avatarux.com webdisk.avatarux.com www.parlaybay.avatarux.com; do echo "== $h"; dig +short $h A | head -3; done
+== stage.betpanda.io
+== parlaybay.avatarux.com
+162.241.253.168
+== parlaybay-flow.avatarux.com
+162.241.253.168
+== webdisk.avatarux.com
+162.241.253.168
+== www.parlaybay.avatarux.com
+162.241.253.168
+[0m
+[0m$ [0mfor h in stage.betpanda.io parlaybay.avatarux.com webdisk.avatarux.com; do echo "== $h"; curl -sk -o /dev/null -w "  HTTP:%{http_code} size:%{size_download} redirect:%{redirect_url}\n" --max-time 15 "https://$h/" ; done
+== stage.betpanda.io
+  HTTP:000 size:0 redirect:
+== parlaybay.avatarux.com
+  HTTP:301 size:0 redirect:https://parlaybay.com/
+== webdisk.avatarux.com
+  HTTP:500 size:706 redirect:
+[0m
+[0m$ [0mecho "== stage.betpanda.io full"; dig +trace stage.betpanda.io 2>/dev/null | tail -5; echo "== stage cname"; dig +short stage.betpanda.io CNAME; echo "(end)"; echo "== betpanda1.io / betpanda99.io"; for d in betpanda1.io betpanda99.io; do echo " $d: $(dig +short $d A | head -1)"; done
+== stage.betpanda.io full
+;; no servers could be reached
+;; UDP setup with 2803:f800:50::6ca2:c36c#53(2803:f800:50::6ca2:c36c) for stage.betpanda.io failed: network unreachable.
+betpanda.io.		1800	IN	SOA	javon.ns.cloudflare.com. dns.cloudflare.com. 2412553764 10000 2400 604800 1800
+;; Received 109 bytes from 172.64.35.108#53(javon.ns.cloudflare.com) in 14 ms
+
+== stage cname
+(end)
+== betpanda1.io / betpanda99.io
+ betpanda1.io: 104.26.0.97
+ betpanda99.io: 172.67.138.69
+[0m
+[0m$ [0mfor h in parlaybay.avatarux.com parlaybay-flow.avatarux.com webdisk.avatarux.com www.parlaybay.avatarux.com; do echo "== $h"; dig +short $h CNAME; done; echo "== parlaybay.com"; curl -sk -o /dev/null -w "  parlaybay.com HTTP:%{http_code} size:%{size_download}\n" --max-time 15 "https://parlaybay.com/"; curl -sk -o /dev/null -w "  www.parlaybay.com→ %{redirect_url} HTTP:%{http_code}\n" --max-time 15 -I "https://www.parlaybay.com/"
+== parlaybay.avatarux.com
+== parlaybay-flow.avatarux.com
+== webdisk.avatarux.com
+== www.parlaybay.avatarux.com
+== parlaybay.com
+  parlaybay.com HTTP:000 size:0
+  www.parlaybay.com→ https://parlaybay.com/ HTTP:301
+[0m
+[0m$ [0mecho "== parlaybay.com DNS"; dig +short parlaybay.com A | head -3; echo "== redirect path preservation"; curl -sk -o /dev/null -w "  parlaybay.avatarux.com/xyz -> %{redirect_url} HTTP:%{http_code}\n" --max-time 15 -I "https://parlaybay.avatarux.com/xyz"; echo "== http variant"; curl -s -o /dev/null -w "  http://parlaybay.avatarux.com -> %{redirect_url} HTTP:%{http_code}\n" --max-time 15 -I "http://parlaybay.avatarux.com/"
+== parlaybay.com DNS
+52.96.222.136
+40.99.140.232
+40.99.191.168
+== redirect path preservation
+  parlaybay.avatarux.com/xyz ->  HTTP:404
+== http variant
+  http://parlaybay.avatarux.com -> https://parlaybay.avatarux.com/ HTTP:301
+[0m
+[0m$ [0mfor d in betpanda1.io betpanda99.io; do echo "== $d"; curl -sk -o /dev/null -w "  HTTP:%{http_code} redirect:%{redirect_url} size:%{size_download}\n" --max-time 15 -I "https://$d/"; done
+== betpanda1.io
+  HTTP:200 redirect: size:0
+== betpanda99.io
+  HTTP:525 redirect: size:0
+[0m
+[0m$ [0mgrep -n "rest/public\|public/" leads/lead-bigpickle.md leads/lead-nemotron3.md reports/hypotheses-bigpickle.txt 2>/dev/null | sort -u | head -40
+leads/lead-bigpickle.md:274:[NEW] `/rest/public/config` endpoint leaks operatorId=1, Strapi CMS config, support email, currency list — full backend config disclosure
+leads/lead-bigpickle.md:275:[NEW] `/rest/public/recover-password/email/{email}` accepts arbitrary emails, returns 204 (password reset trigger — potential account enumeration/reset bypass candidate)
+leads/lead-bigpickle.md:289:reasoning: Endpoint `/rest/player/uid/{id}?currency={curr}` accepts integer player IDs from URL path. JS bundle shows this is called as `Yt()+/player/uid/` + player uid. With cookie-based auth (`withCredentials: true`), any authenticated affiliate could enumerate player UIDs to access cross-affiliate player data. Password reset endpoint `/rest/public/recover-password/email/{email}` returns 204 for any email — possible account enumeration or reset poisoning.
+leads/lead-bigpickle.md:291:verify_steps: 1. GET /rest/public/config — confirm operatorId and full config (DONE: operatorId=1). 2. POST /rest/public/login with valid creds to obtain session. 3. GET /rest/player/uid/1?currency=BTC — observe if response differs by uid. 4. POST /rest/transaction/list with {"affiliateId":1} and {"affiliateId":2} — test IDOR on affiliate scope.
+leads/lead-bigpickle.md:296:asset: affiliates.betpanda.io/rest/public/recover-password/email/{email}
+leads/lead-bigpickle.md:300:verify_steps: 1. GET /rest/public/recover-password/email/valid@betpanda.io — measure time. 2. GET /rest/public/recover-password/email/nonexistent123@betpanda.io — compare time + response. 3. Repeat 5x rapidly to test rate limiting.
+leads/lead-bigpickle.md:316:[NEXT] PROBE: Test password reset timing differential — GET /rest/public/recover-password/email/admin@betpanda.io vs /rest/public/recover-password/email/nonexistent_xyz_999@betpanda.io — measure response time and body for account enumeration. Simultaneously probe /rest/public/register to map registration flow and any exposed fields.
+leads/lead-bigpickle.md:317:[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+leads/lead-bigpickle.md:339:verify_steps: 1. POST /rest/public/register (POST, mutating test account only) or use provided creds. 2. GET /rest/player/uid/1?currency=EUR → observe JSON fields. 3. GET /rest/player/uid/99999?currency=EUR → null/error handler behavior; size differential = IDOR signal.
+leads/lead-nemotron3.md:630:[NEW] `/rest/public/config` on affiliates.betpanda.io leaks operatorId=1, Strapi CMS config, support email, full currency list — backend config disclosure
+leads/lead-nemotron3.md:631:[NEW] `/rest/public/recover-password/email/{email}` on affiliates.betpanda.io accepts arbitrary emails in URL path, returns 204 no body — potential account enumeration/reset bypass
+leads/lead-nemotron3.md:653:reasoning: Endpoint `/rest/player/uid/{id}?currency={curr}` accepts integer player IDs from URL path. JS bundle shows call pattern `Yt()+/player/uid/` + player uid. With cookie-based auth (`withCredentials: true`), any authenticated affiliate could enumerate player UIDs to access cross-affiliate player data. `/rest/public/config` already confirms operatorId=1 and full backend config. `/config/config.json` confirms API base = same-origin `/rest`.
+leads/lead-nemotron3.md:655:verify_steps: 1. GET /rest/public/config — confirm operatorId and config (DONE). 2. POST /rest/public/login with valid creds to obtain session cookie. 3. GET /rest/player/uid/1?currency=BTC — observe response structure. 4. GET /rest/player/uid/2?currency=BTC — compare for cross-affiliate data leak. 5. POST /rest/transaction/list with {"affiliateId":1} then {"affiliateId":2} — test IDOR on affiliate scope.
+leads/lead-nemotron3.md:660:asset: affiliates.betpanda.io/rest/public/recover-password/email/{email}
+leads/lead-nemotron3.md:664:verify_steps: 1. GET /rest/public/recover-password/email/admin@betpanda.io — measure response time (ms). 2. GET /rest/public/recover-password/email/nonexistent_xyz_999@betpanda.io — measure time + compare body. 3. Repeat 5x rapidly (1 rps max) to test rate limiting. 4. GET /rest/public/register — map registration flow for additional enumeration vectors.
+leads/lead-nemotron3.md:682:[NEXT] PROBE: Test password reset timing differential — GET https://affiliates.betpanda.io/rest/public/recover-password/email/admin@betpanda.io vs GET https://affiliates.betpanda.io/rest/public/recover-password/email/nonexistent_xyz_999@betpanda.io — measure response time (ms) and body for account enumeration. Concurrently GET https://affiliates.betpanda.io/rest/public/register to map registration flow and any exposed fields.
+leads/lead-nemotron3.md:683:[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId=1, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+reports/hypotheses-bigpickle.txt:17:verify_steps: 1. POST /rest/public/register (POST, mutating test account only) or use provided creds. 2. GET /rest/player/uid/1?currency=EUR → observe JSON fields. 3. GET /rest/player/uid/99999?currency=EUR → null/error handler behavior; size differential = IDOR signal.
+[0m
+[0m$ [0mgrep -n "rest/" leads/lead-bigpickle.md 2>/dev/null | tail -40
+274:[NEW] `/rest/public/config` endpoint leaks operatorId=1, Strapi CMS config, support email, currency list — full backend config disclosure
+275:[NEW] `/rest/public/recover-password/email/{email}` accepts arbitrary emails, returns 204 (password reset trigger — potential account enumeration/reset bypass candidate)
+278:[NEW] Full API endpoint map extracted from JS bundle: `/rest/player/uid/{id}`, `/rest/transaction/list`, `/rest/agent/*`, `/rest/v2/report`, `/rest/payouts/single-currency-list`, `/rest/trk/*` — all auth-gated but IDOR-vulnerable by design pattern (user-supplied IDs)
+287:asset: affiliates.betpanda.io/rest/player/uid/{id}
+289:reasoning: Endpoint `/rest/player/uid/{id}?currency={curr}` accepts integer player IDs from URL path. JS bundle shows this is called as `Yt()+/player/uid/` + player uid. With cookie-based auth (`withCredentials: true`), any authenticated affiliate could enumerate player UIDs to access cross-affiliate player data. Password reset endpoint `/rest/public/recover-password/email/{email}` returns 204 for any email — possible account enumeration or reset poisoning.
+291:verify_steps: 1. GET /rest/public/config — confirm operatorId and full config (DONE: operatorId=1). 2. POST /rest/public/login with valid creds to obtain session. 3. GET /rest/player/uid/1?currency=BTC — observe if response differs by uid. 4. POST /rest/transaction/list with {"affiliateId":1} and {"affiliateId":2} — test IDOR on affiliate scope.
+296:asset: affiliates.betpanda.io/rest/public/recover-password/email/{email}
+300:verify_steps: 1. GET /rest/public/recover-password/email/valid@betpanda.io — measure time. 2. GET /rest/public/recover-password/email/nonexistent123@betpanda.io — compare time + response. 3. Repeat 5x rapidly to test rate limiting.
+316:[NEXT] PROBE: Test password reset timing differential — GET /rest/public/recover-password/email/admin@betpanda.io vs /rest/public/recover-password/email/nonexistent_xyz_999@betpanda.io — measure response time and body for account enumeration. Simultaneously probe /rest/public/register to map registration flow and any exposed fields.
+317:[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+335:asset: affiliates.betpanda.io/rest/player/uid/{id}
+338:evidence_needed: Valid affiliate session; then compare GET /rest/player/uid/1 vs uid/2 vs uid=own-remote-player.
+339:verify_steps: 1. POST /rest/public/register (POST, mutating test account only) or use provided creds. 2. GET /rest/player/uid/1?currency=EUR → observe JSON fields. 3. GET /rest/player/uid/99999?currency=EUR → null/error handler behavior; size differential = IDOR signal.
+344:asset: betpandacasino.io/rest/user
+346:reasoning: GET /rest/user returns 200 "User Resource" (static text/plain) while /rest/error returns 200 empty — a Spring Boot scaffold mapped but never removed, deployed to production origin. Suggests other unauthenticated resource mappings may exist beyond the 20 paths probed (all 404).
+348:verify_steps: 1. Small read-only HEAD/GET wordlist on plausible singular resources (/watch, /play, /game, /wallet, /promo). 2. OPTIONS /rest/user for allowed-method hints (read-only).
+[0m
+[0m$ [0mecho "== betpanda1.io root"; curl -sk --max-time 15 "https://betpanda1.io/" | head -c 400; echo; echo "== betpanda1.io config"
+== betpanda1.io root
+<!doctype html>
+<html lang="en">
+  <head><link rel="preconnect" href="https://d3ec3n7kizfkuy.cloudfront.net">
+<link rel="preconnect" href="https://d3ec3n7kizfkuy.cloudfront.net" crossorigin>
+<link rel="dns-prefetch" href="https://d3ec3n7kizfkuy.cloudfront.net">
+<script>
+          (function () {
+    if (!localStorage.getItem('rc-referrer')) {
+        const referrer = document.referrer;
+        let 
+== betpanda1.io config
+[0m
+[0m$ [0mcurl -sk -o /dev/null -w "  cfgs HTTP:%{http_code} size:%{size_download}\n" --max-time 15 "https://betpanda1.io/config/config.json"; curl -sk -o /dev/null -w "  rest HTTP:%{http_code} size:%{size_download}\n" --max-time 15 -I "https://betpanda1.io/rest/"
+cfgs HTTP:200 size:51
+  rest HTTP:200 size:0
+[0m
+[0m$ [0mcurl -sk --max-time 15 "https://betpanda1.io/config/config.json"; echo; echo "== betpanda1.io host header vs domain"; curl -sk -o /dev/null -w "  cloudfront-host HTTP:%{http_code} size:%{size_download}\n" --max-time 15 -I "https://d3ec3n7kizfkuy.cloudfront.net/"
+{
+  "baseUrl" : "https://betpandacasino.io/rest"
+}
+
+== betpanda1.io host header vs domain
+  cloudfront-host HTTP:403 size:0
+[0m
+[0m$ [0mfor p in "/rest/" "/rest/public/config" "/config/config.json" "/rest/user" "/rest/health" "/rest/version"; do curl -sk -o /tmp/r.bin -w "  betpandacasino.io$p -> HTTP:%{http_code} size:%{size_download} ctype:%{content_type}\n" --max-time 15 "https://betpandacasino.io$p"; done
+betpandacasino.io/rest/ -> HTTP:200 size:54 ctype:text/plain;charset=UTF-8
+  betpandacasino.io/rest/public/config -> HTTP:404 size:89 ctype:application/json
+  betpandacasino.io/config/config.json -> HTTP:200 size:51 ctype:application/json
+  betpandacasino.io/rest/user -> HTTP:200 size:13 ctype:text/plain;charset=UTF-8
+  betpandacasino.io/rest/health -> HTTP:404 size:82 ctype:application/json
+  betpandacasino.io/rest/version -> HTTP:404 size:83 ctype:application/json
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcat /tmp/r.bin 2>/dev/null | head -2; echo; for p in "/config/config.json" "/rest/actuator" "/rest/actuator/health" "/rest/swagger-ui.html" "/rest/v2/api-docs" "/rest/v3/api-docs" "/rest/error"; do curl -sk -o /tmp/b.bin -w "  $p -> HTTP:%{http_code} size:%{size_download} ctype:%{content_type}\n" --max-time 12 "https://betpandacasino.io$p"; done failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.

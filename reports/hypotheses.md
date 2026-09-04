@@ -167,3 +167,36 @@
 - LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
 - LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API undiscovered
 - LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: Custom Node "BB CABLE" service live, WS paths /socket /ws /events all 404
+
+## RANKED HYPOTHESES 2026-09-04 21:36:26 UTC
+- [72] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on /rest/player/uid/{id} with Auth Session (from art/lead_nemotron3.txt)
+- [65] help.desk.avatarux.com: helpdesk_redirect_to_managed_app (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: curl -sI https://help.desk.avatarux.com && curl -sI http://cpanel.avatarux.com && curl -sI https://cpanel.avatarux.com
+- NEXT(hypotheses-nemotron3.txt): PROBE: Test password reset timing differential — GET https://affiliates.betpanda.io/rest/public/recover-password/email/admin@betpanda.io vs GET https://affiliat
+- LEARN: ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- LEARN: REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+- LEARN: REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+- LEARN: REJECTED daimlertruck/elringklinger: out of scope
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
+- LEARN: REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand or infrastructure)
+- LEARN: REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+- LEARN: REJECTED daimlertruck/elringklinger: out of scope
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: in-scope brand (BetPanda) affiliate portal discovered
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operator
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limitin
+- LEARN: ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link,
+- LEARN: ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- LEARN: ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303

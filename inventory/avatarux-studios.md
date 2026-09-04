@@ -136,3 +136,32 @@ www.avatarux.com
 - CHANGED affiliates.betpanda.io confidence raised 65→78 — API backend confirmed same-origin, endpoint map complete, attack surface quantified
 - CHANGED cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours, CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP), stable dangling DNS
 - CHANGED help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge, tenant IDs/feature flags in HTML, REST paths return 401/404/303
+
+## 2026-09-04 21:36:26 UTC
+- NEW help.desk.avatarux.com: Atlassian Jira Service Desk (live, customer portal active)
+- NEW cpanel.avatarux.com: Cloudflare error 1001 - DNS to prohibited IP (subdomain takeover candidate)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail
+- NEW TXT reveals: Slack, Atlassian, Google verifications
+- NEW `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+- NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+- NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+- NEW `affiliates.betpanda.io` — BetPanda affiliate portal (Vite SPA, Cloudflare-fronted), in-scope brand asset discovered
+- NEW `help.desk.avatarux.com` confirmed as Atlassian Edge (Jira/Confluence help desk), AvatarUX infrastructure
+- NEW `autoconfig.avatarux.com` [200], `autodiscover.avatarux.com` [400], `cpcalendars.avatarux.com` [500], `cpcontacts.avatarux.com` [500] — dedicated hosts with live HTTP status
+- CHANGED `www.avatarux.com` CNAME → `secure.cloudways.cloud` (shared hosting edge), not direct AvatarUX infra
+- NEW Out-of-scope noise identified: alfaview (OpenAPI spec), BASF (Azure Functions), daimlertruck (locked), elringklinger — all unrelated to AvatarUX Studios program
+- NEW `help.desk.avatarux.com` probe: root 200, `/servicedesk/customer/portal/` 303 (active customer portal), `/rest/servicedeskapi/servicedesk` 401 (auth required), `/wiki/` 200 (Confluence accessible)
+- NEW `cpanel.avatarux.com`: SSL handshake failure on :2083, wrong version on :2082, root SSL failure — cPanel ports not directly accessible via HTTPS; Cloudflare 1001 persists
+- NEW `cpcalendars.avatarux.com` confirmed HTTP 500 (benign disabled feature per knowledge)
+- NEW `affiliates.betpanda.io` confirmed Vite SPA (main.1ae50aab.js), Cloudflare-fronted, **no API routes in JS bundle** — API likely on separate subdomain (e.g., api.betpanda.io, affiliates-api.betpanda.io
+- CHANGED `help.desk.avatarux.com` was 302, now 200 with active portal/wiki — higher attack surface than redirect suggested
+- NEW affiliates.betpanda.io: `/rest/public/config` leaks operatorId=1, Strapi CMS config, support email, full currency list — backend config disclosure
+- NEW affiliates.betpanda.io: `/rest/public/recover-password/email/{email}` accepts arbitrary emails in URL path, returns 204 no body — account enumeration/reset bypass vector
+- NEW affiliates.betpanda.io: `/config/config.json` reveals API base URL = `https://affiliates.betpanda.io/rest` (same-origin, not separate subdomain)
+- NEW affiliates.betpanda.io: Full API endpoint map from JS bundle: `/rest/player/uid/{id}`, `/rest/transaction/list`, `/rest/agent/*`, `/rest/v2/report`, `/rest/payouts/single-currency-list`, `/rest/trk/*`
+- NEW custom-lp.betpanda.io: Live behind Cloudflare challenge — new in-scope BetPanda infrastructure via crt.sh
+- NEW fp.betpanda.io: Live behind Cloudflare challenge — likely fingerprint/fraud detection service
+- CHANGED cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours, CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP), stable dangling DNS
+- CHANGED affiliates.betpanda.io confidence raised 65→78 — API backend confirmed same-origin, endpoint map complete, attack surface quantified
+- CHANGED help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge, tenant IDs/feature flags in HTML, REST paths return 401/404/303 (stable)

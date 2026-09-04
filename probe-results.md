@@ -68,3 +68,16 @@ https://crt.sh/?q=%.avatarux.com -> 200 len=?
 https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
 https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out
 https://api.certspotter.com/v1/issuances?domain=avatarux.com&include_subdomains=true&expand=dns_names` -> 200 len=?
+
+## 2026-09-04 21:36:42 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> HTTP 502
+https://help.desk.avatarux.com -> 200 len=?
+https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpcalendars.avatarux.com -> HTTP 500
+https://help.desk.avatarux.com/ -> 200 len=?
+https://help.desk.avatarux.com/servicedesk/customer/portal/ -> HTTP 303
+https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401
+https://help.desk.avatarux.com/wiki/ -> 200 len=?
+https://cpanel.avatarux.com:2083/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://cpanel.avatarux.com:2082/ -> ERR <urlopen error [SSL: WRONG_VERSION_NUMBER] wrong v
