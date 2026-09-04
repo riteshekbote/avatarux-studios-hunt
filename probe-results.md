@@ -81,3 +81,10 @@ https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401
 https://help.desk.avatarux.com/wiki/ -> 200 len=?
 https://cpanel.avatarux.com:2083/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
 https://cpanel.avatarux.com:2082/ -> ERR <urlopen error [SSL: WRONG_VERSION_NUMBER] wrong v
+
+## 2026-09-04 23:20:39 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> 200 len=?
+https://help.desk.avatarux.com/wiki/rest/api/space?limit=5 -> 200 len=?
+https://help.desk.avatarux.com/wiki/rest/api/content?limit=5 -> 200 len=?
+https://help.desk.avatarux.com/wiki/spaces/viewdefaultdecorator.action -> 202 len=0

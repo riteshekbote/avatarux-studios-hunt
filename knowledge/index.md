@@ -51,3 +51,9 @@
 - 2026-09-04 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
 - 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId=1, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
 - 2026-09-04 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand or infrastructure)
+- 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: real API base discovered = same-origin /rest (config/config.json, mirrors affiliates) — SPA catch-all /graphql,/api were pure shell, puzzle now resolved
+- 2026-09-04 ACCEPTED MISCONFIG @ betpandacasino.io: /rest/properties/manifest public; backend = Spring Boot via JSON 404/405 signature; no actuator/swagger/api-docs exposed
+- 2026-09-04 ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL; new BetPanda subdomain, challenge-gated
+- 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: bundle leaks AWS client assets: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public — mapping only, no misconfig
+- 2026-09-04 REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+- 2026-09-04 REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface

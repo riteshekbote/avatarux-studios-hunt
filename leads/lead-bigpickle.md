@@ -546,3 +546,49 @@ asset: help.desk.avatarux.com
 confidence: 60
 reasoning: Probe confirms `/wiki/` returns 200 (Confluence accessible); `/servicedesk/customer/portal/` returns 303 (active customer portal); `/rest/servicedeskapi/servicedesk` returns 401 (REST API auth required); public Confluence wikis often expose space names, page titles, user mentions, or allow anonymous space listing via `/rest/api/space` or `/spaces/viewdefaultdecorator.action`
 evidence_needed: Anonymous access to Confluence REST API `/rest/api/space`, `/rest/api/content`, `/rest/api/user`; enumeration of space keys, page titles, user accounts; JSM customer portal project enumeration via `/servicedesk/customer/portal/` or `/rest/servicedeskapi/servicedesk/{id}/requesttype`
+## 2026-09-04 23:20:23 UTC [target] (model bigpickle)
+[PRIO] betpandacasino.io,8.15,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=4,cloud_surface=7,freshness=9
+[PRIO] affiliates.betpanda.io,7.7,attack_surface=7,business_value=9,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] help.desk.avatarux.com,6.4,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=8,cloud_surface=5,freshness=6
+[PRIO] flags.betpanda.io,4.6,attack_surface=4,business_value=5,tech_exposure=5,gate_ease=2,cloud_surface=4,freshness=9
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 65
+reasoning: /config/config.json + /rest/public/config confirm backend, operatorId=1 leaked; endpoint map includes /rest/player/uid/{id}; path-parameter id pattern is classic BOLA; API is same-origin /rest behind Cloudflare
+evidence_needed: two affiliate sessions with different uid — cross-tenant response diff on /rest/player/uid/{alt_id}
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/{own_id} with session A (baseline); repeat with {alt_id} — observe data of another affiliate
+impact: Cross-affiliate player/PII dump, commission/payout theft — HIGH
+testability: AUTH_HELPED
+[HYP] Atlassian Confluence Wiki Anonymous Space Enumeration / Internal Project Disclosure
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 55
+reasoning: /wiki/ returns 200/303, JSM portal 303, /rest/servicedeskapi/servicedesk 401; Atlassian Edge front may pass through to instance via alternate path roots (/wiki/rest/api, /wiki/pages, /wiki/secure)
+evidence_needed: anonymous 200 from /wiki/rest/api/space, /wiki/rest/api/content, or /wiki/secure/ViewUserHover.jspa producing space keys/page titles/user emails
+verify_steps: GET https://help.desk.avatarux.com/wiki/rest/api/space?limit=5; GET https://help.desk.avatarux.com/wiki/rest/api/content?limit=5; GET https://help.desk.avatarux.com/wiki/spaces/viewdefaultdecorator.action
+impact: Internal project/infrastructure disclosure, employee enumeration — MEDIUM
+testability: PASSIVE
+[HYP] Casino /rest JWT Session Weakness / Zendesk SSO Trust Boundary
+class: AUTH
+asset: betpandacasino.io/rest/user/*
+confidence: 45
+reasoning: Spring Boot /rest; auth = /user/authenticate + /user/refresh; /user/account-balances-and-bonuses exposes financial state; /user/zendesk/jwt (POST, 405 on GET) issues third-party SSO JWTs — anonymous issuance or broken session validation would allow helpdesk impersonation/account access
+evidence_needed: 401 vs 200 on unauthenticated /rest/user/account-balances-and-bonuses; POST /rest/user/zendesk/jwt response without session; JWT alg/signature handling on /user/refresh
+verify_steps: GET https://betpandacasino.io/rest/user/account-balances-and-bonuses (expect 401 — confirm gate); OPTIONS https://betpandacasino.io/rest/user/zendesk/jwt; POST /rest/user/authenticate only with authorized test account (not now)
+impact: ATO, fund manipulation, helpdesk impersonation — HIGH
+testability: AUTH_HELPED
+[PARKED] flags.betpanda.io Flipt unauth flag access: Cloudflare 403 challenge gates all passive access; requires browser session (HUMAN), low demonstrated impact on feature-flag values
+[PARKED] betpandacasino.io `/rest/public/config`: 404 (opposite of affiliates leak) — spring app reveals via /rest/properties/* instead, already harvested; no new surface
+[PARKED] nano-public S3 listing: AccessDenied — public-by-object only, no bucket-level misconfig
+[FINAL] 1. BetPanda Affiliate IDOR /rest/player/uid/{id} (65, AUTH_HELPED)
+[FINAL] 2. Atlassian Confluence Wiki Anonymous Space Enumeration (55, PASSIVE)
+[FINAL] 3. Casino /rest JWT Session / Zendesk SSO Trust Boundary (45, AUTH_HELPED)
+[NEXT] PROBE: GET https://betpandacasino.io/rest/user/account-balances-and-bonuses (unauthenticated) — confirm 401 auth-gate vs 200 money-data leak on newly discovered casino API; then GET https://help.desk.avatarux.com/wiki/rest/api/space?limit=5
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: real API base discovered = same-origin /rest (config/config.json, mirrors affiliates) — SPA catch-all /graphql,/api were pure shell, puzzle now resolved
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/properties/manifest public; backend = Spring Boot via JSON 404/405 signature; no actuator/swagger/api-docs exposed
+[LEARN] ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL; new BetPanda subdomain, challenge-gated
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: bundle leaks AWS client assets: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public — mapping only, no misconfig
+[LEARN] REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+[RISK] avatarux-studios: 80 — betpandacasino.io casino API now mapped and same-origin /rest (JWT auth + Spring), player-funds surface reachable; affiliates IDOR candidate stays best concrete path but needs a second session; AvatarUX corporate (Atlassian/cPanel) attack surface unchanged; only gate-lift is credentialed testing which is not yet authorized.

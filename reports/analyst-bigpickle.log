@@ -4387,3 +4387,297 @@ betpandacasino.io/rest/ -> HTTP:200 size:54 ctype:text/plain;charset=UTF-8
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mcat /tmp/r.bin 2>/dev/null | head -2; echo; for p in "/config/config.json" "/rest/actuator" "/rest/actuator/health" "/rest/swagger-ui.html" "/rest/v2/api-docs" "/rest/v3/api-docs" "/rest/error"; do curl -sk -o /tmp/b.bin -w "  $p -> HTTP:%{http_code} size:%{size_download} ctype:%{content_type}\n" --max-time 12 "https://betpandacasino.io$p"; done failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-04 23:20:31 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/ && ls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/art 2>/dev/null
+total 164
+drwxr-xr-x 12 runner runner  4096 Sep  4 23:17 .
+drwxr-xr-x  3 runner runner  4096 Sep  4 23:17 ..
+drwxr-xr-x  7 runner runner  4096 Sep  4 23:17 .git
+drwxr-xr-x  3 runner runner  4096 Sep  4 23:17 .github
+-rw-r--r--  1 runner runner  1738 Sep  4 23:17 README.md
+-rw-r--r--  1 runner runner    32 Sep  4 23:17 analyst-out.txt
+-rw-r--r--  1 runner runner 39403 Sep  4 23:17 analyst-prompt.txt
+-rw-r--r--  1 runner runner 35567 Sep  4 23:17 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 leads
+-rw-r--r--  1 runner runner  3843 Sep  4 23:17 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 reports
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 reposcan-raw
+-rw-r--r--  1 runner runner  3249 Sep  4 23:17 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 scripts
+-rw-r--r--  1 runner runner    33 Sep  4 23:17 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  4 23:17 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  4 23:17 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  4 23:17 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  4 23:17 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  4 23:17 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  4 23:17 triage
+[0m
+[0m$ [0mmkdir -p /tmp/opencode/bpc && curl -s --max-time 20 https://betpandacasino.io/ -o /tmp/opencode/bpc/index.html -w "HTTP %{http_code} size=%{size_download}\n"
+HTTP 200 size=7598
+[0m
+[0m→ [0mRead /tmp/opencode/bpc/index.html
+[0m→ [0mRead state_bigpickle.json
+[0m
+[0m$ [0mcurl -s --max-time 20 https://betpandacasino.io/rest/properties/manifest -w "\nHTTP %{http_code} type=%{content_type} size=%{size_download}\n" | head -40
+{
+  "name": "Betpanda",
+  "short_name": "Betpanda",
+  "description": "Leading Crypto Gaming Platform",
+  "lang": "en",
+  "start_url": "/app",
+  "display": "standalone",
+  "theme_color": "#171F2B",
+  "background_color": "#171F2B",
+  "icons": [
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-196.png",
+      "sizes": "196x196",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+[0m
+`/rest` API surface confirmed live on betpandacasino.io. Now pulling the SPA bundle for endpoint extraction.
+[0m$ [0mcurl -s --max-time 30 https://betpandacasino.io/assets/index-KqswHEbl.js -o /tmp/opencode/bpc/main.js -w "HTTP %{http_code} size=%{size_download}\n"
+HTTP 200 size=795572
+[0m
+[0m$ [0mgrep -oE '["'"'"'`](/rest/[a-zA-Z0-9_/{}$.:%?=&-]+)["'"'"'`]' /tmp/opencode/bpc/main.js | sort -u | head -80
+(no output)
+[0m
+[0m$ [0mgrep -oE 'https?://[a-zA-Z0-9.-]+\.[a-z]{2,}[a-zA-Z0-9./_-]*' /tmp/opencode/bpc/main.js | sort -u | head -60
+http://host.docker.internal
+https://bit.ly/CRA-PWA
+https://bit.ly/CRA-PWA.Version
+https://dataplane.rum.
+https://fonts.googleapis.com/css
+https://fonts.googleapis.com/css2
+https://github.com/aws-observability/aws-rum-web/issues/723
+https://github.com/uuidjs/uuid
+[0m
+[0m$ [0mgrep -oE '"/[a-zA-Z0-9_./{}:$-]{3,60}"' /tmp/opencode/bpc/main.js | sort -u | grep -iE 'rest|api|user|auth|login|deposit|with|wallet|bonus|game|profile|session|v[0-9]|flag' | head -80
+"/rest"
+"/user/account-balances-and-bonuses"
+"/user/authenticate"
+"/user/logout"
+"/user/zendesk/jwt"
+[0m
+[0m$ [0mgrep -oiE '(apiBaseUrl|apiUrl|baseUrl|baseurl|BASE_URL|apiEndpoint|API_HOST|api\.betpanda|/rest[^"'"'"' ]*|graphql|getmati|flipt)' /tmp/opencode/bpc/main.js | sort | uniq -c | sort -rn | head -40
+36 baseUrl
+     13 flipt
+     11 baseURL
+      8 Flipt
+      6 BaseUrl
+      4 apiUrl
+      4 /rest
+      2 FLIPT
+      2 ApiUrl
+[0m
+[0m$ [0mgrep -oE '(baseURL|baseUrl)[^;,]{0,80}' /tmp/opencode/bpc/main.js | sort -u | head -30
+baseURL
+baseURL:I
+baseURL:a
+baseURL=n().environmentBaseUrl
+baseURL=t().environmentBaseUrl}function q(f){f.defaults.baseURL=t().spaceBaseUrl}return
+baseURL||"".concat(n
+baseURL}environments/${t.environment}`})
+baseUrl
+baseUrl&&this.baseUrl!=""}fetchContent(e
+baseUrl)&&i.headers.set("Authorization"
+baseUrl))return Promise.reject(e)
+baseUrl+"/"+e+"?populate=deep&locale="+t).then(n=>{g(n.data)}).catch(n=>i(n))})}fetchAr
+baseUrl+"/"+e+"?populate=deep&locale="+t+"&pagination[pageSize]=250&sort=date:DESC").th
+baseUrl+"/i18n/locales").then(g=>{e(g.data)}).catch(g=>t(g))})}fetchContentByNameId(e
+baseUrl+e
+baseUrl+e):!1}head(e
+baseUrl:"http://"+h+":8081/rest"}:A={baseUrl:"http://localhost:8081/rest"}}A||(A={baseU
+baseUrl:"http://host.docker.internal:9081/rest"}:h.startsWith("10.0")||h.startsWith("19
+baseUrl:XA.spelling("baseURL")
+baseUrl=e
+baseUrl=t:this.baseUrl=e}this.axios=CA.create({headers:{"Content-type":"application/jso
+baseUrl?.includes("localhost")&&(A.baseUrl=A.baseUrl.replace(/localhost/g
+baseUrl}/${e}?populate=deep&filters[nameId][$eq]=${t}&locale=${g}`).then(I=>{i(I.data)}
+baseUrl}/user/refresh`}inFlight
+baseUrl}`}getTimeSinceLastRequest(){return Date.now()-this.lastRequest}getTimeSinceLast
+[0m
+[0m$ [0mgrep -oE '"/[a-zA-Z0-9_./{}:$-]{3,70}"' /tmp/opencode/bpc/main.js | sort -u | wc -l; grep -oE '"/[a-zA-Z0-9_./{}:$-]{3,70}"' /tmp/opencode/bpc/main.js | sort -u | grep -iE '/(v1|v2|internal|public|open|common|client|config|meta|service|sso|oauth)' | head -40
+20
+"/config/config.json"
+[0m
+[0m$ [0mgrep -oE '"/user/[a-zA-Z0-9_./{}:$-]{2,60}"' /tmp/opencode/bpc/main.js | sort -u; grep -oE '"/[a-zA-Z0-9_-]+/[a-zA-Z0-9_./{}:$-]{2,50}"' /tmp/opencode/bpc/main.js | sort -u | grep -viE '\.(png|jpg|jpeg|svg|gif|webp|ico|css|json|map|xml|txt)"' | head -60
+"/user/account-balances-and-bonuses"
+"/user/authenticate"
+"/user/logout"
+"/user/zendesk/jwt"
+"/i18n/locales"
+"/locales/add/{{lng}}/{{ns}}"
+"/translations/{{lng}}"
+"/user/account-balances-and-bonuses"
+"/user/authenticate"
+"/user/logout"
+"/user/zendesk/jwt"
+[0m
+[0m$ [0mcurl -s --max-time 20 https://betpandacasino.io/config/config.json -w "\nHTTP %{http_code} size=%{size_download}\n" | head -50
+{
+  "baseUrl" : "https://betpandacasino.io/rest"
+}
+
+HTTP 200 size=51
+[0m
+API base confirmed same-origin `/rest` on betpandacasino.io. Probing config surface + the newly-discovered Flipt flags subdomain.
+[0m$ [0mcurl -s --max-time 20 https://betpandacasino.io/rest/public/config -w "\nHTTP %{http_code} size=%{size_download}\n" | head -30
+{"timestamp":1788563892172,"status":404,"error":"Not Found","path":"/rest/public/config"}
+HTTP 404 size=89
+[0m
+[0m$ [0mgrep -oE '"/[a-z][a-z0-9-]*/[a-zA-Z0-9_./{}:$-]{2,60}"' /tmp/opencode/bpc/main.js | sort -u | grep -viE '\.(png|jpg|jpeg|svg|gif|webp|ico|css|map|xml|txt|woff|ttf)' | head -80
+"/config/config.json"
+"/i18n/locales"
+"/locales/add/{{lng}}/{{ns}}"
+"/locales/{{lng}}/{{ns}}.json"
+"/translations/{{lng}}"
+"/user/account-balances-and-bonuses"
+"/user/authenticate"
+"/user/logout"
+"/user/zendesk/jwt"
+[0m
+[0m$ [0mgrep -oE '"/[a-z][a-z0-9-]*"' /tmp/opencode/bpc/main.js | sort -u | head -60
+"/app"
+"/casino-pages"
+"/maintenance"
+"/rest"
+"/s"
+"/settings"
+[0m
+[0m$ [0mcurl -sI --max-time 15 https://flags.betpanda.io/ -w "\nHTTP %{http_code} via %{url_effective}\n"; sleep 1; curl -s --max-time 15 "https://betpandacasino.io/rest/user/zendesk/jwt" -w "\nHTTP %{http_code} size=%{size_download}\n" | head -15
+HTTP/2 403 
+date: Fri, 04 Sep 2026 23:18:24 GMT
+content-type: text/html; charset=UTF-8
+content-length: 22392
+accept-ch: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA
+cf-mitigated: challenge
+x-frame-options: SAMEORIGIN
+server: cloudflare
+critical-ch: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA
+cross-origin-embedder-policy: require-corp
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: same-origin
+origin-agent-cluster: ?1
+permissions-policy: accelerometer=(),camera=(),clipboard-read=(),clipboard-write=(),geolocation=(),gyroscope=(),hid=(),magnetometer=(),microphone=(),payment=(),publickey-credentials-get=(),screen-wake-lock=(),serial=(),sync-xhr=(),usb=(),xr-spatial-tracking=*
+referrer-policy: same-origin
+server-timing: chlray;desc="a360b690190db506"
+x-content-type-options: nosniff
+cf-ray: a360b690190db506-IAD
+
+
+HTTP 403 via https://flags.betpanda.io/
+{"timestamp":1788563905815,"status":405,"error":"Method Not Allowed","path":"/rest/user/zendesk/jwt"}
+HTTP 405 size=101
+[0m
+[0m$ [0mfor p in actuator "actuator/env" "actuator/health" swagger-ui.html "v3/api-docs" "v2/api-docs" error; do code=$(curl -s -o /dev/null --max-time 15 -w "%{http_code} %{size_download}" "https://betpandacasino.io/rest/$p"); echo "/rest/$p -> $code"; sleep 1; done
+/rest/actuator -> 404 84
+/rest/actuator/env -> 404 88
+/rest/actuator/health -> 404 91
+/rest/swagger-ui.html -> 404 91
+/rest/v3/api-docs -> 404 87
+/rest/v2/api-docs -> 404 87
+/rest/error -> 200 0
+[0m
+[0m$ [0mcurl -s --max-time 15 "https://nano-public.s3.eu-west-1.amazonaws.com/?list-type=2&max-keys=20" -w "\nHTTP %{http_code} size=%{size_download}\n" | head -25
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message><RequestId>NG6GTJB5QFYYZQDM</RequestId><HostId>3uzq5zkM2VuQ8uFn6d6DBhDX2Ef+j2wIB+qzxmV5o7oQHPp9aGiiTAuPcidD8MdP2n2pH3eILEoA9WetxZhYl8Vsgut7Lj84</HostId></Error>
+HTTP 403 size=263
+[0m
+[STEP1] DELTA
+- NEW betpandacasino.io: real API base URL resolved = same-origin `/rest` via `/config/config.json` — closes the SPA catch-all shadow gap; Spring Boot backend confirmed (JSON 404/405 error signature), no actuator/swagger/api-docs exposed
+- NEW betpandacasino.io: `/rest/properties/manifest` public PWA manifest (operator brand, CloudFront `d3ec3n7kizfkuy.cloudfront.net`, S3 `nano-public`); bundle endpoint subset extracted: `/rest/user/authenticate`, `/rest/user/refresh`, `/rest/user/logout`, `/rest/user/account-balances-and-bonuses`, `/rest/user/zendesk/jwt`
+- NEW flags.betpanda.io: Flipt feature-flag service discovered via casino bundle (`GLOBAL_FLIPT_URL: https://flags.betpanda.io`, env `betpanda`), Cloudflare 403 challenge — new BetPanda subdomain
+- NEW `/rest/user/zendesk/jwt` on betpandacasino.io returns 405 on GET (POST route exists — potential Zendesk SSO JWT issuance edge)
+- NEW nano-public S3 bucket listing → AccessDenied (no listing misconfig)
+- CHANGED betpandacasino.io: 404 on `/rest/public/config` (differs from affiliates' info leak) — same platform family, separate app
+
+[STEP2] PRIORITIZE
+[PRIO] betpandacasino.io,8.15,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=4,cloud_surface=7,freshness=9
+[PRIO] affiliates.betpanda.io,7.7,attack_surface=7,business_value=9,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] help.desk.avatarux.com,6.4,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=8,cloud_surface=5,freshness=6
+[PRIO] flags.betpanda.io,4.6,attack_surface=4,business_value=5,tech_exposure=5,gate_ease=2,cloud_surface=4,freshness=9
+
+[STEP3] HYPOTHESES
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 65
+reasoning: /config/config.json + /rest/public/config confirm backend, operatorId=1 leaked; endpoint map includes /rest/player/uid/{id}; path-parameter id pattern is classic BOLA; API is same-origin /rest behind Cloudflare
+evidence_needed: two affiliate sessions with different uid — cross-tenant response diff on /rest/player/uid/{alt_id}
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/{own_id} with session A (baseline); repeat with {alt_id} — observe data of another affiliate
+impact: Cross-affiliate player/PII dump, commission/payout theft — HIGH
+testability: AUTH_HELPED
+
+[HYP] Atlassian Confluence Wiki Anonymous Space Enumeration / Internal Project Disclosure
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 55
+reasoning: /wiki/ returns 200/303, JSM portal 303, /rest/servicedeskapi/servicedesk 401; Atlassian Edge front may pass through to instance via alternate path roots (/wiki/rest/api, /wiki/pages, /wiki/secure)
+evidence_needed: anonymous 200 from /wiki/rest/api/space, /wiki/rest/api/content, or /wiki/secure/ViewUserHover.jspa producing space keys/page titles/user emails
+verify_steps: GET https://help.desk.avatarux.com/wiki/rest/api/space?limit=5; GET https://help.desk.avatarux.com/wiki/rest/api/content?limit=5; GET https://help.desk.avatarux.com/wiki/spaces/viewdefaultdecorator.action
+impact: Internal project/infrastructure disclosure, employee enumeration — MEDIUM
+testability: PASSIVE
+
+[HYP] Casino /rest JWT Session Weakness / Zendesk SSO Trust Boundary
+class: AUTH
+asset: betpandacasino.io/rest/user/*
+confidence: 45
+reasoning: Spring Boot /rest; auth = /user/authenticate + /user/refresh; /user/account-balances-and-bonuses exposes financial state; /user/zendesk/jwt (POST, 405 on GET) issues third-party SSO JWTs — anonymous issuance or broken session validation would allow helpdesk impersonation/account access
+evidence_needed: 401 vs 200 on unauthenticated /rest/user/account-balances-and-bonuses; POST /rest/user/zendesk/jwt response without session; JWT alg/signature handling on /user/refresh
+verify_steps: GET https://betpandacasino.io/rest/user/account-balances-and-bonuses (expect 401 — confirm gate); OPTIONS https://betpandacasino.io/rest/user/zendesk/jwt; POST /rest/user/authenticate only with authorized test account (not now)
+impact: ATO, fund manipulation, helpdesk impersonation — HIGH
+testability: AUTH_HELPED
+
+[STEP4] SELF-CRITIQUE
+[PARKED] flags.betpanda.io Flipt unauth flag access: Cloudflare 403 challenge gates all passive access; requires browser session (HUMAN), low demonstrated impact on feature-flag values
+[PARKED] betpandacasino.io `/rest/public/config`: 404 (opposite of affiliates leak) — spring app reveals via /rest/properties/* instead, already harvested; no new surface
+[PARKED] nano-public S3 listing: AccessDenied — public-by-object only, no bucket-level misconfig
+[FINAL] 1. BetPanda Affiliate IDOR /rest/player/uid/{id} (65, AUTH_HELPED)
+[FINAL] 2. Atlassian Confluence Wiki Anonymous Space Enumeration (55, PASSIVE)
+[FINAL] 3. Casino /rest JWT Session / Zendesk SSO Trust Boundary (45, AUTH_HELPED)
+
+[STEP5] NEXT ACTION
+[NEXT] PROBE: GET https://betpandacasino.io/rest/user/account-balances-and-bonuses (unauthenticated) — confirm 401 auth-gate vs 200 money-data leak on newly discovered casino API; then GET https://help.desk.avatarux.com/wiki/rest/api/space?limit=5
+
+[STEP6] LEARNING
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: real API base discovered = same-origin /rest (config/config.json, mirrors affiliates) — SPA catch-all /graphql,/api were pure shell, puzzle now resolved
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/properties/manifest public; backend = Spring Boot via JSON 404/405 signature; no actuator/swagger/api-docs exposed
+[LEARN] ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL; new BetPanda subdomain, challenge-gated
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: bundle leaks AWS client assets: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public — mapping only, no misconfig
+[LEARN] REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+
+[STEP7] RISK
+[RISK] avatarux-studios: 80 — betpandacasino.io casino API now mapped and same-origin /rest (JWT auth + Spring), player-funds surface reachable; affiliates IDOR candidate stays best concrete path but needs a second session; AvatarUX corporate (Atlassian/cPanel) attack surface unchanged; only gate-lift is credentialed testing which is not yet authorized.
