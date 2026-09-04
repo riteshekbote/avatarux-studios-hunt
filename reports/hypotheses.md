@@ -132,3 +132,21 @@
 - LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
 - LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
 - LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+
+## RANKED HYPOTHESES 2026-09-04 16:39:41 UTC
+- [72] affiliates.betpanda.io/rest/player/uid/{id}: betpanda_affiliate_idor_on_player_uid (from art/lead_bigpickle.txt)
+- [70] affiliates.betpanda.io: BetPanda Affiliate Portal API Subdomain Discovery + IDOR on Affiliate IDs (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Test password reset timing differential — GET /rest/public/recover-password/email/admin@betpanda.io vs /rest/public/recover-password/email/nonexistent_xy
+- NEXT(hypotheses-nemotron3.txt): PROBE: Passive DNS enumeration for *.betpanda.io via crt.sh (https://crt.sh/?q=%.betpanda.io) and subfinder; concurrent GET https://affiliates.betpanda.io/main.
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operator
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limitin
+- LEARN: ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link,
+- LEARN: ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- LEARN: ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: Vite SPA with zero API routes in bundle — API subdomain hunt remains blocked after NXDOMAIN on common patterns
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature

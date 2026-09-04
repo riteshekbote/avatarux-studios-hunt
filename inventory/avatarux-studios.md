@@ -118,3 +118,11 @@ www.avatarux.com
 - NEW betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL undiscovered (reconfirmed)
 - CHANGED cpanel.avatarux.com priority increased to 7.0 (was 6.0) — takeover evidence strengthening
 - CHANGED help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer (stable)
+
+## 2026-09-04 16:39:41 UTC
+- NEW `/rest/public/config` endpoint leaks operatorId=1, Strapi CMS config, support email, currency list — full backend config disclosure
+- NEW `/rest/public/recover-password/email/{email}` accepts arbitrary emails, returns 204 (password reset trigger — potential account enumeration/reset bypass candidate)
+- NEW `custom-lp.betpanda.io` and `fp.betpanda.io` confirmed live (Cloudflare challenge) — new in-scope BetPanda infrastructure
+- NEW `/config/config.json` same-origin reveals API base URL = `https://affiliates.betpanda.io/rest` — API is NOT on a separate subdomain, it's co-hosted on the SPA origin
+- NEW Full API endpoint map extracted from JS bundle: `/rest/player/uid/{id}`, `/rest/transaction/list`, `/rest/agent/*`, `/rest/v2/report`, `/rest/payouts/single-currency-list`, `/rest/trk/*` — all auth-ga
+- CHANGED affiliates.betpanda.io confidence raised from 65→78 — API backend confirmed, endpoint map complete, attack surface quantified

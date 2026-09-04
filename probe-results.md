@@ -59,3 +59,7 @@ https://help.desk.avatarux.com -> 200 len=?
 https://cpanel.avatarux.com -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
 https://cpcalendars.avatarux.com -> HTTP 500
 https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+
+## 2026-09-04 16:39:44 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> 200 len=?

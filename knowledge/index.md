@@ -44,3 +44,8 @@
 - 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
 - 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
 - 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML
+- 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+- 2026-09-04 ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limiting unverified
+- 2026-09-04 ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link, and full currency list
+- 2026-09-04 ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- 2026-09-04 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service

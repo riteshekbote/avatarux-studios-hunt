@@ -1157,3 +1157,69 @@ testability: PASSIVE
 
 ### STEP 7 — RISK
 [RISK] avatarux-studios: 82 — High-value gaming brands (Roobet, Stake, Gamdom, BetPanda, RainBet) with undiscovered game/API infrastructure; discovered BetPanda affiliate portal + casino + cable service shows brand assets exist and are testable; AvatarUX corporate infra (Atlassian JSM/Confluence live behind Edge, cPanel 1001 dangling DNS) exposes secondary risk; main game API attack surface likely large but unmapped — priority on API discovery for Roobet/Stake/Gamdom/RainBet/BetPanda
+===== ANALYST nemotron3 2026-09-04 16:39:41 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[DELTA] [CHANGED] cpanel.avatarux.com priority increased to 7.0 (was 6.0) — takeover evidence strengthening, 15+ hour stable Cloudflare 1001
+[DELTA] [CHANGED] help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer (stable)
+[DELTA] [NEW] cable.betpanda.io: custom Node "BB CABLE 🔌" service confirmed live (200 OK, Cloudflare-fronted); WS endpoints /socket /ws /events return 404 (newly confirmed WS probes)
+[DELTA] [NEW] betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL undiscovered (reconfirmed)
+[DELTA] [CHANGED] No new probe data since 2026-09-04 07:48:20 — only cpanel SSL re-verification; lead-bigpickle.md last two cycles empty
+
+[PRIO] affiliates.betpanda.io,8.2,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=9
+[PRIO] cpanel.avatarux.com,7.0,attack_surface=7,business_value=7,tech_exposure=5,gate_ease=4,cloud_surface=6,freshness=6
+[PRIO] cable.betpanda.io,6.5,attack_surface=6,business_value=6,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] betpandacasino.io,6.2,attack_surface=5,business_value=8,tech_exposure=4,gate_ease=6,cloud_surface=6,freshness=7
+[PRIO] help.desk.avatarux.com,5.5,attack_surface=5,business_value=5,tech_exposure=6,gate_ease=8,cloud_surface=5,freshness=5
+[PRIO] api.roobet.com (undiscovered),9.0,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] api.stake.com (undiscovered),9.0,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] api.gamdom.com (undiscovered),9.0,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+[PRIO] api.rainbet.com (undiscovered),9.0,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
+
+[HYP] BetPanda Affiliate Portal API Subdomain Discovery + IDOR on Affiliate IDs
+class: IDOR
+asset: affiliates.betpanda.io
+confidence: 70
+reasoning: Vite SPA affiliate portal for in-scope brand BetPanda; single JS bundle (main.ef021e68.js) contains no API routes, apiBaseUrl, GraphQL endpoints, or affiliate_id/campaign_id patterns; Cloudflare-fronted suggests API also behind Cloudflare; affiliate systems typically use numeric/sequential affiliate_id or campaign_id in API calls
+evidence_needed: API subdomain discovery (api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io, partner-api.betpanda.io); API endpoint showing affiliate_id/campaign_id parameters; unauthorized access to other affiliates' stats/commissions/payouts
+verify_steps: GET https://affiliates.betpanda.io/main.ef021e68.js (full string search for apiBaseUrl, baseURL, VITE_API, REACT_APP_API, NEXT_PUBLIC_API, GraphQL, ws://, wss://, affiliate_id, campaign_id, user_id, partner_id); passive DNS enumeration *.betpanda.io via crt.sh (https://crt.sh/?q=%.betpanda.io) and subfinder; HEAD https://api.betpanda.io/, https://affiliates-api.betpanda.io/, https://api.affiliates.betpanda.io/, https://partner-api.betpanda.io/; if API found, test IDOR on /affiliates/{id}/stats, /campaigns/{id}/commissions with different affiliate IDs
+impact: Cross-affiliate PII dump (email, payment details), commission theft, campaign manipulation — HIGH
+testability: PASSIVE
+
+[HYP] cPanel Subdomain Takeover via Cloudflare 1001 / Dangling DNS to Cloudflare IP
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 70
+reasoning: DNS: cpanel.avatarux.com CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP); Cloudflare error 1001 "DNS points to prohibited IP" confirms DNS record exists but target IP is blocked by Cloudflare; classic subdomain takeover when DNS points to deprovisioned Cloudways/shared hosting slot; cPanel subdomain on shared hosting (Cloudways per www CNAME) — if hosting account cancelled but DNS remains, attacker could claim the IP/hosting slot
+evidence_needed: Confirm target IP (162.159.136.54) is unclaimed Cloudways/hosting IP; verify no active cPanel service on resolved IP (port 2083/2082/443/80); check for cPanel login page or takeover placeholder
+verify_steps: DIG cpanel.avatarux.com (A, AAAA, CNAME) — confirmed; HEAD https://cpanel.avatarux.com/ (port 443); HEAD http://cpanel.avatarux.com/ (port 80); check resolved IP against Cloudways IP ranges via whois; if takeover confirmed, report dangling DNS
+impact: Full hosting compromise — file access, DB access, email takeover, subdomain takeover, SSL key theft, pivot to www.avatarux.com — CRITICAL
+testability: PASSIVE
+
+[HYP] BetPanda Cable Service Unauthenticated Realtime Channel Access
+class: MISCONFIG
+asset: cable.betpanda.io
+confidence: 50
+reasoning: Custom Node "BB CABLE 🔌" service live at root (200 OK, Cloudflare-fronted); standard WS mounts /socket /ws /events return 404; cable/WS services often mount channels at non-standard paths (e.g., /cable, /ws/app, /realtime, /pusher, /socket.io); no JS bundle analyzed yet to discover client-side channel config; in-scope BetPanda brand infrastructure
+evidence_needed: Discovered WS/channel endpoint path; successful unauthenticated WS handshake; subscription to channel exposing casino events, user notifications, or affiliate updates
+verify_steps: GET https://cable.betpanda.io/ (confirm banner); POST https://cable.betpanda.io/ with JSON probe payloads to map router (test /cable, /ws/app, /realtime, /pusher, /socket.io, /channels, /events); if path discovered, attempt WS upgrade (GET with Upgrade: websocket) and observe auth requirement; passive DNS *.betpanda.io for WS subdomains
+impact: Unauthorized access to realtime/notification/casino event streams if any channel unauthenticated — LOW-MEDIUM
+testability: PASSIVE
+
+[PARKED] BetPanda Cable Service Unauthenticated Realtime Channel Access: confidence 50 but verify_steps require active WS path probing with unknown path space — low yield without JS bundle analysis first; deprioritize until cable client config found in casino/affiliate bundles
+[PARKED] BetPanda Casino Real API Discovery via SPA Bundle Analysis: confidence 55 but verify_steps depend on undiscovered API subdomain; casino bundle may also lack API config like affiliate portal; deprioritize until API subdomain or bundle config found
+[FINAL] 1. BetPanda Affiliate Portal API Subdomain Discovery + IDOR on Affiliate IDs (70)
+[FINAL] 2. cPanel Subdomain Takeover via Cloudflare 1001 / Dangling DNS to Cloudflare IP (70)
+
+[NEXT] PROBE: Passive DNS enumeration for *.betpanda.io via crt.sh (https://crt.sh/?q=%.betpanda.io) and subfinder; concurrent GET https://affiliates.betpanda.io/main.ef021e68.js (full string extraction for apiBaseUrl, baseURL, VITE_API, REACT_APP_API, NEXT_PUBLIC_API, GraphQL, ws://, wss://, affiliate_id, campaign_id, user_id, partner_id)
+
+[LEARN] ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+[LEARN] ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: Vite SPA with zero API routes in bundle — API subdomain hunt remains blocked after NXDOMAIN on common patterns
+[LEARN] ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
+[LEARN] REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature
+
+[RISK] avatarux-studios: 82 — High-value gaming brands (Roobet, Stake, Gamdom, BetPanda, RainBet) with undiscovered game/API infrastructure; discovered BetPanda affiliate portal + casino + cable service shows brand assets exist and are testable; AvatarUX corporate infra (Atlassian JSM/Confluence live behind Edge, cPanel 1001 dangling DNS) exposes secondary risk; main game API attack surface likely large but unmapped — priority on API discovery for Roobet/Stake/Gamdom/RainBet/BetPanda
