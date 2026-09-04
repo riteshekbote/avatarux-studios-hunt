@@ -26,3 +26,21 @@
 - 2026-09-04 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
 - 2026-09-04 ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
 - 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API base URL undiscovered, high-value casino target
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- 2026-09-04 ACCEPTED IDOR @ affiliates.betpanda.io: Vite SPA with zero API routes in bundle — API subdomain hunt remains blocked after NXDOMAIN on common patterns
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API undiscovered
+- 2026-09-04 ACCEPTED MISCONFIG @ cable.betpanda.io: Custom Node "BB CABLE" service live, WS paths /socket /ws /events all 404
+- 2026-09-04 ACCEPTED MISCONFIG @ cPanel/helpdesk: standard recon targets; will confirm with passive probes before escalation.
+- 2026-09-04 REJECTED MISCONFIG @ cpcalendars: HTTP 500 likely benign disabled feature, parked for now.
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-04 REJECTED alfaview OpenAPI/IDOR @ apis.alfaview.com: out of scope (not AvatarUX Studios brand)
+- 2026-09-04 REJECTED BASF Azure Functions @ ap-digitalconnect.api.basf.com: out of scope
+- 2026-09-04 REJECTED daimlertruck/elringklinger: out of scope
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk.avatarux.com: Atlassian Edge confirmed, in-scope AvatarUX infrastructure
+- 2026-09-04 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 is strong takeover indicator
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM exposes internal configuration in HTML
+- 2026-09-04 ACCEPTED MISCONFIG @ help.desk: JSM customer portal exposes tenant IDs, feature flags, and experiment configurations in page source HTML

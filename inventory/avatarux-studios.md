@@ -98,3 +98,23 @@ www.avatarux.com
 - NEW BetPanda API subdomains api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io — all NXDOMAIN
 - CHANGED help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer
 - CHANGED cpanel.avatarux.com priority increased to 7.0 (was 6.0) — takeover evidence strengthening
+
+## 2026-09-04 12:42:00 UTC
+- CHANGED lead-bigpickle.md: last two cycles (2026-09-04 03:02:55, 07:45:49) produced empty entries — no new probes executed since 2026-09-03 23:47:16
+- CHANGED probe-results.md: no new probe data since 2026-09-04 07:48:20 (only cpanel SSL re-verification)
+- NEW help.desk.avatarux.com: Atlassian Jira Service Desk (live, customer portal active)
+- NEW cpanel.avatarux.com: Cloudflare error 1001 - DNS to prohibited IP (subdomain takeover candidate)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail
+- NEW TXT reveals: Slack, Atlassian, Google verifications
+- NEW `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+- NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+- NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+- NEW `cpanel.avatarux.com`: Cloudflare 1001 error → DNS points to prohibited IP (subdomain takeover candidate)
+- NEW `help.desk.avatarux.com`: Atlassian Jira Service Desk (customer portal active)
+- NEW `affiliates.betpanda.io`: BetPanda affiliate portal (in-scope brand, Vite SPA, Cloudflare-fronted)
+- NEW MX records: Google Workspace, Zoho, Mandrill, ProtonMail discovered
+- NEW cable.betpanda.io: custom Node "BB CABLE 🔌" service confirmed live (200 OK, Cloudflare-fronted); WS endpoints /socket /ws /events return 404 (newly confirmed WS probes)
+- NEW betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL undiscovered (reconfirmed)
+- CHANGED cpanel.avatarux.com priority increased to 7.0 (was 6.0) — takeover evidence strengthening
+- CHANGED help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer (stable)
