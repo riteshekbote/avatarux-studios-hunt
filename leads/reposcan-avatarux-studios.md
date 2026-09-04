@@ -16,3 +16,12 @@ TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
 ## REPOSCAN 2026-09-04 19:06:31 UTC
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
+## REPOSCAN 2026-09-04 21:32:38 UTC
+[HYP] No GitHub org candidates configured for source-code audit
+class: OTHER
+asset: (none — cands.txt, scope.yml)
+confidence: 100
+reasoning: |
+impact: LOW — no action possible; this is a configuration gap, not a vulnerability
+verify_steps: |
+TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
