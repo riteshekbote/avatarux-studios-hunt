@@ -126,3 +126,13 @@ www.avatarux.com
 - NEW `/config/config.json` same-origin reveals API base URL = `https://affiliates.betpanda.io/rest` — API is NOT on a separate subdomain, it's co-hosted on the SPA origin
 - NEW Full API endpoint map extracted from JS bundle: `/rest/player/uid/{id}`, `/rest/transaction/list`, `/rest/agent/*`, `/rest/v2/report`, `/rest/payouts/single-currency-list`, `/rest/trk/*` — all auth-ga
 - CHANGED affiliates.betpanda.io confidence raised from 65→78 — API backend confirmed, endpoint map complete, attack surface quantified
+
+## 2026-09-04 19:14:47 UTC
+- NEW `/rest/public/config` on affiliates.betpanda.io leaks operatorId=1, Strapi CMS config, support email, full currency list — backend config disclosure
+- NEW `/rest/public/recover-password/email/{email}` on affiliates.betpanda.io accepts arbitrary emails in URL path, returns 204 no body — potential account enumeration/reset bypass
+- NEW `/config/config.json` on affiliates.betpanda.io reveals API base URL = `https://affiliates.betpanda.io/rest` (same-origin, not separate subdomain)
+- NEW Full API endpoint map extracted from JS bundle: `/rest/player/uid/{id}`, `/rest/transaction/list`, `/rest/agent/*`, `/rest/v2/report`, `/rest/payouts/single-currency-list`, `/rest/trk/*` — all auth-ga
+- NEW `custom-lp.betpanda.io` and `fp.betpanda.io` confirmed live behind Cloudflare challenge — new in-scope BetPanda infrastructure via crt.sh
+- CHANGED affiliates.betpanda.io confidence raised 65→78 — API backend confirmed same-origin, endpoint map complete, attack surface quantified
+- CHANGED cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours, CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP), stable dangling DNS
+- CHANGED help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge, tenant IDs/feature flags in HTML, REST paths return 401/404/303

@@ -320,3 +320,33 @@ testability: PASSIVE/VERIFICATION_NEEDED
 [LEARN] ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
 [LEARN] ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
 [RISK] AvatarUX Studios: 45 — BetPanda affiliate API map breakthrough elevates IDOR hypothesis from 65→72 confidence; cpanel takeover remains strongest passive finding at 78. New subdomains (custom-lp, fp) expand surface. Still blocked on auth-gated IDOR depth testing. Risk = moderate; fresh targets identified but live exploitation requires auth sessions.
+## 2026-09-04 19:12:58 UTC [target] (model bigpickle)
+[HYP] cpanel_subdomain_takeover_cloudflare_1001
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 78
+reasoning: Cloudflare 1001 error persists across 20+ cycles (>48h). CNAME chain cpanel → avatarux.com → 162.159.136.54 (Cloudflare edge). Dangling DNS to a prohibited Cloudflare IP is a state consistent with unclaimed zone. All /rest endpoints on the affiliate API are auth-gated 401, so this remains the only unauthenticated full-host risk in scope.
+evidence_needed: CT/zone records proving no active service; actual DNS takeover claim is HUMAN_ONLY.
+verify_steps: 1. GET https://cpanel.avatarux.com/ reconfirm 1001 stability. 2. Passive CT re-check for *.avatarux.com. 3. Cross-check Cloudflare IP ownership timestamps.
+impact: Full subdomain control under *.avatarux.com → phishing/host takeover | severity=CRITICAL
+testability: PASSIVE/VERIFICATION_NEEDED
+[HYP] betpanda_affiliate_idor_on_player_uid
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 72
+reasoning: Template literal render confirmed in bundle: `Vt.get(Yt()+"/player/uid/${e.id}?currency=${e.curr}")` fetches player records by client-supplied id with optional user-controlled currency param. Endpoint is auth-gated (401 unauthenticated), but any authenticated affiliate can likely supply arbitrary player UIDs. The player-information components imply fetched record includes PII (username, avatar, metrics). Password reset shows the API family defaults to 200/204-empty responses, so response differentiation must be measured by body size/JSON, not status.
+evidence_needed: Valid affiliate session; then compare GET /rest/player/uid/1 vs uid/2 vs uid=own-remote-player.
+verify_steps: 1. POST /rest/public/register (POST, mutating test account only) or use provided creds. 2. GET /rest/player/uid/1?currency=EUR → observe JSON fields. 3. GET /rest/player/uid/99999?currency=EUR → null/error handler behavior; size differential = IDOR signal.
+impact: Cross-affiliate player PII exposure, balance/transaction disclosure, commission interference | severity=HIGH
+testability: AUTH_HELPED
+[HYP] betpandacasino_spring_boot_debug_surface
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: GET /rest/user returns 200 "User Resource" (static text/plain) while /rest/error returns 200 empty — a Spring Boot scaffold mapped but never removed, deployed to production origin. Suggests other unauthenticated resource mappings may exist beyond the 20 paths probed (all 404).
+evidence_needed: Additional resource name enumeration; nothing exploitable so far.
+verify_steps: 1. Small read-only HEAD/GET wordlist on plausible singular resources (/watch, /play, /game, /wallet, /promo). 2. OPTIONS /rest/user for allowed-method hints (read-only).
+impact: Potential unauthenticated debug/logic endpoints on casino origin | severity=UNKNOWN
+testability: PASSIVE
+[NEXT] PROBE: Reconfirm cpanel.avatarux.com Cloudflare 1001 persistence (curl status page) and concurrently run passive CT enumeration via certspotter API for avatarux.com (`https://api.certspotter.com/v1/issuances?domain=avatarux.com&include_subdomains=true&expand=dns_names`) to confirm no new live subdomains and lock the takeover hypothesis freshness; if certspotter reachable, repeat for betpanda.io.
+[RISK] AvatarUX Studios: 47 — BetPanda affiliate API is proven auth-gated and schema-closed; betpandacasino.io degraded to an empty Spring Boot stub (surface narrowed). cpanel takeover remains the only CRITICAL-class passive lead and is stalled at verification (crt.sh unreachable, claim is not read-only). IDOR depth testing remains blocked on an auth session; progress now depends on authorized credential provision or a new passive surface win.

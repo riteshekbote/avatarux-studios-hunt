@@ -63,3 +63,8 @@ https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_F
 ## 2026-09-04 16:39:44 UTC
 https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
 https://crt.sh/?q=%.avatarux.com -> 200 len=?
+
+## 2026-09-04 19:15:03 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out
+https://api.certspotter.com/v1/issuances?domain=avatarux.com&include_subdomains=true&expand=dns_names` -> 200 len=?

@@ -150,3 +150,20 @@
 - LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
 - LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
 - LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature
+
+## RANKED HYPOTHESES 2026-09-04 19:14:47 UTC
+- [78] cpanel.avatarux.com: cpanel_subdomain_takeover_cloudflare_1001 (from art/lead_bigpickle.txt)
+- [72] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on /rest/player/uid/{id} with Auth Session (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: Reconfirm cpanel.avatarux.com Cloudflare 1001 persistence (curl status page) and concurrently run passive CT enumeration via certspotter API for avatarux
+- NEXT(hypotheses-nemotron3.txt): PROBE: Test password reset timing differential — GET https://affiliates.betpanda.io/rest/public/recover-password/email/admin@betpanda.io vs GET https://affiliat
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operator
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limitin
+- LEARN: ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link,
+- LEARN: ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- LEARN: ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- LEARN: ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 15+ hour stable state confirms dangling DNS, subdomain takeover candidate
+- LEARN: REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature
+- LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature
+- LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: SPA catch-all shadows /graphql and /api — real API undiscovered
+- LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: Custom Node "BB CABLE" service live, WS paths /socket /ws /events all 404
