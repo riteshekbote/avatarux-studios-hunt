@@ -1,13 +1,14 @@
-## 2026-09-04 03:02:55 UTC [target] (model nemotron3)
-[NEW] cable.betpanda.io: custom Node "BB CABLE 🔌" service live, 200 OK, Cloudflare-fronted; WS mounts /socket /ws /events return 404
-[NEW] betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL unknown
-[NEW] cpanel.avatarux.com: CNAME chain confirmed cpanel → avatarux.com → 162.159.136.54 (Cloudflare IP); Cloudflare 1001 = dangling DNS to prohibited Cloudflare IP
+## 2026-09-04 07:48:08 UTC [target] (model nemotron3)
+[NEW] cable.betpanda.io: custom Node "BB CABLE 🔌" service confirmed live (200 OK, Cloudflare-fronted); WS endpoints /socket /ws /events return 404
+[NEW] betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL undiscovered
+[NEW] cpanel.avatarux.com: CNAME chain cpanel → avatarux.com → 162.159.136.54 (Cloudflare IP) confirmed; Cloudflare 1001 = dangling DNS to prohibited Cloudflare IP
 [NEW] BetPanda API subdomains api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io — all NXDOMAIN
 [CHANGED] help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer
+[CHANGED] cpanel.avatarux.com priority increased to 7.0 (was 6.0) — takeover evidence strengthening
 [PRIO] affiliates.betpanda.io,8.2,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=9
+[PRIO] cpanel.avatarux.com,7.0,attack_surface=7,business_value=7,tech_exposure=5,gate_ease=4,cloud_surface=6,freshness=6
 [PRIO] cable.betpanda.io,6.5,attack_surface=6,business_value=6,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
 [PRIO] betpandacasino.io,6.2,attack_surface=5,business_value=8,tech_exposure=4,gate_ease=6,cloud_surface=6,freshness=7
-[PRIO] cpanel.avatarux.com,7.0,attack_surface=7,business_value=7,tech_exposure=5,gate_ease=4,cloud_surface=6,freshness=6
 [PRIO] help.desk.avatarux.com,5.5,attack_surface=5,business_value=5,tech_exposure=6,gate_ease=8,cloud_surface=5,freshness=5
 [PRIO] api.roobet.com (undiscovered),9.0,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
 [PRIO] api.stake.com (undiscovered),9.0,attack_surface=10,business_value=10,tech_exposure=10,gate_ease=3,cloud_surface=8,freshness=10
@@ -18,7 +19,11 @@ class: IDOR
 asset: affiliates.betpanda.io
 confidence: 70
 reasoning: Vite SPA affiliate portal for in-scope brand BetPanda; single JS bundle (main.ef021e68.js) contains no API routes, apiBaseUrl, GraphQL endpoints, or affiliate_id/campaign_id patterns; Cloudflare-fronted suggests API also behind Cloudflare; affiliate systems typically use numeric/sequential affiliate_id or campaign_id in API calls
-evidence_needed: API subdomain discovery (api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io, partner-api.betpanda.io); API endpoint showing affiliate_id/campaign_id parameters; un[0m
+evidence_needed: API subdomain discovery (api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io, partner-api.betpanda.io); API endpoint showing affiliate_id/campaign_id parameters; unauthorized access to other affiliates' stats/commissions/payouts
+verify_steps: GET https://affiliates.betpanda.io/main.ef021e68.js (full string search for apiBaseUrl, baseURL, VITE_API, REACT_APP_API, NEXT_PUBLIC_API, GraphQL, ws://, wss://, affiliate_id, campaign_id, user_id, partner_id); passive DNS enumeration *.betpanda.io via crt.sh (https://crt.sh/?q=%.betpanda.io) and subfinder; HEAD https://api.betpanda.io/, https://affiliates-api.betpanda.io/, https://api.affiliates.betpanda.io/, https://partner-api.betpanda.io/; if API found, test IDOR on /affiliates/{id}/stats, /campaigns/{id}/commissions with different affiliate IDs
+impact: Cross-affiliate PII dump (email, payment details), commission theft, campaign manipulation — HIGH
+testability: PASSIVE
+[HYP] cPanel Subdomain Takeover via Cloudflare 1001 / Dangling DNS to Cloudflare IP
 class: MISCONFIG
 asset: cpanel.avatarux.com
 confidence: 70

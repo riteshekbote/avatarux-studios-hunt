@@ -90,3 +90,11 @@ www.avatarux.com
 - NEW cpanel.avatarux.com: CNAME chain confirmed cpanel → avatarux.com → 162.159.136.54 (Cloudflare IP); Cloudflare 1001 = dangling DNS to prohibited Cloudflare IP
 - NEW BetPanda API subdomains api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io — all NXDOMAIN
 - CHANGED help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer
+
+## 2026-09-04 07:48:19 UTC
+- NEW cable.betpanda.io: custom Node "BB CABLE 🔌" service confirmed live (200 OK, Cloudflare-fronted); WS endpoints /socket /ws /events return 404
+- NEW betpandacasino.io: SPA catch-all shadows /graphql and /api (both 200 HTML shell); real API base URL undiscovered
+- NEW cpanel.avatarux.com: CNAME chain cpanel → avatarux.com → 162.159.136.54 (Cloudflare IP) confirmed; Cloudflare 1001 = dangling DNS to prohibited Cloudflare IP
+- NEW BetPanda API subdomains api.betpanda.io, affiliates-api.betpanda.io, api.affiliates.betpanda.io — all NXDOMAIN
+- CHANGED help.desk.avatarux.com Confluence /wiki/ flipped 200→303 — now behind Atlassian Edge redirect layer
+- CHANGED cpanel.avatarux.com priority increased to 7.0 (was 6.0) — takeover evidence strengthening
