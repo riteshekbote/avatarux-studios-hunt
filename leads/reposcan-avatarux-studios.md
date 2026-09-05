@@ -70,3 +70,5 @@ reasoning: REST API at `/rest/user/authenticate`, `/rest/user/refresh`, `/rest/u
 impact: MEDIUM — if auth is bypassed or tokens are weak, financial data and user records across brands could be accessed
 verify_steps: `curl -s -X POST https://betpandacasino.io/rest/user/account-balances-and-bonuses -H "Content-Type: application/json" -d '{}'` (passive: test without valid auth to confirm 401/403)
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
+## REPOSCAN 2026-09-05 16:06:50 UTC
+TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
