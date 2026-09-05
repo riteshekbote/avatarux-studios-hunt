@@ -344,3 +344,18 @@
 - LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
 - LEARN: ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
 - LEARN: ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303
+
+## RANKED HYPOTHESES 2026-09-05 20:45:53 UTC
+- [78] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on /rest/player/uid/{id} with Auth Session (from art/lead_nemotron3.txt)
+- [72] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on /rest/player/uid/{id} (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://cpanel.avatarux.com/ -H "User-Agent: AvatarUX-Recon/1.0" (confirm Cloudflare 1001 persists) && GET https://crt.sh/?q=%.avatarux.com -H "User-
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+- LEARN: ACCEPTED IDOR @ affiliates.betpanda.io: API backend same-origin at /rest; endpoint map complete; IDOR pattern confirmed but requires second credentialed session
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 no body — timing enumeration unvalidated
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+- LEARN: REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+- LEARN: ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-ga
+- LEARN: ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 HTTP 200 — expands attack surface for tenant ID e
+- LEARN: ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- LEARN: ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- LEARN: ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL

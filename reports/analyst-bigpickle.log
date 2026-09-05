@@ -5385,3 +5385,89 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] avatarux-studios: 78 — Casino money/JWT surface POST-gated behind pinned CORS; Confluence enumeration closed; best concrete path remains affiliates IDOR (needs second credentialed session); cPanel takeover + JSM config-exposure surfaces unchanged; passive collection nearly exhausted at fixed gate.
+===== ANALYST bigpickle 2026-09-05 20:45:53 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sk -o /dev/null -w 'portal2 code=%{http_code} redir=%{redirect_url} time=%{time_total}\n' --max-time 25 'https://help.desk.avatarux.com/servicedesk/customer/portal/2'; sleep 1; curl -sk -o /tmp/opencode/portal2.html -w 'portal2html code=%{http_code} time=%{time_total} size=%{size_download}\n' --max-time 25 'https://help.desk.avatarux.com/servicedesk/customer/portal/2'; sleep 1; curl -sk -o /dev/null -w 'portals code=%{http_code} redir=%{redirect_url} time=%{time_total}\n' --max-time 25 'https://help.desk.avatarux.com/servicedesk/customer/portals'
+portal2 code=303 redir=https://help.desk.avatarux.com/servicedesk/customer/portal/2/user/login?destination=portal%2F2 time=0.592149
+portal2html code=303 time=0.332050 size=0
+portals code=303 redir=https://help.desk.avatarux.com/servicedesk/customer/user/login?destination=portals time=0.336905
+[0m
+[0m$ [0mcurl -sk -o /tmp/opencode/portal2b.html -w 'portal2browser code=%{http_code} redir=%{redirect_url} time=%{time_total} size=%{size_download}\n' --max-time 25 -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' 'https://help.desk.avatarux.com/servicedesk/customer/portal/2'
+portal2browser code=303 redir=https://help.desk.avatarux.com/servicedesk/customer/portal/2/user/login?destination=portal%2F2 time=0.316772 size=0
+[0m
+[0m$ [0m(dig +short cpanel.avatarux.com CNAME; dig +short cpanel.avatarux.com A; dig +short avatarux.com A; dig +short www.avatarux.com CNAME) 2>&1; sleep 1; curl -sk -o /dev/null -w 'cpanel code=%{http_code} redir=%{redirect_url} time=%{time_total}\n' --max-time 25 'https://cpanel.avatarux.com/'
+avatarux.com.
+avatarux.com.
+162.159.136.54
+162.159.136.54
+secure.cloudways.cloud.
+cpanel code=000 redir= time=0.135368
+[0m
+[0m$ [0mcurl -sk -o /dev/null -w 'errormsg=%{errormsg} code=%{http_code}\n' --max-time 25 -v 'https://cpanel.avatarux.com/' 2>&1 | tail -5
+* TLSv1.3 (IN), TLS alert, handshake failure (552):
+{ [2 bytes data]
+* OpenSSL/3.0.13: error:0A000410:SSL routines::sslv3 alert handshake failure
+* Closing connection
+errormsg=OpenSSL/3.0.13: error:0A000410:SSL routines::sslv3 alert handshake failure code=000
+[0m
+STEP 1 — DELTA
+- [CHANGED] help.desk.avatarux.com/servicedesk/customer/portal/2: previously 200, now 303→`.../portal/2/user/login` (both default + Chrome UA) — anonymous JSM portal/2 surface closed this cycle.
+- [CHANGED] cpanel.avatarux.com: edge now returns TLS handshake-fail (code=000) instead of HTTP 1001; dig confirms chain `cpanel→avatarux.com (apex)→162.159.136.54` (Cloudflare-owned).
+- NO_DELTA elsewhere.
+
+STEP 2 — PRIORITIZE
+- [PRIO] affiliates.betpanda.io,7.60,attack_surface=9|business_value=9|tech_exposure=8|gate_ease=4|cloud_surface=6|freshness=7
+- [PRIO] betpandacasino.io,7.40,attack_surface=8|business_value=10|tech_exposure=7|gate_ease=3|cloud_surface=7|freshness=7
+- [PRIO] help.desk.avatarux.com,5.70,attack_surface=7|business_value=6|tech_exposure=7|gate_ease=2|cloud_surface=3|freshness=8
+- [PRIO] cpanel.avatarux.com,5.35,attack_surface=5|business_value=4|tech_exposure=3|gate_ease=9|cloud_surface=5|freshness=8
+
+STEP 3 — HYPOTHESES
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 72
+reasoning: Same-origin /rest Spring API confirmed via /config/config.json apiBaseUrl + /rest/public/config (operatorId=1); bundle endpoint map includes /rest/player/uid/{id}; path-param uid is classic BOLA; no counter-evidence; only concrete high-impact path remaining.
+evidence_needed: response diff between session-A uid and an alt uid showing another affiliate's player/commission data.
+verify_steps: GET /rest/player/uid/{own_uid} with session A baseline → replay with {alt_uid}; requires authorized second credentialed session (not run now).
+impact: Cross-affiliate PII/commission/payout exposure — HIGH
+testability: AUTH_HELPED
+
+[HYP] BetPanda Casino /rest config disclosure mirror
+class: OTHER
+asset: betpandacasino.io/rest/public/config
+confidence: 48
+reasoning: Casino backend mirrors affiliates (same-origin /rest, Spring Boot signatures via JSON 404/405, /rest/properties/manifest public); affiliates /rest/public/config leaks operatorId/Strapi/currencies; casino equivalent never probed.
+evidence_needed: 200 JSON at casino /rest/public/config exposing tenant/backend config.
+verify_steps: GET https://betpandacasino.io/rest/public/config (passive, no auth).
+impact: Backend/tenant config disclosure (operatorId, CMS, support, currencies) — LOW-MED
+testability: PASSIVE
+
+[HYP] cPanel subdomain takeover via dangling DNS
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 45
+reasoning: Cloudflare 1001 persists but edge now TLS-fails; dig proves chain CNAME→apex (same-zone)→162.159.136.54 (Cloudflare-owned IP); no external claimable provider in chain; apex not attacker-claimable — takeover mechanism likely invalid.
+evidence_needed: claimable provider in DNS chain or orphaned external CNAME (none found to date).
+verify_steps: GET https://cpanel.avatarux.com/ + crt.sh `%25.avatarux.com` for orphaned issuance.
+impact: If claimable, *.avatarux.com control — CRITICAL; claim path currently absent
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] Password reset timing differential @ affiliates.betpanda.io: REJECTED program class (username enumeration on forgot-password) and would spam admin@betpanda.io with real reset emails — dropped.
+- [PARKED] cPanel takeover @ cpanel.avatarux.com: live DNS probe (CNAME→apex→Cloudflare-owned 162.159.136.54) shows no attacker-claimable provider; 1001/TLS-fail is an edge config anomaly, not a takeover path — confidence <50.
+- [PARKED] JSM portal/2 @ help.desk.avatarux.com: live probe now 303→login (flipped from 200); anonymous surface closed, not exploitable.
+- [FINAL] ranked: affiliates IDOR (72, AUTH_HELPED) > casino /rest/public/config mirror (48, PASSIVE).
+
+STEP 5 — NEXT ACTION
+- [NEXT] PROBE: GET https://betpandacasino.io/rest/public/config — passive, no auth; compare against affiliates confirmed leak (operatorId/Strapi/currencies) to determine if shared backend config endpoint is exposed on casino origin too.
+
+STEP 6 — LEARNING
+- [LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: timing enumeration = REJECTED class (username enumeration on forgot-password) + live-account spam; parked permanently.
+- [LEARN] REJECTED MISCONFIG @ cpanel.avatarux.com: DNS chain CNAME→apex→Cloudflare-owned IP proves no claimable provider; 1001/TLS-fail is edge misconfig, not subdomain takeover (20+ prior accepts over-stated mechanism).
+- [LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com portal/2: flipped 200→303 login; anonymous portal surface now closed (probe this cycle).
+- [LEARN] ACCEPTED IDOR @ affiliates.betpanda.io/rest/player/uid/{id}: unchanged top candidate; validation still blocked on second credentialed session.
+
+STEP 7 — RISK
+- [RISK] avatarux-studios: 70 — compliance cleanup removed timing (REJECTED class) and cPanel takeover (mechanism invalidated by live DNS evidence); casino money/JWT surface POST-gated, Confluence closed, JSM portal/2 now auth-gated; only concrete high-impact path is affiliates IDOR, which needs an authorized second credentialed session; passive collection near exhaustion.

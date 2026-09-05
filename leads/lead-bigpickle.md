@@ -764,3 +764,31 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
 [LEARN] ACCEPTED OTHER @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema
 [RISK] avatarux-studios: 78 — Casino money/JWT surface POST-gated behind pinned CORS; Confluence enumeration closed; best concrete path remains affiliates IDOR (needs second credentialed session); cPanel takeover + JSM config-exposure surfaces unchanged; passive collection nearly exhausted at fixed gate.
+## 2026-09-05 20:45:40 UTC [target] (model bigpickle)
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 72
+reasoning: Same-origin /rest Spring API confirmed via /config/config.json apiBaseUrl + /rest/public/config (operatorId=1); bundle endpoint map includes /rest/player/uid/{id}; path-param uid is classic BOLA; no counter-evidence; only concrete high-impact path remaining.
+evidence_needed: response diff between session-A uid and an alt uid showing another affiliate's player/commission data.
+verify_steps: GET /rest/player/uid/{own_uid} with session A baseline → replay with {alt_uid}; requires authorized second credentialed session (not run now).
+impact: Cross-affiliate PII/commission/payout exposure — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino /rest config disclosure mirror
+class: OTHER
+asset: betpandacasino.io/rest/public/config
+confidence: 48
+reasoning: Casino backend mirrors affiliates (same-origin /rest, Spring Boot signatures via JSON 404/405, /rest/properties/manifest public); affiliates /rest/public/config leaks operatorId/Strapi/currencies; casino equivalent never probed.
+evidence_needed: 200 JSON at casino /rest/public/config exposing tenant/backend config.
+verify_steps: GET https://betpandacasino.io/rest/public/config (passive, no auth).
+impact: Backend/tenant config disclosure (operatorId, CMS, support, currencies) — LOW-MED
+testability: PASSIVE
+[HYP] cPanel subdomain takeover via dangling DNS
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 45
+reasoning: Cloudflare 1001 persists but edge now TLS-fails; dig proves chain CNAME→apex (same-zone)→162.159.136.54 (Cloudflare-owned IP); no external claimable provider in chain; apex not attacker-claimable — takeover mechanism likely invalid.
+evidence_needed: claimable provider in DNS chain or orphaned external CNAME (none found to date).
+verify_steps: GET https://cpanel.avatarux.com/ + crt.sh `%25.avatarux.com` for orphaned issuance.
+impact: If claimable, *.avatarux.com control — CRITICAL; claim path currently absent
+testability: PASSIVE

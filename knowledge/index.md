@@ -81,3 +81,4 @@
 - 2026-09-05 REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
 - 2026-09-05 REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
 - 2026-09-05 ACCEPTED OTHER @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema
+- 2026-09-05 ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 HTTP 200 — expands attack surface for tenant ID enumeration
