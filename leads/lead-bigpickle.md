@@ -592,3 +592,35 @@ testability: AUTH_HELPED
 [LEARN] REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
 [LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
 [RISK] avatarux-studios: 80 — betpandacasino.io casino API now mapped and same-origin /rest (JWT auth + Spring), player-funds surface reachable; affiliates IDOR candidate stays best concrete path but needs a second session; AvatarUX corporate (Atlassian/cPanel) attack surface unchanged; only gate-lift is credentialed testing which is not yet authorized.
+## 2026-09-05 01:09:44 UTC [target] (model bigpickle)
+[PRIO] betpandacasino.io,8.15,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=3,cloud_surface=7,freshness=9
+[PRIO] affiliates.betpanda.io,7.7,attack_surface=7,business_value=9,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] help.desk.avatarux.com,6.0,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=6,cloud_surface=5,freshness=6
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 65
+reasoning: Same-origin /rest Spring API confirmed via /config/config.json + /rest/public/config (operatorId=1 leaked); endpoint map harvested from bundle includes /rest/player/uid/{id}; path-parameter uid is classic BOLA; no counter-evidence observed this cycle.
+evidence_needed: two affiliate sessions — response diff on /rest/player/uid/{alt_id} returning another affiliate's player/commission data.
+verify_steps: GET /rest/player/uid/{own_id} with session A (baseline) → replay with {alt_id}; requires credentialed second session.
+impact: Cross-affiliate PII/commission/payout exposure — HIGH
+testability: AUTH_HELPED
+[HYP] Multi-tenant routing header confusion on shared casino API
+class: AUTH
+asset: betpandacasino.io/rest/*
+confidence: 42
+reasoning: CORS preflight advertises tenant-routing headers x-site-name-id + x-preferred-app-context; manifest S3 layout uses /operators/{brand}/ paths; same Spring /rest likely serves Roobet/Stake/Gamdom (all in-scope). x-site-name-id ignored on public manifest, but auth'd routes may scope sessions by header unbound to JWT principal.
+evidence_needed: response/tenant variance when auth'd request carries x-preferred-app-context or x-site-name-id of another in-scope brand; cross-brand data in body or site-name echo.
+verify_steps: GET/OPTIONS https://betpandacasino.io/rest/properties/manifest with x-preferred-app-context: roobet_com (passive header-matrix completion); then credentialed cross-header replay.
+impact: Cross-brand/cross-tenant casino data or session confusion — HIGH
+testability: AUTH_HELPED
+[PARKED] Casino JWT Session / Zendesk SSO Trust Boundary (45): /rest/user/account-balances-and-bonuses, /refresh, /authenticate all 405 on GET — POST-only; anonymous JWT issuance unverifiable passively; needs authed POST, deferred.
+[PARKED] Confluence Anonymous Space Enumeration (55): /wiki/rest/api/space?limit=5 → 303 to root — Edge closes all Confluence REST passthrough; no anonymous route, confirmed closed.
+[PARKED] Multi-tenant header routing: x-site-name-id=roobet_com|stake_com ignored on public /rest/properties/manifest (echo stays betpandacasino_io, body Betpanda) — not passively visible; only kept at 42 pending x-preferred-app-context test.
+[FINAL] 1. BetPanda Affiliate IDOR /rest/player/uid/{id} (65, AUTH_HELPED)
+[FINAL] 2. Multi-tenant routing header confusion (42, AUTH_HELPED) — pending header-matrix probe
+[NEXT] PROBE: GET https://betpandacasino.io/rest/properties/manifest with headers `x-preferred-app-context: roobet_com` and `x-captcha-token: 1` — any deviation from betpandacasino_io/Betpanda echo confirms active tenant routing; if ignored, PARK the header thread and hold at single flagship IDOR.
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo (betpandacasino_io).
+[LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com: /wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io: x-site-name-id tenant header ignored on public manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch.
+[RISK] avatarux-studios: 78 — casino money/JWT surface confirmed POST-method-gated behind pinned CORS (no anonymous GET exposure), Confluence enumeration closed; best concrete path remains affiliates IDOR (needs second credentialed session, not yet authorized); cPanel takeover + JSM config-exposure surfaces unchanged; passive collection nearly exhausted at fixed gate.

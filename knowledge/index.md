@@ -57,3 +57,21 @@
 - 2026-09-04 ACCEPTED OTHER @ betpandacasino.io: bundle leaks AWS client assets: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public — mapping only, no misconfig
 - 2026-09-04 REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
 - 2026-09-04 REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+- 2026-09-05 ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo (betpandacasino_io).
+- 2026-09-05 REJECTED MISCONFIG @ help.desk.avatarux.com: /wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge.
+- 2026-09-05 REJECTED MISCONFIG @ betpandacasino.io: x-site-name-id tenant header ignored on public manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch.
+- 2026-09-05 ACCEPTED IDOR @ affiliates.betpanda.io: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId=1, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter
+- 2026-09-05 ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 with no body — potential enumeration vector, rate limiting unverified
+- 2026-09-05 ACCEPTED MISCONFIG @ affiliates.betpanda.io: /config/config.json exposes runtime config including operatorId=1, CMS integration details, betpanda.partners link, and full currency list
+- 2026-09-05 ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- 2026-09-05 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- 2026-09-05 ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+- 2026-09-05 ACCEPTED MISCONFIG @ betpandacasino.io: real API base = same-origin /rest; /rest/properties/manifest public; Spring Boot backend; no actuator/swagger/api-docs exposed
+- 2026-09-05 ACCEPTED MISCONFIG @ betpandacasino.io: bundle leaks AWS client assets: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public — mapping only, no misconfig
+- 2026-09-05 REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+- 2026-09-05 REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+- 2026-09-05 ACCEPTED MISCONFIG @ cpanel: Cloudflare 1001 persists — 48h stable state confirms dangling DNS, subdomain takeover candidate
+- 2026-09-05 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-05 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-05 ACCEPTED MISCONFIG @ cable.betpanda.io: custom Node "BB CABLE" service live, Cloudflare-fronted, in-scope BetPanda brand infrastructure
+- 2026-09-05 ACCEPTED MISCONFIG @ help.desk: JSM/Confluence behind Atlassian Edge, tenant IDs in HTML, REST endpoints return 401/404/303

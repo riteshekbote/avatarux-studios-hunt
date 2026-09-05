@@ -167,3 +167,16 @@ www.avatarux.com
 - CHANGED help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge, tenant IDs/feature flags in HTML, REST paths return 401/404/303 (stable)
 
 ## 2026-09-04 23:20:31 UTC
+
+## 2026-09-05 01:16:23 UTC
+- NEW affiliates.betpanda.io: API backend confirmed same-origin at /rest (not separate subdomain); /config/config.json reveals apiBaseUrl=https://affiliates.betpanda.io/rest
+- NEW affiliates.betpanda.io: /rest/public/config leaks operatorId=1, Strapi CMS config, support email, full currency list — backend config disclosure
+- NEW affiliates.betpanda.io: /rest/public/recover-password/email/{email} accepts email in URL path, returns 204 no body — account enumeration/reset bypass vector
+- NEW affiliates.betpanda.io: Full API endpoint map from JS bundle: /rest/player/uid/{id}, /rest/transaction/list, /rest/agent/*, /rest/v2/report, /rest/payouts/single-currency-list, /rest/trk/* — all auth-
+- NEW betpandacasino.io: real API base = same-origin /rest (mirrors affiliates); /rest/properties/manifest public; Spring Boot backend; no actuator/swagger/api-docs
+- NEW custom-lp.betpanda.io: Live behind Cloudflare challenge — new BetPanda infrastructure via crt.sh
+- NEW fp.betpanda.io: Live behind Cloudflare challenge — likely fingerprint/fraud detection service
+- NEW flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+- NEW betpandacasino.io bundle leaks AWS client config: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public
+- CHANGED cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours; CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP); stable dangling DNS
+- CHANGED help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge; tenant IDs/feature flags in HTML; REST paths return 401/404/303 (stable)

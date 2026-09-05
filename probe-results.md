@@ -88,3 +88,7 @@ https://crt.sh/?q=%.avatarux.com -> 200 len=?
 https://help.desk.avatarux.com/wiki/rest/api/space?limit=5 -> 200 len=?
 https://help.desk.avatarux.com/wiki/rest/api/content?limit=5 -> 200 len=?
 https://help.desk.avatarux.com/wiki/spaces/viewdefaultdecorator.action -> 202 len=0
+
+## 2026-09-05 01:16:26 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> 200 len=?

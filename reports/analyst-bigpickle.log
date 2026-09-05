@@ -4681,3 +4681,350 @@ testability: AUTH_HELPED
 
 [STEP7] RISK
 [RISK] avatarux-studios: 80 — betpandacasino.io casino API now mapped and same-origin /rest (JWT auth + Spring), player-funds surface reachable; affiliates IDOR candidate stays best concrete path but needs a second session; AvatarUX corporate (Atlassian/cPanel) attack surface unchanged; only gate-lift is credentialed testing which is not yet authorized.
+===== ANALYST bigpickle 2026-09-05 01:16:23 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -o /dev/null -w "%{http_code} %{time_total}s %{redirect_url}\n" "https://betpandacasino.io/rest/user/account-balances-and-bonuses" ; sleep 1.1; curl -sS -o /dev/null -w "%{http_code} %{time_total}s %{redirect_url}\n" "https://help.desk.avatarux.com/wiki/rest/api/space?limit=5"
+405 1.044734s 
+303 0.486714s https://help.desk.avatarux.com:443/
+[0m
+[0m$ [0mcurl -sS -X OPTIONS -D - -o /dev/null "https://betpandacasino.io/rest/user/account-balances-and-bonuses" | rg -i "HTTP|allow|content-type" ; sleep 1.1; curl -sS -o /dev/null -w "GAUTH %{http_code}\n" "https://betpandacasino.io/rest/user/authenticate"
+/bin/bash: line 1: rg: command not found
+GAUTH 405
+[0m
+[0m$ [0mfor h in "OPTIONS /rest/user/account-balances-and-bonuses" ; do :; done; curl -sS -X OPTIONS -D - -o /dev/null "https://betpandacasino.io/rest/user/account-balances-and-bonuses" ; echo "---"; sleep 1.1; curl -sS -D - -o /dev/null "https://betpandacasino.io/rest/user/account-balances-and-bonuses"
+HTTP/2 200 
+date: Sat, 05 Sep 2026 01:05:43 GMT
+content-length: 0
+cf-ray: a36153bffa387a72-DFW
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpuP7j22GXttxqWguNbk8iikDmv; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 06 Sep 2026 00:05:43 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+
+---
+HTTP/2 405 
+date: Sat, 05 Sep 2026 01:05:45 GMT
+content-type: application/json
+cf-ray: a36153cc5cd0111a-ORD
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+allow: POST
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpY9SfHui9PYtcxt1dvPqRUtrx4; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 06 Sep 2026 00:05:45 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+[0m
+[0m$ [0mcurl -sS -X OPTIONS -D - -o /dev/null "https://betpandacasino.io/rest/user/zendesk/jwt" | grep -iE "HTTP/|allow:" ; sleep 1.1; curl -sS -o /dev/null -w "manifest %{http_code}\n" "https://betpandacasino.io/rest/properties/manifest"
+HTTP/2 200 
+manifest 200
+[0m
+[0m$ [0mcurl -sS -X OPTIONS -D - -o /dev/null "https://betpandacasino.io/rest/user/zendesk/jwt"; echo "==="; sleep 1.1; curl -sS -o /dev/null -w "refresh %{http_code}\n" -X GET "https://betpandacasino.io/rest/user/refresh"
+HTTP/2 200 
+date: Sat, 05 Sep 2026 01:06:05 GMT
+content-length: 0
+cf-ray: a361544c2e243ad0-DFW
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpuP7j22GXttxqWy9Q48WzUgpZ2; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 06 Sep 2026 00:06:05 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+
+===
+refresh 405
+[0m
+[0m$ [0mcurl -sS -D - -H "x-site-name-id: roobet_com" "https://betpandacasino.io/rest/properties/manifest" ; echo; echo "==="; sleep 1.1; curl -sS -D - -H "x-site-name-id: stake_com" "https://betpandacasino.io/rest/properties/manifest"
+HTTP/2 200 
+date: Sat, 05 Sep 2026 01:06:41 GMT
+content-type: text/plain;charset=UTF-8
+content-length: 2442
+cf-ray: a3615529fe1a69cc-DFW
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpY9SfHui9PYtcwxrp8iKXGwgwn; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 06 Sep 2026 00:06:41 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+
+{
+  "name": "Betpanda",
+  "short_name": "Betpanda",
+  "description": "Leading Crypto Gaming Platform",
+  "lang": "en",
+  "start_url": "/app",
+  "display": "standalone",
+  "theme_color": "#171F2B",
+  "background_color": "#171F2B",
+  "icons": [
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-196.png",
+      "sizes": "196x196",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-36.png",
+      "sizes": "36x36",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ]
+}
+===
+HTTP/2 200 
+date: Sat, 05 Sep 2026 01:06:43 GMT
+content-type: text/plain;charset=UTF-8
+content-length: 2442
+cf-ray: a36155362deb45f0-DFW
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpuP7j22GXttxqVphptrsR1shjJ; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 06 Sep 2026 00:06:43 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+
+{
+  "name": "Betpanda",
+  "short_name": "Betpanda",
+  "description": "Leading Crypto Gaming Platform",
+  "lang": "en",
+  "start_url": "/app",
+  "display": "standalone",
+  "theme_color": "#171F2B",
+  "background_color": "#171F2B",
+  "icons": [
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-196.png",
+      "sizes": "196x196",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-36.png",
+      "sizes": "36x36",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ]
+}
+[0m
+[0m$ [0mcurl -sS "https://crt.sh/?q=%25.avatarux.com&output=json" | tr ',' '\n' | grep -oE '"name_value":"[^"]*"' | sort -u | head -40; echo "==="; sleep 1.2; curl -sS "https://crt.sh/?q=%25.betpanda.io&output=json" | tr ',' '\n' | grep -oE '"name_value":"[^"]*"' | sort -u | head -60
+(no output)
+
+<shell_metadata>
+shell tool terminated command after exceeding timeout 120000 ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.
+</shell_metadata>
+[0m
+STEP 1 — DELTA
+CHANGED betpandacasino.io `/rest/user/account-balances-and-bonuses`: GET→405 (allow:POST), CORS `access-control-allow-origin: https://betpandacasino.io` pinned with credentials — money endpoint is POST-method-gated, NOT a GET leak; `/rest/user/refresh` + `/rest/user/authenticate` also 405 (POST-only).
+NEW betpandacasino.io custom header surface exposed via OPTIONS/CORS preflight: `x-site-name-id` (echo `betpandacasino_io`), `x-preferred-app-context`, `x-captcha-token`, `x-maintenance-reason` — consistent with a single Spring API serving multiple in-scope casino brands.
+CHANGED help.desk.avatarux.com `GET /wiki/rest/api/space?limit=5` → 303 to root (stable) — Confluence REST passthrough closed behind Atlassian Edge.
+
+STEP 2 — PRIORITIZE
+[PRIO] betpandacasino.io,8.15,attack_surface=9,business_value=10,tech_exposure=8,gate_ease=3,cloud_surface=7,freshness=9
+[PRIO] affiliates.betpanda.io,7.7,attack_surface=7,business_value=9,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=8
+[PRIO] help.desk.avatarux.com,6.0,attack_surface=6,business_value=6,tech_exposure=7,gate_ease=6,cloud_surface=5,freshness=6
+
+STEP 3 — HYPOTHESES
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 65
+reasoning: Same-origin /rest Spring API confirmed via /config/config.json + /rest/public/config (operatorId=1 leaked); endpoint map harvested from bundle includes /rest/player/uid/{id}; path-parameter uid is classic BOLA; no counter-evidence observed this cycle.
+evidence_needed: two affiliate sessions — response diff on /rest/player/uid/{alt_id} returning another affiliate's player/commission data.
+verify_steps: GET /rest/player/uid/{own_id} with session A (baseline) → replay with {alt_id}; requires credentialed second session.
+impact: Cross-affiliate PII/commission/payout exposure — HIGH
+testability: AUTH_HELPED
+
+[HYP] Multi-tenant routing header confusion on shared casino API
+class: AUTH
+asset: betpandacasino.io/rest/*
+confidence: 42
+reasoning: CORS preflight advertises tenant-routing headers x-site-name-id + x-preferred-app-context; manifest S3 layout uses /operators/{brand}/ paths; same Spring /rest likely serves Roobet/Stake/Gamdom (all in-scope). x-site-name-id ignored on public manifest, but auth'd routes may scope sessions by header unbound to JWT principal.
+evidence_needed: response/tenant variance when auth'd request carries x-preferred-app-context or x-site-name-id of another in-scope brand; cross-brand data in body or site-name echo.
+verify_steps: GET/OPTIONS https://betpandacasino.io/rest/properties/manifest with x-preferred-app-context: roobet_com (passive header-matrix completion); then credentialed cross-header replay.
+impact: Cross-brand/cross-tenant casino data or session confusion — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] Casino JWT Session / Zendesk SSO Trust Boundary (45): /rest/user/account-balances-and-bonuses, /refresh, /authenticate all 405 on GET — POST-only; anonymous JWT issuance unverifiable passively; needs authed POST, deferred.
+[PARKED] Confluence Anonymous Space Enumeration (55): /wiki/rest/api/space?limit=5 → 303 to root — Edge closes all Confluence REST passthrough; no anonymous route, confirmed closed.
+[PARKED] Multi-tenant header routing: x-site-name-id=roobet_com|stake_com ignored on public /rest/properties/manifest (echo stays betpandacasino_io, body Betpanda) — not passively visible; only kept at 42 pending x-preferred-app-context test.
+[FINAL] 1. BetPanda Affiliate IDOR /rest/player/uid/{id} (65, AUTH_HELPED)
+[FINAL] 2. Multi-tenant routing header confusion (42, AUTH_HELPED) — pending header-matrix probe
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET https://betpandacasino.io/rest/properties/manifest with headers `x-preferred-app-context: roobet_com` and `x-captcha-token: 1` — any deviation from betpandacasino_io/Betpanda echo confirms active tenant routing; if ignored, PARK the header thread and hold at single flagship IDOR.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo (betpandacasino_io).
+[LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com: /wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io: x-site-name-id tenant header ignored on public manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 78 — casino money/JWT surface confirmed POST-method-gated behind pinned CORS (no anonymous GET exposure), Confluence enumeration closed; best concrete path remains affiliates IDOR (needs second credentialed session, not yet authorized); cPanel takeover + JSM config-exposure surfaces unchanged; passive collection nearly exhausted at fixed gate.
