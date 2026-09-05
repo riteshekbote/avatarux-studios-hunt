@@ -1,1 +1,30 @@
-## 2026-09-05 09:57:49 UTC [target] (model bigpickle)
+## 2026-09-05 13:20:15 UTC [target] (model bigpickle)
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 72
+reasoning: Same-origin /rest Spring API confirmed via /config/config.json + /rest/public/config (operatorId=1); endpoint map includes /rest/player/uid/{id}; path-parameter uid is classic BOLA; no counter-evidence.
+evidence_needed: two affiliate sessions — response diff on /rest/player/uid/{alt_id} returning another affiliate's player/commission data.
+verify_steps: GET /rest/player/uid/{own_id} with session A (baseline) → replay with {alt_id}; requires credentialed second session.
+impact: Cross-affiliate PII/commission/payout exposure — HIGH
+testability: AUTH_HELPED
+[HYP] cPanel Subdomain Takeover via Cloudflare 1001 / Dangling DNS
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 78
+reasoning: Cloudflare 1001 ("DNS points to prohibited IP") stable 48h+ across 20+ cycles; CNAME → avatarux.com → 162.159.136.54 (Cloudflare edge); cPanel ports (2082/2083) SSL failures confirm no active origin. Classic dangling DNS takeover indicator.
+evidence_needed: Certificate transparency log confirming no active service; verification of zone orphaned status.
+verify_steps: GET https://cpanel.avatarux.com/ reconfirm 1001 persists; crt.sh query for *.avatarux.com certificate status.
+impact: Full subdomain control under *.avatarux.com → phishing/host takeover — CRITICAL
+testability: PASSIVE
+[HYP] BetPanda Password Reset Timing Enumeration
+class: AUTH
+asset: affiliates.betpanda.io/rest/public/recover-password/email/{email}
+confidence: 65
+reasoning: Password reset endpoint accepts email in URL path, returns 204 no body for any email; timing differential between valid/invalid emails could enable account enumeration; rate limiting unverified.
+evidence_needed: measurable timing differential between valid email (admin@betpanda.io) and invalid email (nonexistent_xyz_999@betpanda.io).
+verify_steps: GET /rest/public/recover-password/email/admin@betpanda.io — measure ms; GET /rest/public/recover-password/email/nonexistent_xyz_999@betpanda.io — measure ms + compare body size.
+impact: Account enumeration, potential ATO via reset link interception — MEDIUM
+testability: PASSIVE
+[NEXT] PROBE: GET https://affiliates.betpanda.io/rest/public/recover-password/email/admin@betpanda.io (measure response time ms, body length) && GET https://affiliates.betpanda.io/rest/public/recover-password/email/nonexistent_xyz_999@betpanda.io (measure response time ms, body length) — compare timing differential for account enumeration confirmation
+[RISK] avatarux-studios: 78 — casino money/JWT surface confirmed POST-method-gated behind pinned CORS (no anonymous GET exposure), Confluence enumeration closed; best concrete path remains affiliates IDOR (needs second credentialed session, not yet authorized); cPanel takeover + JSM config-exposure surfaces unchanged; passive collection nearly exhausted at fixed gate.
