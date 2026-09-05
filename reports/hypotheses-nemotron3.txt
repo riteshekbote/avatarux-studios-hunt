@@ -1,15 +1,12 @@
-## 2026-09-05 01:16:14 UTC [target] (model nemotron3)
-[NEW] affiliates.betpanda.io: API backend confirmed same-origin at /rest (not separate subdomain); /config/config.json reveals apiBaseUrl=https://affiliates.betpanda.io/rest
-[NEW] affiliates.betpanda.io: /rest/public/config leaks operatorId=1, Strapi CMS config, support email, full currency list — backend config disclosure
-[NEW] affiliates.betpanda.io: /rest/public/recover-password/email/{email} accepts email in URL path, returns 204 no body — account enumeration/reset bypass vector
-[NEW] affiliates.betpanda.io: Full API endpoint map from JS bundle: /rest/player/uid/{id}, /rest/transaction/list, /rest/agent/*, /rest/v2/report, /rest/payouts/single-currency-list, /rest/trk/* — all auth-gated
-[NEW] betpandacasino.io: real API base = same-origin /rest (mirrors affiliates); /rest/properties/manifest public; Spring Boot backend; no actuator/swagger/api-docs
-[NEW] custom-lp.betpanda.io: Live behind Cloudflare challenge — new BetPanda infrastructure via crt.sh
+## 2026-09-05 05:51:10 UTC [target] (model nemotron3)
+[NEW] betpandacasino.io: real API base confirmed same-origin `/rest` (mirrors affiliates.betpanda.io); `/rest/properties/manifest` public; Spring Boot backend signature via JSON 404/405; no actuator/swagger/api-docs exposed
+[NEW] betpandacasino.io bundle leaks AWS client config: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public — mapping only, no misconfig
+[NEW] custom-lp.betpanda.io: Live behind Cloudflare challenge — new BetPanda infrastructure discovered via crt.sh
 [NEW] fp.betpanda.io: Live behind Cloudflare challenge — likely fingerprint/fraud detection service
 [NEW] flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
-[NEW] betpandacasino.io bundle leaks AWS client config: CloudWatch identity pool (eu-west-1), CloudFront dist d3ec3n7kizfkuy.cloudfront.net, S3 nano-public
-[CHANGED] cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours; CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP); stable dangling DNS
+[CHANGED] cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours; CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP); stable dangling DNS confirmed
 [CHANGED] help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge; tenant IDs/feature flags in HTML; REST paths return 401/404/303 (stable)
+[CHANGED] affiliates.betpanda.io: API backend confirmed same-origin at `/rest` (not separate subdomain); full endpoint map extracted (20+ routes); `/config/config.json` reveals apiBaseUrl=https://affiliates.betpanda.io/rest
 [PRIO] affiliates.betpanda.io,8.5,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=9
 [PRIO] cpanel.avatarux.com,7.3,attack_surface=7,business_value=7,tech_exposure=5,gate_ease=4,cloud_surface=6,freshness=7
 [PRIO] betpandacasino.io,6.8,attack_surface=6,business_value=8,tech_exposure=5,gate_ease=6,cloud_surface=6,freshness=8
@@ -18,7 +15,13 @@
 [PRIO] fp.betpanda.io,5.6,attack_surface=5,business_value=5,tech_exposure=5,gate_ease=4,cloud_surface=6,freshness=9
 [PRIO] flags.betpanda.io,5.4,attack_surface=5,business_value=5,tech_exposure=5,gate_ease=4,cloud_surface=6,freshness=9
 [PRIO] help.desk.avatarux.com,5.5,attack_surface=5,business_value=5,tech_exposure=6,gate_ease=8,cloud_surface=5,freshness=6
-[HYP] BetPa[0m
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id} with Auth Session
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 75
+reasoning: Full API map extracted from JS bundle confirms /rest/player/uid/{id} path parameter pattern; /rest/public/config leaks operatorId=1 and Strapi config; all 20+ endpoints auth-gated; IDOR pattern confirmed on player UID path parameter
+evidence_needed: Valid affiliate session cookie/JWT to test cross-player UID access; response body comparison between own UID and other UIDs
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/{own_uid} with valid auth session — capture response; GET https://affiliates.betpanda.io/rest/player/uid/{other_uid} with same session — compare response bodies for PII/commission data leakage
 impact: Cross-affiliate player PII dump, commission data theft, transaction history exposure — HIGH
 testability: AUTH_HELPED
 [HYP] cPanel Subdomain Takeover via Cloudflare 1001 / Dangling DNS

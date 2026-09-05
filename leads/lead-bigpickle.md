@@ -624,3 +624,31 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com: /wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge.
 [LEARN] REJECTED MISCONFIG @ betpandacasino.io: x-site-name-id tenant header ignored on public manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch.
 [RISK] avatarux-studios: 78 — casino money/JWT surface confirmed POST-method-gated behind pinned CORS (no anonymous GET exposure), Confluence enumeration closed; best concrete path remains affiliates IDOR (needs second credentialed session, not yet authorized); cPanel takeover + JSM config-exposure surfaces unchanged; passive collection nearly exhausted at fixed gate.
+## 2026-09-05 05:51:23 UTC [target] (model bigpickle)
+[HYP] Multi-tenant routing header (x-preferred-app-context) on shared casino /rest
+class: AUTH
+asset: betpandacasino.io/rest/properties/manifest
+confidence: 40
+reasoning: OPTIONS advertises x-preferred-app-context + x-site-name-id; x-site-name-id proven inert (echo stays betpandacasino_io); x-preferred-app-context untested; manifest S3 layout uses /operators/{brand}/ and same Spring /rest likely serves Roobet/Stake/Gamdom.
+evidence_needed: manifest echo/body deviation with x-preferred-app-context: roobet_com — brand switch or extra fields = active tenant routing; identical response = header matrix closed.
+verify_steps: GET https://betpandacasino.io/rest/properties/manifest with headers `x-preferred-app-context: roobet_com` and `x-captcha-token: 1` (read-only)
+impact: cross-brand/tenant data routing or session confusion across in-scope brands — HIGH if proven
+testability: PASSIVE
+[HYP] JSM portal key enumeration via /servicedesk/customer/portal/{id}
+class: MISCONFIG
+asset: help.desk.avatarux.com/servicedesk/customer/portal/*
+confidence: 45
+reasoning: root portal returns 303 (active, Atlassian Edge passes /servicedesk/*); portal keys are short sequential IDs; anonymous browse of alternate keys may leak project/service names.
+evidence_needed: 200/303 (vs 404) on non-known portal keys with project/service names in body or title.
+verify_steps: GET https://help.desk.avatarux.com/servicedesk/customer/portal/2 .. /20 at ≤1 rps, compare status/title
+impact: internal service-name disclosure compounding known config leak — MEDIUM
+testability: PASSIVE
+[HYP] BetPanda Affiliate IDOR on /rest/player/uid/{id}
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 65
+reasoning: same-origin /rest Spring API; /config/config.json leaks operatorId=1; bundle endpoint map includes /rest/player/uid/{id}; path-param uid is classic BOLA; no counter-evidence.
+evidence_needed: two credentialed sessions → response diff on /rest/player/uid/{alt_id}
+verify_steps: GET /rest/player/uid/{own_id} with session A baseline, replay alt uid — requires authorized second session (not run now)
+impact: cross-affiliate PII/commission/payout exposure — HIGH
+testability: AUTH_HELPED
