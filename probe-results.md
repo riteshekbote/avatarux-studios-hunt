@@ -97,3 +97,7 @@ https://crt.sh/?q=%.avatarux.com -> 200 len=?
 https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
 https://crt.sh/?q=%.avatarux.com -> 200 len=?
 https://help.desk.avatarux.com/servicedesk/customer/portal/2 -> 200 len=?
+
+## 2026-09-05 10:03:23 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out

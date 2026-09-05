@@ -190,3 +190,11 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com: Cloudflare 1001 persists 48+ hours; CNAME → avatarux.com → 162.159.136.54 (Cloudflare IP); stable dangling DNS confirmed
 - CHANGED help.desk.avatarux.com: Confluence/JSM behind Atlassian Edge; tenant IDs/feature flags in HTML; REST paths return 401/404/303 (stable)
 - CHANGED affiliates.betpanda.io: API backend confirmed same-origin at `/rest` (not separate subdomain); full endpoint map extracted (20+ routes); `/config/config.json` reveals apiBaseUrl=https://affiliates.bet
+
+## 2026-09-05 10:03:08 UTC
+- NEW help.desk.avatarux.com/servicedesk/customer/portal/2 → HTTP 200 (previously only portal/ returned 303; portal/2 is a second accessible JSM customer portal instance)
+- NEW betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-i
+- CHANGED cpanel.avatarux.com Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed via 20+ probe cycles
+- CHANGED help.desk.avatarux.com/wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge
+- CHANGED betpandacasino.io x-site-name-id tenant header ignored on public manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch
+- CHANGED affiliates.betpanda.io API backend confirmed same-origin at `/rest` (not separate subdomain); full endpoint map extracted (20+ routes); `/config/config.json` reveals apiBaseUrl=https://affiliates.betp

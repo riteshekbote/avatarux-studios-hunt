@@ -5092,3 +5092,32 @@ testability: AUTH_HELPED
 
 **STEP 7 — RISK**
 - [RISK] avatarux-studios: 78 — no new surface this cycle; casino money/JWT endpoints POST-gated behind pinned CORS (no anonymous exposure); best concrete path (affiliates IDOR) blocked on a second authorized session; cPanel takeover + JSM config leak surfaces unchanged; passive collection approaching exhaustion at fixed gate.
+===== ANALYST bigpickle 2026-09-05 10:03:08 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -w "\nHTTP_CODE:%{http_code}\nTIME_TOTAL:%{time_total}\n" -o /tmp/manifest_default.json "https://betpandacasino.io/rest/properties/manifest" -H "User-Agent: Mozilla/5.0" --max-time 10 2>&1
+HTTP_CODE:200
+TIME_TOTAL:0.929488
+[0m
+[0m$ [0mcurl -s -w "\nHTTP_CODE:%{http_code}\nTIME_TOTAL:%{time_total}\n" -o /tmp/manifest_roobet.json "https://betpandacasino.io/rest/properties/manifest" -H "User-Agent: Mozilla/5.0" -H "x-preferred-app-context: roobet_com" -H "x-captcha-token: 1" --max-time 10 2>&1
+HTTP_CODE:200
+TIME_TOTAL:0.755169
+[0m
+[0m$ [0mcurl -s -w "\nHTTP_CODE:%{http_code}\nTIME_TOTAL:%{time_total}\nBODY_SIZE:%{size_download}\n" "https://affiliates.betpanda.io/rest/public/recover-password/email/test123_nonexist_x@betpanda.io" -H "User-Agent: Mozilla/5.0" --max-time 10 2>&1
+HTTP_CODE:200
+TIME_TOTAL:0.608505
+BODY_SIZE:0
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcat /tmp/manifest_default.json failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcat /tmp/manifest_roobet.json failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+[0m
+[0m$ [0mcurl -s -w "\nHTTP_CODE:%{http_code}\nTIME_TOTAL:%{time_total}\nBODY_SIZE:%{size_download}\n" "https://affiliates.betpanda.io/rest/public/recover-password/email/betpanda-admin@betpanda.io" -H "User-Agent: Mozilla/5.0" --max-time 10 2>&1
+HTTP_CODE:200
+TIME_TOTAL:0.436244
+BODY_SIZE:0
+[0m

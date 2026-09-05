@@ -652,3 +652,4 @@ evidence_needed: two credentialed sessions → response diff on /rest/player/uid
 verify_steps: GET /rest/player/uid/{own_id} with session A baseline, replay alt uid — requires authorized second session (not run now)
 impact: cross-affiliate PII/commission/payout exposure — HIGH
 testability: AUTH_HELPED
+## 2026-09-05 09:57:49 UTC [target] (model bigpickle)
