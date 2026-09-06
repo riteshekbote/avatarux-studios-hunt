@@ -255,3 +255,5 @@ www.avatarux.com
 - CHANGED help.desk.avatarux.com/wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge
 - CHANGED betpandacasino.io x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch
 - CHANGED affiliates.betpanda.io API backend confirmed same-origin at `/rest`; full endpoint map (20+ routes); `/config/config.json` reveals apiBaseUrl=https://affiliates.betpanda.io/rest
+
+## 2026-09-06 09:25:36 UTC

@@ -99,3 +99,6 @@
 - 2026-09-06 REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
 - 2026-09-06 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
 - 2026-09-06 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-06 REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed.
+- 2026-09-06 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded.
+- 2026-09-06 ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 — attack surface reduced
