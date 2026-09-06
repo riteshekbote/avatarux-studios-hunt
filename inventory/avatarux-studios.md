@@ -238,3 +238,12 @@ www.avatarux.com
 - CHANGED help.desk.avatarux.com/wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge
 - CHANGED betpandacasino.io x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch
 - CHANGED affiliates.betpanda.io API backend confirmed same-origin at `/rest`; full endpoint map (20+ routes); `/config/config.json` reveals apiBaseUrl=https://affiliates.betpanda.io/rest
+
+## 2026-09-06 00:24:07 UTC
+- CHANGED ranked-lead set reintroduces a REJECTED-class item ("Password Reset Timing Differential for Account Enumeration", bigpickle NEXT) — will be parked at critique (out-of-scope: forgot-password enumeratio
+- NEW help.desk.avatarux.com/servicedesk/customer/portal/2 → HTTP 200 confirmed across 4 probe cycles (second accessible JSM customer portal instance)
+- NEW betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} OPTIONS leaks tenant-routing header schema + echoes x-site-name-id (betpandacasino_io) on financial endpoint
+- CHANGED cpanel.avatarux.com Cloudflare 1001 persists 48h+ across 20+ probe cycles — stable dangling DNS confirmed
+- CHANGED help.desk.avatarux.com/wiki/rest/api/space?limit=5 → 303 to root stable — Confluence anonymous space enumeration closed behind Atlassian Edge
+- CHANGED betpandacasino.io x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch
+- CHANGED affiliates.betpanda.io API backend confirmed same-origin at `/rest`; full endpoint map (20+ routes); `/config/config.json` reveals apiBaseUrl=https://affiliates.betpanda.io/rest

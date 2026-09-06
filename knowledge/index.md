@@ -82,3 +82,20 @@
 - 2026-09-05 REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
 - 2026-09-05 ACCEPTED OTHER @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema
 - 2026-09-05 ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 HTTP 200 — expands attack surface for tenant ID enumeration
+- 2026-09-06 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it.
+- 2026-09-06 ACCEPTED OTHER @ betpandacasino.io: only remaining cheap passive gap is /rest/public/config mirror; all other passive surfaces closed (actuator/api-docs 404, SPA shell shadows, x-site-name-id ignored).
+- 2026-09-06 ACCEPTED MISCONFIG @ cpanel.avatarux.com: 48h+ stable dangling DNS reconfirmed; claim mechanism remains the sole unknown — NS/SOA delegation check still unevidenced.
+- 2026-09-06 ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+- 2026-09-06 ACCEPTED IDOR @ affiliates.betpanda.io: API backend same-origin at /rest; endpoint map complete; IDOR pattern confirmed but requires second credentialed session
+- 2026-09-06 ACCEPTED AUTH @ affiliates.betpanda.io: Password reset endpoint accepts email in URL path, returns 204 no body — timing enumeration unvalidated
+- 2026-09-06 ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo
+- 2026-09-06 ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 HTTP 200 — expands attack surface for tenant ID enumeration
+- 2026-09-06 ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- 2026-09-06 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- 2026-09-06 ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+- 2026-09-06 REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+- 2026-09-06 REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+- 2026-09-06 REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+- 2026-09-06 REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+- 2026-09-06 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-06 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
