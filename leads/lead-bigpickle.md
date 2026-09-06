@@ -943,3 +943,33 @@ testability: PASSIVE
 [LEARN] ACCEPTED OTHER @ betpandacasino.io: only remaining cheap passive gap is /rest/public/config mirror; all other passive surfaces closed (actuator/api-docs 404, SPA shell shadows, x-site-name-id ignored).
 [LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: 48h+ stable dangling DNS reconfirmed; claim mechanism remains the sole unknown — NS/SOA delegation check still unevidenced.
 [RISK] avatarux-studios: 68 — Passive surface effectively exhausted; both high-value paths (affiliates IDOR, casino tenant isolation) require credentialed sessions not yet authorized; cPanel CRITICAL claim mechanism unproven and edge unobservable; remaining probes are LOW-MED corroboration only. Exposure contingent on the next auth step, not further passive recon.
+## 2026-09-06 04:49:05 UTC [target] (model bigpickle)
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest backend confirmed (config.json apiBaseUrl); /rest/public/config leaks operatorId=1; endpoint map includes /rest/player/uid/{id}; live probe 401 gated (len 48); path-param uid = classic BOLA, no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id header schema (echo betpandacasino_io); header IGNORED on public manifest (roobet_com/stake_com echo betpandacasino_io) — only the pre-auth surface was tested; auth-scoped routing unverified; multitenancy across Roobet/Stake/Gamdom/BetPanda established via bundle (GLOBAL_FLIPT_URL, tenant id-space).
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows balance/context switch or cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] cPanel Subdomain Takeover via Dangling DNS
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 25
+reasoning: CNAME→apex (same-zone)→162.159.136.54 (Cloudflare) stable 48h+; Cloudflare 1001 persists; BUT fresh NS/SOA: cpanel shares Bluehost zone with apex (serial 126031004), no separate delegation, no orphaned external CNAME, apex not attacker-claimable — no claimable provider exists anywhere in the chain.
+evidence_needed: (none viable) only zone-delegation change or orphaned external CNAME to a claimable provider would reopen; neither exists to date.
+verify_steps: passive-only future re-check of dig cpanel.avatarux.com CNAME/NS + crt.sh %.avatarux.com for orphaned issuance.
+impact: *.avatarux.com control IF claimable — CRITICAL; claim path currently absent
+testability: PASSIVE
+[NEXT] HUMAN: request program-authorized credentialed sessions for affiliates.betpanda.io and betpandacasino.io (or written authorization to test the two AUTH_HELPED endpoints); passive surface is exhausted — no further read-only probe moves any score.
+[RISK] avatarux-studios: 72 — Passive surface is exhausted and the sole CRITICAL-path hypothesis (cPanel) is now evidence-disproven; both remaining high-value hypotheses (affiliates IDOR, casino tenant isolation) are AUTH_HELPED and blocked on sanctioned credentials. Risk is now engagement-stall: no further passive progress possible, and exposure of ATO/cross-tenant money surface depends entirely on the next authorized auth step.

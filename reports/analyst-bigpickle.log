@@ -5902,3 +5902,83 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 68 — Passive surface effectively exhausted; both high-value paths (affiliates IDOR, casino tenant isolation) require credentialed sessions not yet authorized; cPanel CRITICAL claim mechanism unproven and edge unobservable; remaining probes are LOW-MED corroboration only. Exposure contingent on the next auth step, not further passive recon.
+===== ANALYST bigpickle 2026-09-06 04:49:30 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mdig +short cpanel.avatarux.com NS; echo "---SOA cpanel---"; dig +short cpanel.avatarux.com SOA; echo "---SOA apex---"; dig +short avatarux.com SOA; echo "---NS apex---"; dig +short avatarux.com NS
+avatarux.com.
+ns2.bluehost.com.
+ns1.bluehost.com.
+---SOA cpanel---
+avatarux.com.
+NS1.BLUEHOST.com. root.BLUEHOST.com. 126031004 10800 3600 604800 3600
+---SOA apex---
+NS1.BLUEHOST.com. root.BLUEHOST.com. 126031004 10800 3600 604800 3600
+---NS apex---
+ns1.bluehost.com.
+ns2.bluehost.com.
+[0m
+[0m$ [0mcurl -s -o /tmp/opencode/casino_cfg.json -w "%{http_code} %{content_type} %{size_download}\n" --max-time 15 https://betpandacasino.io/rest/public/config
+404 application/json 89
+[0m
+[0m$ [0mcat /tmp/opencode/casino_cfg.json
+{"timestamp":1788670073426,"status":404,"error":"Not Found","path":"/rest/public/config"}
+[0m
+STEP 1 — DELTA
+- NEW betpandacasino.io: `/rest/public/config` → `404 application/json` Spring JSON `{"timestamp":...,"status":404,"path":"/rest/public/config"}` — NO casino mirror of the affiliates leak; last cheap passive gap closed.
+- NEW cpanel.avatarux.com: NS=ns1/ns2.bluehost.com, SOA serial 126031004 identical for subdomain and apex — cpanel sits in the same Bluehost-managed zone as the apex, no separate delegation, no external/claimable provider in the CNAME chain.
+- CHANGED ranked set: nemotron3 cpanel score bumped to [80]; fresh delegation evidence contradicts the claim path (mechanism structurally absent).
+
+STEP 2 — PRIORITIZE
+- [PRIO] betpandacasino.io/rest/user/* (tenant isolation),6.7,a7b9t8g2c6f6 — unchanged, needs auth
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{id},6.5,a6b9t6g3c5f8 — unchanged, needs auth
+- [PRIO] help.desk.avatarux.com /servicedesk/customer/portal/2,5.0,a3b6t5g7c4f5 — tenant-ID surface, but customer-data exposure class REJECTED
+- [PRIO] cpanel.avatarux.com,3.5,a1b8t1g10c3f4 — downgraded: zone-ownership evidence (Bluehost, serial 126031004) removes claimable delegation mechanism
+- [PRIO] betpandacasino.io/rest/public/config,2.5 — dead: 404 Spring JSON, no mirror
+
+STEP 3 — HYPOTHESES
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest backend confirmed (config.json apiBaseUrl); /rest/public/config leaks operatorId=1; endpoint map includes /rest/player/uid/{id}; live probe 401 gated (len 48); path-param uid = classic BOLA, no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id header schema (echo betpandacasino_io); header IGNORED on public manifest (roobet_com/stake_com echo betpandacasino_io) — only the pre-auth surface was tested; auth-scoped routing unverified; multitenancy across Roobet/Stake/Gamdom/BetPanda established via bundle (GLOBAL_FLIPT_URL, tenant id-space).
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows balance/context switch or cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] cPanel Subdomain Takeover via Dangling DNS
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 25
+reasoning: CNAME→apex (same-zone)→162.159.136.54 (Cloudflare) stable 48h+; Cloudflare 1001 persists; BUT fresh NS/SOA: cpanel shares Bluehost zone with apex (serial 126031004), no separate delegation, no orphaned external CNAME, apex not attacker-claimable — no claimable provider exists anywhere in the chain.
+evidence_needed: (none viable) only zone-delegation change or orphaned external CNAME to a claimable provider would reopen; neither exists to date.
+verify_steps: passive-only future re-check of dig cpanel.avatarux.com CNAME/NS + crt.sh %.avatarux.com for orphaned issuance.
+impact: *.avatarux.com control IF claimable — CRITICAL; claim path currently absent
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] cPanel takeover: confidence 25 <40; SOA serial 126031004 shared with apex proves same Bluehost-managed zone — claim mechanism structurally absent; nemotron3 [80] contradicted by delegation evidence.
+- [PARKED] casino /rest/public/config mirror: 404 Spring JSON kills it — REJECTED on evidence, no corroboration value remains.
+- [PARKED] recover-password timing: REJECTED class (forgot-password enumeration / account-recovery policy) — must not rerank.
+- [PARKED] JSM portal/2 tenant enumeration: only validation routes, risk customer-data exposure (REJECTED), Confluence anon-space already 303-closed.
+- [FINAL] 1. Affiliates IDOR /rest/player/uid/{id} (78, AUTH_HELPED). 2. Casino tenant isolation /rest/user/* (55, AUTH_HELPED). Both unprobeable without credentialed sessions.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: request program-authorized credentialed sessions for affiliates.betpanda.io and betpandacasino.io (or written authorization to test the two AUTH_HELPED endpoints); passive surface is exhausted — no further read-only probe moves any score.
+
+STEP 6 — LEARNING
+- [LEARN] REJECTED MISCONFIG @ betpandacasino.io: /rest/public/config 404 Spring JSON — no casino mirror; passive casino surface now fully exhausted.
+- [LEARN] REJECTED MISCONFIG @ cpanel.avatarux.com: SOA serial 126031004 identical for cpanel and apex, NS=ns1/ns2.bluehost.com — same-zone Bluehost delegation; dangling-DNS takeover mechanism disproven, not just unproven.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 72 — Passive surface is exhausted and the sole CRITICAL-path hypothesis (cPanel) is now evidence-disproven; both remaining high-value hypotheses (affiliates IDOR, casino tenant isolation) are AUTH_HELPED and blocked on sanctioned credentials. Risk is now engagement-stall: no further passive progress possible, and exposure of ATO/cross-tenant money surface depends entirely on the next authorized auth step.
