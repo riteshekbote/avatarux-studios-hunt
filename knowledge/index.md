@@ -104,3 +104,4 @@
 - 2026-09-06 ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 — attack surface reduced
 - 2026-09-06 ACCEPTED OTHER @ all live in-scope hosts: re-verified stable (cpanel 000/1001, affiliates 200, casino 200, help.desk 302); casino /rest/public/config 404 vs affiliates 200 — mirror falsification reconfirmed, passive gap closed.
 - 2026-09-06 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
+- 2026-09-06 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed.

@@ -136,3 +136,6 @@ https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out
 
 ## 2026-09-06 16:10:40 UTC
 https://crt.sh/?q=%.avatarux.com -> HTTP 502
+
+## 2026-09-06 18:20:36 UTC
+https://crt.sh/?q=%.avatarux.com -> HTTP 404
