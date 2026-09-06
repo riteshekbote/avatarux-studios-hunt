@@ -139,3 +139,6 @@ https://crt.sh/?q=%.avatarux.com -> HTTP 502
 
 ## 2026-09-06 18:20:36 UTC
 https://crt.sh/?q=%.avatarux.com -> HTTP 404
+
+## 2026-09-06 20:35:03 UTC
+https://crt.sh/?q=%.avatarux.com -> ERR <urlopen error [Errno 101] Network is unreachable>

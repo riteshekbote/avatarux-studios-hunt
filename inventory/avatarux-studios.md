@@ -282,3 +282,12 @@ www.avatarux.com
 - CHANGED betpandacasino.io: x-site-name-id tenant header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
 - CHANGED help.desk.avatarux.com: Confluence /wiki/rest/api/space → 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
 - CHANGED All live in-scope hosts re-verified stable (cpanel 000/1001, affiliates 200, casino 200, help.desk 302)
+
+## 2026-09-06 20:34:49 UTC
+- NEW betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror affiliates leak; hypothesis falsified, last passive corroboration gap closed
+- NEW help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 (was 200) — attack surface reduced
+- NEW cpanel.avatarux.com: NS confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded from takeover candidate
+- CHANGED cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed but delegation gap unclaimable via standard means
+- CHANGED betpandacasino.io: x-site-name-id tenant header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+- CHANGED help.desk.avatarux.com: Confluence /wiki/rest/api/space → 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+- CHANGED All live in-scope hosts re-verified stable (cpanel 000/1001, affiliates 200, casino 200, help.desk 302)
