@@ -6245,3 +6245,102 @@ testability: PASSIVE
 ### STEP 7 — RISK
 
 [RISK] avatarux-studios: 74 — Passive surface fully exhausted and the sole CRITICAL-path hypothesis (cPanel) is mechanism-unproven with no claimable provider (evidence-capped); the casino config-mirror route is now falsified. Both remaining high-value hypotheses (affiliates IDOR 78, casino tenant isolation 55) are AUTH_HELPED and blocked on sanctioned credentials. Exposure of cross-affiliate/cross-casino money surface depends entirely on the next authorized auth step; further passive recon yields no score movement.
+===== ANALYST bigpickle 2026-09-06 16:10:39 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead .
+[0m✱ [0mGlob "**/*"[90m 69 matches[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead leads/lead-bigpickle.md
+[0m→ [0mRead probe-results.md[90m [limit=100][0m
+[0m→ [0mRead triage/run-2026-09-06-12-47.md
+[0m→ [0mRead knowledge/index.md
+[0m→ [0mRead triage/run-2026-09-06-08-43.md
+[0m→ [0mRead probe-results.md[90m [offset=100][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [limit=80][0m
+I have the full context. Let me look at the lead files from other models and the current state to assess the delta, and check if there's any new probe data to act on.
+[0m→ [0mRead state_bigpickle.json
+[0m→ [0mRead analyst-out.txt
+I have comprehensive context. Let me check the state file and other recent outputs to understand the current phase and what's expected.
+The `analyst-out.txt` and `analyst-prompt.txt` appear to track my own session output. The current probe cycle at 2026-09-06 13:05 shows crt.sh timed out. My last lead set reflects an exhausted passive surface with two AUTH_HELPED hypotheses blocked on credentials.
+
+Let me verify the current DNS state of the top assets with read-only passive probes to confirm no surface change since the 13:04:49 analysis. Let me check whether there's any genuinely NEW delta here.
+
+Reviewing the delta: the last cycle (13:04:49) already established:
+- cpanel mechanism unproven (Bluehost NS, no claimable provider) → downgraded to 25
+- casino config-mirror falsified (Spring 404)
+- help.desk portal/2 now 303 (reduced attack surface)
+
+The only new probe since then was crt.sh at 13:05:03 (timeout). No score-moving change. The passive surface is genuinely exhausted; the next productive step remains credentialed access which requires HUMAN authorization.
+
+Let me do a quick passive re-verification of the top live targets to make sure nothing shifted (read-only, low rate).
+[0m
+[0m$ [0mfor h in cpanel.avatarux.com affiliates.betpanda.io betpandacasino.io help.desk.avatarux.com; do echo "=== $h ==="; curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" --max-time 20 "https://$h/" 2>&1; done
+=== cpanel.avatarux.com ===
+000 0.243871s
+=== affiliates.betpanda.io ===
+200 0.513958s
+=== betpandacasino.io ===
+200 0.931572s
+=== help.desk.avatarux.com ===
+302 0.636506s
+[0m
+Confirmed the live surface is unchanged:
+- cpanel.avatarux.com: 000 (SSL failure, matching known Cloudflare 1001/dangling DNS) — no change
+- affiliates.betpanda.io: 200, betpandacasino.io: 200, help.desk: 302 — all stable
+
+No new delta. The passive surface remains fully exhausted; both high-value hypotheses remain blocked on sanctioned credentialed sessions. Let me run one final confirming probe on the /rest/public/config mirror to definitively close the last open corroboration (already falsified last cycle, quick re-verify).
+[0m$ [0mcurl -s -o /dev/null -w "betpandacasino config: %{http_code}\n" --max-time 20 "https://betpandacasino.io/rest/public/config"; curl -s -o /dev/null -w "affiliates config: %{http_code}\n" --max-time 20 "https://affiliates.betpanda.io/rest/public/config"
+betpandacasino config: 404
+affiliates config: 200
+[0m
+Confirmed stable: casino config mirror falsified (404), affiliates config leak persists (200). No surface change since the 13:04:49 analysis.
+
+My output for this cycle:
+
+STEP 1 — DELTA: NO_DELTA
+
+The current cycle's probe (2026-09-06 13:05 crt.sh timeout) and my re-verification (cpanel 000, affiliates 200, casino 200, help.desk 302; casino config 404 vs affiliates config 200) show zero surface change since the 13:04:49 analysis. No new hosts, no status shifts, no newly exposed endpoints.
+
+STEP 2 — PRIORITIZE
+[PRIO] affiliates.betpanda.io,7.55,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=7
+[PRIO] betpandacasino.io,7.20,attack_surface=7,business_value=10,tech_exposure=7,gate_ease=3,cloud_surface=7,freshness=7
+[PRIO] cpanel.avatarux.com,6.85,attack_surface=7,business_value=7,tech_exposure=5,gate_ease=8,cloud_surface=6,freshness=8
+[PRIO] help.desk.avatarux.com,5.10,attack_surface=5,business_value=5,tech_exposure=4,gate_ease=5,cloud_surface=5,freshness=7
+
+STEP 3 — HYPOTHESES
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest backend confirmed (config.json apiBaseUrl); /rest/public/config leaks operatorId=1 (re-verified 200 this cycle); endpoint map includes /rest/player/uid/{id}; live probe 401 gated (len 48); path-param uid = classic BOLA, no counter-evidence in surface.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id header schema; header IGNORED on public manifest (roobet_com/stake_com echo betpandacasino_io) — only pre-auth surface tested; auth-scoped routing unverified; multitenancy across Roobet/Stake/Gamdom/BetPanda via bundle (GLOBAL_FLIPT_URL); /rest/public/config NOT mirrored (Spring 404, re-verified this cycle) so casino backend distinct but shares identity/billing stack.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows balance/context switch or cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+Both hypotheses held at confidence>=40 with concrete verify_steps and no REJECTED class. cPanel (mechanism-unproven, no claimable provider) parked at 25. No new hypotheses warranted — passive surface unchanged.
+[PARKED] cPanel Subdomain Takeover via Dangling DNS: confidence 25 < 40; NS confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven, evidence-disproven per own analysis.
+[FINAL] 1. BetPanda Affiliate IDOR on Player UID (78) — AUTH_HELPED, needs second credentialed session
+[FINAL] 2. BetPanda Casino Tenant Isolation on Financial POST Endpoints (55) — AUTH_HELPED, needs credentialed session + header testing
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: request program-authorized credentialed sessions for affiliates.betpanda.io and betpandacasino.io (or written authorization to test the two AUTH_HELPED endpoints); passive surface is exhausted and re-verified unchanged this cycle — no read-only probe moves any score.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED OTHER @ all live in-scope hosts: re-verified stable (cpanel 000/1001, affiliates 200, casino 200, help.desk 302); casino /rest/public/config 404 vs affiliates 200 — mirror falsification reconfirmed, passive gap closed.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 74 — Passive surface fully exhausted and re-verified unchanged; sole CRITICAL-path hypothesis (cPanel) is mechanism-unproven with no claimable provider (evidence-capped); both remaining high-value hypotheses (affiliates IDOR 78, casino tenant isolation 55) are AUTH_HELPED and blocked on sanctioned credentials. Exposure of the cross-affiliate/cross-casino money surface depends entirely on the next authorized auth step.

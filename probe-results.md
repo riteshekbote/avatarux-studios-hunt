@@ -133,3 +133,6 @@ https://crt.sh/?q=%.avatarux.com -> 200 len=?
 
 ## 2026-09-06 13:05:03 UTC
 https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out
+
+## 2026-09-06 16:10:40 UTC
+https://crt.sh/?q=%.avatarux.com -> HTTP 502
