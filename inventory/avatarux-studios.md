@@ -291,3 +291,5 @@ www.avatarux.com
 - CHANGED betpandacasino.io: x-site-name-id tenant header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
 - CHANGED help.desk.avatarux.com: Confluence /wiki/rest/api/space → 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
 - CHANGED All live in-scope hosts re-verified stable (cpanel 000/1001, affiliates 200, casino 200, help.desk 302)
+
+## 2026-09-06 22:21:47 UTC

@@ -142,3 +142,8 @@ https://crt.sh/?q=%.avatarux.com -> HTTP 404
 
 ## 2026-09-06 20:35:03 UTC
 https://crt.sh/?q=%.avatarux.com -> ERR <urlopen error [Errno 101] Network is unreachable>
+
+## 2026-09-06 22:21:53 UTC
+https://crt.sh/?q=%.avatarux.com -> HTTP 502
+https://cpanel.avatarux.com/` -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE
+https://help.desk.avatarux.com/servicedesk/customer/portal/2` -> HTTP 303
