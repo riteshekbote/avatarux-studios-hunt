@@ -8318,3 +8318,203 @@ The most productive next step would be:
 3. **Prepare detailed verification steps** for when credentials become available
 
 Your systematic approach has been thorough and methodical. The hypotheses are well-formed and the evidence gaps are clearly documented. The next logical step requires human/program intervention to provide the authentication context needed for verification.
+===== ANALYST bigpickle 2026-09-07 22:25:31 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m• [0mExplore workspace artifacts[90m Explore Agent[0m
+[0m• [0mRead scope and inventory[90m Explore Agent[0m
+I'll execute the full 8-step analysis cycle. Let me first examine the workspace artifacts to build current context.
+[0m✓ [0mExplore workspace artifacts[90m Explore Agent[0m
+[0m✓ [0mRead scope and inventory[90m Explore Agent[0m
+I have sufficient context from the knowledge base, state, and latest hypotheses. Let me verify current live surface with read-only probes to detect any delta.
+[0m
+[0m$ [0mecho "--- affiliates root ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://affiliates.betpanda.io/ ; echo "--- affiliates public config ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://affiliates.betpanda.io/rest/public/config ; echo "--- casino root ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://betpandacasino.io/ ; echo "--- casino manifest ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://betpandacasino.io/rest/properties/manifest ; echo "--- cpanel ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://cpanel.avatarux.com/ ; echo "--- help.desk ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 -L https://help.desk.avatarux.com/
+--- affiliates root ---
+200
+--- affiliates public config ---
+200
+--- casino root ---
+200
+--- casino manifest ---
+200
+--- cpanel ---
+000
+--- help.desk ---
+200
+[0m
+All live hosts remain stable (affiliates 200, config 200, casino 200, manifest 200, cpanel 000/1001, help.desk 200). Let me do a couple of targeted read-only probes to look for any new passive surface that hasn't been explored — specifically checking the casino for any probe endpoints the prior cycles may not have tried, and re-checking the affiliates endpoint map for discovery leaks.
+[0m$ [0mecho "--- affiliates /config/config.json ---"; curl -s -m 15 https://affiliates.betpanda.io/config/config.json | head -c 600 ; echo; echo "--- affiliates /rest/public/config check ---"; curl -s -m 15 https://affiliates.betpanda.io/rest/public/config | head -c 400
+--- affiliates /config/config.json ---
+{
+  "baseUrl" : "https://affiliates.betpanda.io/rest"
+}
+
+--- affiliates /rest/public/config check ---
+{"logoUrl":"https://d3ec3n7kizfkuy.cloudfront.net/Betpanda_io_logo_White_Green_b5267c709b.png","operatorId":1,"linkUrl":"https://betpanda.partners","supportEmail":"deals@bamboopartners.io","contenfulSpaceId":"","strapiApiUrl":"/cms","contentfulAccessToken":"","currencies":["BTC","ETH","USDT","BNB","DOGE","LTC","SAND","SHIB","TRX","uBTC","XMR","XRP","USDC","SOL","TON"],"phoneSignupEnabled":false}
+[0m
+[0m$ [0mecho "--- casino /rest/properties/manifest body (tenant fields) ---"; curl -s -m 15 https://betpandacasino.io/rest/properties/manifest | head -c 800 ; echo; echo "--- casino OPTIONS financial ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 -X OPTIONS https://betpandacasino.io/rest/user/account-balances-and-bonuses -H "Origin: https://betpandacasino.io" -D -
+--- casino /rest/properties/manifest body (tenant fields) ---
+{
+  "name": "Betpanda",
+  "short_name": "Betpanda",
+  "description": "Leading Crypto Gaming Platform",
+  "lang": "en",
+  "start_url": "/app",
+  "display": "standalone",
+  "theme_color": "#171F2B",
+  "background_color": "#171F2B",
+  "icons": [
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.eu-west-1.amazonaws.com/operators/betpanda/pwa/icons/Icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://nano-public.s3.e
+--- casino OPTIONS financial ---
+HTTP/2 200 
+date: Mon, 07 Sep 2026 22:19:27 GMT
+content-length: 0
+cf-ray: a37918522c918a19-SJC
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpY9SfHui9PYtcxxWzhPneJZCJp; HttpOnly; SameSite=None; Secure; Path=/; Expires=Tue, 08 Sep 2026 21:19:27 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+
+200
+[0m
+The surface is entirely stable — no new endpoints, no changes in tenant leakage. Everything confirms prior findings. Both top hypotheses remain AUTH_HELPED. Let me check one more passive angle that hasn't been explicitly noted in the leads: whether the orphaned `/cms` Strapi endpoint referenced in the config is reachable, and whether the casino mirrors any other `/rest/public/*` paths that the affiliates backend exposes (a differential that could reveal a new surface).
+[0m$ [0mecho "--- affiliates /cms (strapiApiUrl referenced in config) ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://affiliates.betpanda.io/cms ; echo "--- casino /rest/public/ (dir) ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://betpandacasino.io/rest/public/ ; echo "--- casino /rest/config ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://betpandacasino.io/rest/config ; echo "--- casino /rest/config/config.json ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://betpandacasino.io/rest/config/config.json ; echo "--- casino /config/config.json ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://betpandacasino.io/config/config.json
+--- affiliates /cms (strapiApiUrl referenced in config) ---
+200
+--- casino /rest/public/ (dir) ---
+404
+--- casino /rest/config ---
+404
+--- casino /rest/config/config.json ---
+404
+--- casino /config/config.json ---
+200
+[0m
+Interesting — two potential deltas to investigate:
+1. `affiliates.betpanda.io/cms` returns **200** — the `strapiApiUrl: "/cms"` referenced in config resolves live. This is a potential new passive surface (Strapi CMS).
+2. `betpandacasino.io/config/config.json` returns **200** — the casino DOES host /config/config.json (previously the config mirror was only checked at /rest/public/config which was 404). Let me inspect both.
+[0m$ [0mecho "--- affiliates /cms body ---"; curl -s -m 15 https://affiliates.betpanda.io/cms | head -c 600; echo; echo "=== casino /config/config.json body ==="; curl -s -m 15 https://betpandacasino.io/config/config.json | head -c 1500
+--- affiliates /cms body ---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<!--     <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Affiliate</title>
+    <script type="module" crossorigin src="/main.ef021e68.js"></script>
+    <link rel="stylesheet" href="/index.82c23d1f.css">
+  </head>
+  <body id="kt_body" class="page-loading" data-kt-app-layout="dark-sidebar">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!--begin::Theme mode setup on page load-->
+ 
+=== casino /config/config.json body ===
+{
+  "baseUrl" : "https://betpandacasino.io/rest"
+}
+[0m
+Both are SPA shell findings:
+- `affiliates.betpanda.io/cms` → 200 returns the **same SPA shell** (Vite, main.ef021e68.js) — the Strapi `strapiApiUrl: "/cms"` is a client-side relative path, so hitting `/cms` just returns the SPA index (catch-all). Not a real CMS endpoint. Confirmed SPA catch-all, no new surface.
+- `betpandacasino.io/config/config.json` → 200 returns `{"baseUrl":"https://betpandacasino.io/rest"}` — this confirms the casino does host `/config/config.json` at same-origin (analogous to affiliates). This is a **mirror** of the affiliates baseUrl config, not a new leak, but it corroborates the casino API base is same-origin /rest (already established).
+
+Neither is a new finding. The `/cms` is SPA catch-all noise; the casino config.json confirms known state.
+
+Let me verify these are SPA catch-alls by checking a nonsense path returns the same shell, to confirm no distinct CMS surface.
+[0m$ [0mecho "--- affiliates /cms/nonexistent-x (catch-all check) ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://affiliates.betpanda.io/cms/nonexistent-xyz ; echo "--- affiliates /nonexistent ---"; curl -s -o /dev/null -w "%{http_code}\n" -m 15 https://affiliates.betpanda.io/does-not-exist-zyx ; echo "--- check if /cms serves distinct SPA or Strapi admin ---"; curl -s -m 15 https://affiliates.betpanda.io/cms | grep -iE "strapi|cms-admin|affiliate" | head -5
+--- affiliates /cms/nonexistent-x (catch-all check) ---
+200
+--- affiliates /nonexistent ---
+200
+--- check if /cms serves distinct SPA or Strapi admin ---
+    <title>Affiliate</title>
+[0m
+Confirmed: `/cms` is pure SPA catch-all (same shell as any nonexistent path). Not a Strapi admin surface. No new finding.
+
+The passive surface is now fully re-verified and genuinely exhausted. I have enough to finalize the 8-step cycle.
+
+---
+
+STEP 1 — DELTA
+- [CHANGED] casino `/config/config.json` verified 200 mirror of affiliates baseUrl config (same-origin `/rest`) — confirms known state, not new.
+- [REJECTED-NEW] affiliates `/cms` returns SPA catch-all (Vite `main.ef021e68.js`, `title=Affiliate`) identical to any nonexistent path — `strapiApiUrl:"/cms"` is client-rel, **not** a live Strapi surface; disambiguated.
+- [NO_DELTA] All live hosts re-verified stable (affiliates 200, `/rest/public/config` 200, casino 200, manifest 200, cpanel 000/1001, help.desk 200). Top-2 hypotheses unchanged & still AUTH_HELPED.
+
+STEP 2 — PRIORITIZE
+score=0.25a+0.25b+0.15t+0.15g+0.10c+0.10f
+- affiliates.betpanda.io: a=8,b=8,t=8,g=9,c=7,f=4 → **7.70** (IDOR+BUSLOGIC, REST same-origin)
+- betpandacasino.io: a=7,b=9,t=8,g=3,c=8,f=4 → **6.45** (tenant financial/JWT)
+- cpanel.avatarux.com: a=5,b=6,t=5,g=10,c=7,f=2 → **5.80** (takeover, monitoring)
+- help.desk.avatarux.com: a=3,b=5,t=4,g=5,c=5,f=3 → **4.10** (JSM/Confluence reduced)
+
+[PRIO] affiliates.betpanda.io,7.70,IDOR+BUSLOGIC|business_value=commissions|tech_exposure=REST_SAME_ORIGIN|gate_ease=9|cloud_surface=CLOUDFLARE|freshness=4
+[PRIO] betpandacasino.io,6.45,BUSLOGIC tenant|business_value=financial_jwt|tech_exposure=POST_gated_OPTIONS_leak|gate_ease=3|cloud_surface=CLOUDFLARE|freshness=4
+[PRIO] cpanel.avatarux.com,5.80,MISCONFIG takeover|gate_ease=10|cloud_surface=CLOUDFLARE|freshness=2|delegation_gap=Bluehost
+[PRIO] help.desk.avatarux.com,4.10,JSM_confluence|business_value=tenant|tech_exposure=ATLASSIAN|gate_ease=8|surface_reduced_303
+
+STEP 3 — HYPOTHESES
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed via config.json apiBaseUrl; /rest/public/config leaks operatorId=1, Strapi config, support email (re-verified 200 this cycle); endpoint map (20+ routes) includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS re-verified leaks x-site-name-id in allow-headers + echoes betpandacasino_io; header IGNORED on public manifest (roobet/stake echo betpandacasino_io) → auth-scoped routing unverified; multitenancy via GLOBAL_FLIPT_URL bundle; /rest/public/config NOT mirrored (Spring 404, RECHECKED); /config/config.json mirrors affiliate baseUrl only (no leak).
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS: NS/SOA confirms apex Bluehost delegation; no separate claimable subdomain delegation → standard Cloudflare zone claim mechanism unproven; monitoring only, not actionable without program cooperation (confidence 55, mechanism-gap).
+[PARKED] BetPanda Blog REST Author-Profile Exposure: confidence <50, informational; username/author enumeration is REJECTED class under program scope.
+[FINAL] 1. affiliate IDOR (78) — AUTH_HELPED, strongest evidence, needs credentialed session
+[FINAL] 2. casino tenant-isolation (55) — AUTH_HELPED, cross-casino CRITICAL if proven, needs credentialed session
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: both remaining high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED and blocked — passive surface fully exhausted (cms catch-all disambiguated, config.json mirror non-leaking, manifest/OPTIONS stable, cable falsified). Request program-authorized test credentials/session for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.
+
+STEP 6 — LEARNING
+[LEARN] REJECTED MISCONFIG @ affiliates.betpanda.io/cms: strapiApiUrl:"/cms" resolves to the SPA index.html shell (Vite main.ef021e68.js, title=Affiliate), identical to any nonexistent path 200 — client-side relative base, NOT a live Strapi CMS/admin surface; no new attack path.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io/config/config.json: 200 returns {"baseUrl":"https://betpandacasino.io/rest"} — mirrors affiliate baseUrl config, corroborates same-origin /rest API base; non-sensitive, no new leak.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 80 — passive surface fully closed (only /cms catch-all + config.json mirror newly disambiguated this cycle, neither a finding). Top-2 findings are AUTH_HELPED and cannot progress without program-supplied credentials; cPanel takeover mechanism remains unproven (Bluehost delegation gap). Remaining risk driven by the unevidenced IDOR/tenant-isolation impact if proven under credentialed testing.

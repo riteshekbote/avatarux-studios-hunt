@@ -1318,3 +1318,34 @@ testability: PASSIVE
 [LEARN] REJECTED MISCONFIG @ cable.betpanda.io: cleared nemotron3-queued PROBE — root 200 text/plain decorative ASCII banner, all other paths (/health /api /graphql /actuator /socket /status /ws /info /config /debug) return identical default Express 404 {"error":"Cannot GET X"}. Bare Express server with NO functional endpoints. "Undocumented endpoint exposure" hypothesis FALSIFIED — no surface to enumerate. Parked.
 [RISK] avatarux-studios: 80 — all passive surfaces closed this cycle (cable falsified, config mirror falsified, x-site-name-id ignored, blog author leak low/informational, cpanel delegation-gap blocked). Top 2 findings are AUTH_HELPED and cannot progress without program-supplied credentials. Remaining risk driven by IDOR/tenant-isolation impact if proven, but currently unevidenced.
 ## 2026-09-07 19:23:38 UTC [target] (model bigpickle)
+## 2026-09-07 22:19:47 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io,7.70,IDOR+BUSLOGIC|business_value=commissions|tech_exposure=REST_SAME_ORIGIN|gate_ease=9|cloud_surface=CLOUDFLARE|freshness=4
+[PRIO] betpandacasino.io,6.45,BUSLOGIC tenant|business_value=financial_jwt|tech_exposure=POST_gated_OPTIONS_leak|gate_ease=3|cloud_surface=CLOUDFLARE|freshness=4
+[PRIO] cpanel.avatarux.com,5.80,MISCONFIG takeover|gate_ease=10|cloud_surface=CLOUDFLARE|freshness=2|delegation_gap=Bluehost
+[PRIO] help.desk.avatarux.com,4.10,JSM_confluence|business_value=tenant|tech_exposure=ATLASSIAN|gate_ease=8|surface_reduced_303
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed via config.json apiBaseUrl; /rest/public/config leaks operatorId=1, Strapi config, support email (re-verified 200 this cycle); endpoint map (20+ routes) includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS re-verified leaks x-site-name-id in allow-headers + echoes betpandacasino_io; header IGNORED on public manifest (roobet/stake echo betpandacasino_io) → auth-scoped routing unverified; multitenancy via GLOBAL_FLIPT_URL bundle; /rest/public/config NOT mirrored (Spring 404, RECHECKED); /config/config.json mirrors affiliate baseUrl only (no leak).
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[PARKED] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS: NS/SOA confirms apex Bluehost delegation; no separate claimable subdomain delegation → standard Cloudflare zone claim mechanism unproven; monitoring only, not actionable without program cooperation (confidence 55, mechanism-gap).
+[PARKED] BetPanda Blog REST Author-Profile Exposure: confidence <50, informational; username/author enumeration is REJECTED class under program scope.
+[FINAL] 1. affiliate IDOR (78) — AUTH_HELPED, strongest evidence, needs credentialed session
+[FINAL] 2. casino tenant-isolation (55) — AUTH_HELPED, cross-casino CRITICAL if proven, needs credentialed session
+[NEXT] HUMAN: both remaining high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED and blocked — passive surface fully exhausted (cms catch-all disambiguated, config.json mirror non-leaking, manifest/OPTIONS stable, cable falsified). Request program-authorized test credentials/session for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.
+[LEARN] REJECTED MISCONFIG @ affiliates.betpanda.io/cms: strapiApiUrl:"/cms" resolves to the SPA index.html shell (Vite main.ef021e68.js, title=Affiliate), identical to any nonexistent path 200 — client-side relative base, NOT a live Strapi CMS/admin surface; no new attack path.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io/config/config.json: 200 returns {"baseUrl":"https://betpandacasino.io/rest"} — mirrors affiliate baseUrl config, corroborates same-origin /rest API base; non-sensitive, no new leak.
+[RISK] avatarux-studios: 80 — passive surface fully closed (only /cms catch-all + config.json mirror newly disambiguated this cycle, neither a finding). Top-2 findings are AUTH_HELPED and cannot progress without program-supplied credentials; cPanel takeover mechanism remains unproven (Bluehost delegation gap). Remaining risk driven by the unevidenced IDOR/tenant-isolation impact if proven under credentialed testing.

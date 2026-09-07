@@ -697,3 +697,9 @@
 - LEARN: REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
 - LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must no
 - LEARN: REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last pa
+
+## RANKED HYPOTHESES 2026-09-07 22:25:31 UTC
+- [78] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on Player UID Endpoint (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: both remaining high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED and blocked — passive surface fully exhausted (cm
+- LEARN: REJECTED MISCONFIG @ affiliates.betpanda.io/cms: strapiApiUrl:"/cms" resolves to the SPA index.html shell (Vite main.ef021e68.js, title=Affiliate), identical to
+- LEARN: ACCEPTED OTHER @ betpandacasino.io/config/config.json: 200 returns {"baseUrl":"https://betpandacasino.io/rest"} — mirrors affiliate baseUrl config, corroborates

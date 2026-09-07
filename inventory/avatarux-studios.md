@@ -329,3 +329,5 @@ www.avatarux.com
 - NEW help.desk.avatarux.com/servicedesk/customer/portal/2 changed 200→303 — second JSM portal instance now redirects, attack surface reduced
 - CHANGED No new subdomains via crt.sh (recent: 502/404/timeout)
 - CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
+
+## 2026-09-07 22:25:31 UTC
