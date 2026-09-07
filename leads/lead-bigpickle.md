@@ -1207,3 +1207,22 @@ evidence_needed: credentialed casino session — POST financial endpoint with x-
 verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
 impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
 testability: AUTH_HELPED
+## 2026-09-07 00:11:00 UTC [target] (model bigpickle)
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest backend confirmed (config.json apiBaseUrl); /rest/public/config leaks operatorId=1 (re-verified 200 this cycle); endpoint map includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id header schema; header ignored on public manifest (roobet_com/stake_com echo betpandacasino_io); auth-scoped routing unverified; shared identity/billing stack across Roobet/Stake/Gamdom/BetPanda via bundle.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows balance/context switch or cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED

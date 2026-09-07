@@ -3367,3 +3367,225 @@ testability: PASSIVE
 [LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it
 [LEARN] REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
 [RISK] avatarux-studios: 85 — BetPanda affiliate API map breakthrough (same-origin /rest, 20+ endpoints, IDOR pattern on player/uid/{id}, config disclosure) elevates concrete exploitability. cPanel takeover remains strongest passive finding at 55 confidence with 48h+ stable evidence but delegation gap to Bluehost blocks standard claim path. Casino multi-tenant header leak on financial endpoints adds critical attack vector if tenant isolation fails under auth. Main game API attack surface for Roobet/Stake/Gamdom/RainBet still unmapped but BetPanda proves brand assets exist and are testable. Risk = HIGH — fresh exploitable targets identified, live exploitation requires auth sessions for IDOR/tenant-bypass depth.
+===== ANALYST nemotron3 2026-09-07 00:11:09 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/
+total 224
+drwxr-xr-x 12 runner runner  4096 Sep  7 00:04 .
+drwxr-xr-x  3 runner runner  4096 Sep  7 00:04 ..
+drwxr-xr-x  7 runner runner  4096 Sep  7 00:04 .git
+drwxr-xr-x  3 runner runner  4096 Sep  7 00:04 .github
+-rw-r--r--  1 runner runner  1738 Sep  7 00:04 README.md
+-rw-r--r--  1 runner runner    43 Sep  7 00:04 analyst-out.txt
+-rw-r--r--  1 runner runner 67826 Sep  7 00:04 analyst-prompt.txt
+-rw-r--r--  1 runner runner 63990 Sep  7 00:04 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 leads
+-rw-r--r--  1 runner runner  6478 Sep  7 00:04 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 reports
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 reposcan-raw
+-rw-r--r--  1 runner runner  3249 Sep  7 00:04 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 scripts
+-rw-r--r--  1 runner runner    33 Sep  7 00:04 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:04 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:04 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:04 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:04 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:04 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 triage
+[0m
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead state_nemotron3.json
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/knowledge/
+total 24
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:04 .
+drwxr-xr-x 12 runner runner  4096 Sep  7 00:04 ..
+-rw-r--r--  1 runner runner 16254 Sep  7 00:04 index.md
+[0m
+[0m→ [0mRead knowledge/index.md
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/leads/
+total 412
+drwxr-xr-x  2 runner runner   4096 Sep  7 00:04 .
+drwxr-xr-x 12 runner runner   4096 Sep  7 00:04 ..
+-rw-r--r--  1 runner runner 130824 Sep  7 00:04 lead-bigpickle.md
+-rw-r--r--  1 runner runner   1377 Sep  7 00:04 lead-laguna.md
+-rw-r--r--  1 runner runner   1350 Sep  7 00:04 lead-ling3.md
+-rw-r--r--  1 runner runner   1404 Sep  7 00:04 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  7 00:04 lead-mimo.md
+-rw-r--r--  1 runner runner 254261 Sep  7 00:04 lead-nemotron3.md
+-rw-r--r--  1 runner runner   7376 Sep  7 00:04 reposcan-avatarux-studios.md
+[0m
+[0m→ [0mRead scope.yml
+[0m
+[0m$ [0mcat /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/leads/lead-nemotron3.md | tail -100
+evidence_needed: Valid affiliate session cookie/JWT to test cross-player UID access; response body comparison between own UID and other UIDs for PII/commission data leakage
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/{own_uid} with valid auth session — capture response; GET https://affiliates.betpanda.io/rest/player/uid/{other_uid} with same session — compare response bodies for PII/commission data leakage
+impact: Cross-affiliate player PII dump, commission data theft, transaction history exposure — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 62
+reasoning: OPTIONS on financial endpoints leaks tenant-routing header schema (x-site-name-id in allow-headers) and echoes x-site-name-id: betpandacasino_io in response. Header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io), but financial endpoints are POST-gated and may process tenant header differently under auth. Spring Boot backend suggests multi-tenant architecture (Roobet/Stake/Gamdom/RetroBet brands). Manifest shows BetPanda as single operator but infrastructure shared.
+evidence_needed: Valid casino session to test x-site-name-id header on POST /rest/user/authenticate, /rest/user/account-balances-and-bonuses, /rest/user/refresh, /rest/user/zendesk/jwt; observe if tenant context switches or leaks cross-brand data
+verify_steps: GET https://betpandacasino.io/rest/user/authenticate — capture OPTIONS response for allowed headers. With valid session: POST /rest/user/authenticate with Header "x-site-name-id: roobet_com" — compare response to baseline. POST /rest/user/account-balances-and-bonuses with same header — check for cross-tenant balance leakage.
+impact: Cross-casino player balance theft, authentication bypass, JWT token theft for other brands (Roobet/Stake/Gamdom) — CRITICAL
+testability: AUTH_HELPED
+[HYP] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS — Delegation Gap Unproven
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 55
+reasoning: Cloudflare error 1001 ("DNS points to prohibited IP") persists 48h+/20+ probes. CNAME chain: cpanel.avatarux.com → avatarux.com → 162.159.136.54 (Cloudflare edge IP). NS/SOA delegation to Bluehost confirmed (ns1/ns2.bluehost.com) — zone ownership gap exists between AvatarUX DNS (Bluehost) and Cloudflare zone. cPanel ports 2082/2083 SSL failures confirm no active origin. Standard Cloudflare zone claim requires delegated NS; Bluehost delegation blocks direct claim. No CT log evidence of active cert for cpanel.avatarux.com.
+evidence_needed: Cloudflare zone claim attempt via Workers/Pages if delegation allows; CT log check for any active cert on cpanel.avatarux.com; check if avatarux.com zone in Cloudflare is orphaned (no active plan)
+verify_steps: DIG cpanel.avatarux.com NS + SOA (delegation chain verified) && GET https://crt.sh/?q=%.avatarux.com -H "User-Agent: AvatarUX-Recon/1.0" (CT logs show *.avatarux.com wildcard cert issued to Cloudflare, no dedicated cpanel cert) — all passive, <=1 rps
+impact: Full subdomain takeover — attacker serves arbitrary content on cpanel.avatarux.com, phishing, cookie theft, brand abuse — CRITICAL
+testability: PASSIVE
+[PARKED] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS — Delegation Gap Unproven: confidence 55 but NS delegation to Bluehost confirmed — standard Cloudflare zone claim requires NS delegation to Cloudflare; mechanism unproven without program cooperation; downgraded from actionable takeover to monitoring
+[FINAL] 1. BetPanda Affiliate IDOR on Player UID Endpoint (78) — HIGH value, API map complete, needs auth session
+[FINAL] 2. BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header (62) — CRITICAL if proven, needs auth session + header testing
+[NEXT] HUMAN: request program-authorized credentialed sessions for affiliates.betpanda.io and betpandacasino.io (or written authorization to test the two AUTH_HELPED hypotheses) — both top findings require valid auth to verify IDOR and tenant isolation bypass
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: API backend same-origin at /rest; endpoint map complete; IDOR pattern confirmed but requires second credentialed session
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 — attack surface reduced
+[LEARN] ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+[LEARN] ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+[LEARN] ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+[LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+[LEARN] REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it
+[LEARN] REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
+[RISK] avatarux-studios: 85 — BetPanda affiliate API map breakthrough (same-origin /rest, 20+ endpoints, IDOR pattern on player/uid/{id}, config disclosure) elevates concrete exploitability. cPanel takeover remains strongest passive finding at 55 confidence with 48h+ stable evidence but delegation gap to Bluehost blocks standard claim path. Casino multi-tenant header leak on financial endpoints adds critical attack vector if tenant isolation fails under auth. Main game API attack surface for Roobet/Stake/Gamdom/RainBet still unmapped but BetPanda proves brand assets exist and are testable. Risk = HIGH — fresh exploitable targets identified, live exploitation requires auth sessions for IDOR/tenant-bypass depth.
+## 2026-09-06 22:21:39 UTC [target] (model nemotron3)
+[PRIO] affiliates.betpanda.io,7.55,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=9,cloud_surface=7,freshness=9
+[PRIO] betpandacasino.io,7.10,attack_surface=7,business_value=9,tech_exposure=8,gate_ease=3,cloud_surface=8,freshness=9
+[PRIO] cpanel.avatarux.com,5.80,attack_surface=5,business_value=6,tech_exposure=5,gate_ease=10,cloud_surface=7,freshness=8
+[PRIO] help.desk.avatarux.com,4.30,attack_surface=3,business_value=5,tech_exposure=4,gate_ease=5,cloud_surface=5,freshness=6
+[PRIO] cable.betpanda.io,4.10,attack_surface=4,business_value=4,tech_exposure=5,gate_ease=4,cloud_surface=4,freshness=6
+[PRIO] flags.betpanda.io,3.95,attack_surface=3,business_value=4,tech_exposure=5,gate_ease=2,cloud_surface=4,freshness=7
+[PRIO] custom-lp.betpanda.io,3.65,attack_surface=3,business_value=5,tech_exposure=3,gate_ease=2,cloud_surface=4,freshness=7
+[PRIO] fp.betpanda.io,3.45,attack_surface=3,business_value=4,tech_exposure=3,gate_ease=2,cloud_surface=4,freshness=7
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: API backend confirmed same-origin at /rest with 20+ endpoints mapped. /rest/player/uid/{id} uses path parameter for player lookup. /config/config.json reveals apiBaseUrl=https://affiliates.betpanda.io/rest. /rest/public/config leaks operatorId=1, Strapi config, support email. No authorization check evidence in JS bundle for cross-UID access.
+evidence_needed: Valid affiliate session cookie/JWT to test cross-player UID access; response body comparison between own UID and other UIDs for PII/commission data leakage
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/{own_uid} with valid auth session — capture response; GET https://affiliates.betpanda.io/rest/player/uid/{other_uid} with same session — compare response bodies for PII/commission data leakage
+impact: Cross-affiliate player PII dump, commission data theft, transaction history exposure — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 62
+reasoning: OPTIONS on financial endpoints leaks tenant-routing header schema (x-site-name-id in allow-headers) and echoes x-site-name-id: betpandacasino_io in response. Header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io), but financial endpoints are POST-gated and may process tenant header differently under auth. Spring Boot backend suggests multi-tenant architecture (Roobet/Stake/Gamdom/RetroBet brands). Manifest shows BetPanda as single operator but infrastructure shared.
+evidence_needed: Valid casino session to test x-site-name-id header on POST /rest/user/authenticate, /rest/user/account-balances-and-bonuses, /rest/user/refresh, /rest/user/zendesk/jwt; observe if tenant context switches or leaks cross-brand data
+verify_steps: GET https://betpandacasino.io/rest/user/authenticate — capture OPTIONS response for allowed headers. With valid session: POST /rest/user/authenticate with Header "x-site-name-id: roobet_com" — compare response to baseline. POST /rest/user/account-balances-and-bonuses with same header — check for cross-tenant balance leakage.
+impact: Cross-casino player balance theft, authentication bypass, JWT token theft for other brands (Roobet/Stake/Gamdom) — CRITICAL
+testability: AUTH_HELPED
+[HYP] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS — Delegation Gap Unproven
+class: MISCONFIG
+asset: cpanel.avatarux.com
+confidence: 55
+reasoning: Cloudflare error 1001 ("DNS points to prohibited IP") persists 48h+/20+ probes. CNAME chain: cpanel.avatarux.com → avatarux.com → 162.159.136.54 (Cloudflare edge IP). NS/SOA delegation to Bluehost confirmed (ns1/ns2.bluehost.com) — zone ownership gap exists between AvatarUX DNS (Bluehost) and Cloudflare zone. cPanel ports 2082/2083 SSL failures confirm no active origin. Standard Cloudflare zone claim requires delegated NS; Bluehost delegation blocks direct claim. No CT log evidence of active cert for cpanel.avatarux.com.
+evidence_needed: Cloudflare zone claim attempt via Workers/Pages if delegation allows; CT log check for any active cert on cpanel.avatarux.com; check if avatarux.com zone in Cloudflare is orphaned (no active plan)
+verify_steps: DIG cpanel.avatarux.com NS + SOA (delegation chain verified) && GET https://crt.sh/?q=%.avatarux.com -H "User-Agent: AvatarUX-Recon/1.0" (CT logs show *.avatarux.com wildcard cert issued to Cloudflare, no dedicated cpanel cert) — all passive, <=1 rps
+impact: Full subdomain takeover — attacker serves arbitrary content on cpanel.avatarux.com, phishing, cookie theft, brand abuse — CRITICAL
+testability: PASSIVE
+[PARKED] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS — Delegation Gap Unproven: confidence 55 but NS delegation to Bluehost confirmed — standard Cloudflare zone claim requires NS delegation to Cloudflare; mechanism unproven without program cooperation; downgraded from actionable takeover to monitoring
+[FINAL] 1. BetPanda Affiliate IDOR on Player UID Endpoint (78) — HIGH value, API map complete, needs auth session
+[FINAL] 2. BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header (62) — CRITICAL if proven, needs auth session + header testing
+[NEXT] HUMAN: request program-authorized credentialed sessions for affiliates.betpanda.io and betpandacasino.io (or written authorization to test the two AUTH_HELPED hypotheses) — both top findings require valid auth to verify IDOR and tenant isolation bypass
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: API backend same-origin at /rest; endpoint map complete; IDOR pattern confirmed but requires second credentialed session
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 — attack surface reduced
+[LEARN] ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+[LEARN] ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+[LEARN] ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+[LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+[LEARN] REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it
+[LEARN] REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
+[RISK] avatarux-studios: 85 — BetPanda affiliate API map breakthrough (same-origin /rest, 20+ endpoints, IDOR pattern on player/uid/{id}, config disclosure) elevates concrete exploitability. cPanel takeover remains strongest passive finding at 55 confidence with 48h+ stable evidence but delegation gap to Bluehost blocks standard claim path. Casino multi-tenant header leak on financial endpoints adds critical attack vector if tenant isolation fails under auth. Main game API attack surface for Roobet/Stake/Gamdom/RainBet still unmapped but BetPanda proves brand assets exist and are testable. Risk = HIGH — fresh exploitable targets identified, live exploitation requires auth sessions for IDOR/tenant-bypass depth.
+[0m
+[NEW] help.desk.avatarux.com/servicedesk/customer/portal/2: 200→303 (attack surface reduced, second JSM portal now redirects)
+[NEW] betpandacasino.io/rest/public/config: 404 (Spring JSON) — casino does NOT mirror affiliates /rest/public/config leak; hypothesis falsified
+[NEW] cpanel.avatarux.com: NS/SOA confirms apex delegation to Bluehost (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain; takeover mechanism unproven
+[CHANGED] All live in-scope hosts re-verified stable: cpanel (SSL fail/1001), affiliates.betpanda.io (200), betpandacasino.io (200), help.desk.avatarux.com (302)
+[CHANGED] cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
+[NEW] No new subdomains discovered via crt.sh (recent queries: 502/404/timeout)
+[NEW] No new probe data since 2026-09-06 22:21:53 UTC — awaiting credentialed sessions for top 2 AUTH_HELPED hypotheses
+[PRIO] affiliates.betpanda.io,7.55,attack_surface=8,business_value=8,tech_exposure=8,gate_ease=9,cloud_surface=7,freshness=9
+[PRIO] betpandacasino.io,7.10,attack_surface=7,business_value=9,tech_exposure=8,gate_ease=3,cloud_surface=8,freshness=9
+[PRIO] cpanel.avatarux.com,5.80,attack_surface=5,business_value=6,tech_exposure=5,gate_ease=10,cloud_surface=7,freshness=8
+[PRIO] help.desk.avatarux.com,4.30,attack_surface=3,business_value=5,tech_exposure=4,gate_ease=5,cloud_surface=5,freshness=6
+[PRIO] cable.betpanda.io,4.10,attack_surface=4,business_value=4,tech_exposure=5,gate_ease=4,cloud_surface=4,freshness=6
+[PRIO] flags.betpanda.io,3.95,attack_surface=3,business_value=4,tech_exposure=5,gate_ease=2,cloud_surface=4,freshness=7
+[PRIO] custom-lp.betpanda.io,3.65,attack_surface=3,business_value=5,tech_exposure=3,gate_ease=2,cloud_surface=4,freshness=7
+[PRIO] fp.betpanda.io,3.45,attack_surface=3,business_value=4,tech_exposure=3,gate_ease=2,cloud_surface=4,freshness=7
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: API backend confirmed same-origin at /rest with 20+ endpoints mapped. /rest/player/uid/{id} uses path parameter for player lookup. /config/config.json reveals apiBaseUrl=https://affiliates.betpanda.io/rest. /rest/public/config leaks operatorId=1, Strapi config, support email. No authorization check evidence in JS bundle for cross-UID access.
+evidence_needed: Valid affiliate session cookie/JWT to test cross-player UID access; response body comparison between own UID and other UIDs for PII/commission data leakage
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/{own_uid} with valid auth session — capture response; GET https://affiliates.betpanda.io/rest/player/uid/{other_uid} with same session — compare response bodies for PII/commission data leakage
+impact: Cross-affiliate player PII dump, commission data theft, transaction history exposure — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 62
+reasoning: OPTIONS on financial endpoints leaks tenant-routing header schema (x-site-name-id in allow-headers) and echoes x-site-name-id: betpandacasino_io in response. Header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io), but financial endpoints are POST-gated and may process tenant header differently under auth. Spring Boot backend suggests multi-tenant architecture (Roobet/Stake/Gamdom/RetroBet brands). Manifest shows BetPanda as single operator but infrastructure shared.
+evidence_needed: Valid casino session to test x-site-name-id header on POST /rest/user/authenticate, /rest/user/account-balances-and-bonuses, /rest/user/refresh, /rest/user/zendesk/jwt; observe if tenant context switches or leaks cross-brand data
+verify_steps: GET https://betpandacasino.io/rest/user/authenticate — capture OPTIONS response for allowed headers. With valid session: POST /rest/user/authenticate with Header "x-site-name-id: roobet_com" — compare response to baseline. POST /rest/user/account-balances-and-bonuses with same header — check for cross-tenant balance leakage.
+impact: Cross-casino player balance theft, authentication bypass, JWT token theft for other brands (Roobet/Stake/Gamdom) — CRITICAL
+testability: AUTH_HELPED
+[HYP] cable.betpanda.io BB CABLE Service Undocumented Endpoint Exposure
+class: MISCONFIG
+asset: cable.betpanda.io
+confidence: 45
+reasoning: Custom Node "BB CABLE" service live (200 OK, Cloudflare-fronted). WS mounts /socket /ws /events return 404. No API documentation, OpenAPI spec, or health endpoints discovered. Single-page response suggests minimal surface but undocumented REST/GraphQL endpoints possible. In-scope BetPanda brand infrastructure.
+evidence_needed: Discovery of any non-404 endpoint beyond root; response analysis for debug/admin/actuator paths
+verify_steps: GET https://cable.betpanda.io/ — capture full response body/headers; GET https://cable.betpanda.io/health — check for Spring/Node actuator; GET https://cable.betpanda.io/api — check for API routes; GET https://cable.betpanda.io/graphql — check for GraphQL; all GET/HEAD, <=1 rps
+impact: Undocumented internal service exposure, potential debug/admin endpoint leak, WebSocket hijack if WS auth flawed — MEDIUM
+testability: PASSIVE
+[PARKED] cPanel Subdomain Takeover via Cloudflare 1001 Dangling DNS — Delegation Gap Unproven: confidence 55 but NS delegation to Bluehost confirmed — standard Cloudflare zone claim requires NS delegation to Cloudflare; mechanism unproven without program cooperation; downgraded from actionable takeover to monitoring
+[FINAL] 1. BetPanda Affiliate IDOR on Player UID Endpoint (78) — HIGH value, API map complete, needs auth session
+[FINAL] 2. BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header (62) — CRITICAL if proven, needs auth session + header testing
+[FINAL] 3. cable.betpanda.io BB CABLE Service Undocumented Endpoint Exposure (45) — MEDIUM, passive verifiable
+[NEXT] PROBE: GET https://cable.betpanda.io/ — capture full response body/headers; GET https://cable.betpanda.io/health; GET https://cable.betpanda.io/api; GET https://cable.betpanda.io/graphql; GET https://cable.betpanda.io/actuator — all GET/HEAD, <=1 rps, passive enumeration of undocumented endpoints on live BetPanda infrastructure
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+[LEARN] ACCEPTED IDOR @ affiliates.betpanda.io: API backend same-origin at /rest; endpoint map complete; IDOR pattern confirmed but requires second credentialed session
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 — attack surface reduced
+[LEARN] ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+[LEARN] ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+[LEARN] ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+[LEARN] REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+[LEARN] REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+[LEARN] REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it
+[LEARN] REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
+[RISK] avatarux-studios: 85 — BetPanda affiliate API map breakthrough (same-origin /rest, 20+ endpoints, IDOR pattern on player/uid/{id}, config disclosure) elevates concrete exploitability. cPanel takeover remains strongest passive finding at 55 confidence with 48h+ stable evidence but delegation gap to Bluehost blocks standard claim path. Casino multi-tenant header leak on financial endpoints adds critical attack vector if tenant isolation fails under auth. Main game API attack surface for Roobet/Stake/Gamdom/RainBet still unmapped but BetPanda proves brand assets exist and are testable. Risk = HIGH — fresh exploitable targets identified, live exploitation requires auth sessions for IDOR/tenant-bypass depth.

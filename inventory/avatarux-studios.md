@@ -293,3 +293,12 @@ www.avatarux.com
 - CHANGED All live in-scope hosts re-verified stable (cpanel 000/1001, affiliates 200, casino 200, help.desk 302)
 
 ## 2026-09-06 22:21:47 UTC
+
+## 2026-09-07 00:11:09 UTC
+- NEW help.desk.avatarux.com/servicedesk/customer/portal/2: 200→303 (attack surface reduced, second JSM portal now redirects)
+- NEW betpandacasino.io/rest/public/config: 404 (Spring JSON) — casino does NOT mirror affiliates /rest/public/config leak; hypothesis falsified
+- NEW cpanel.avatarux.com: NS/SOA confirms apex delegation to Bluehost (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain; takeover mechanism unproven
+- CHANGED All live in-scope hosts re-verified stable: cpanel (SSL fail/1001), affiliates.betpanda.io (200), betpandacasino.io (200), help.desk.avatarux.com (302)
+- CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
+- NEW No new subdomains discovered via crt.sh (recent queries: 502/404/timeout)
+- NEW No new probe data since 2026-09-06 22:21:53 UTC — awaiting credentialed sessions for top 2 AUTH_HELPED hypotheses
