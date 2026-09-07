@@ -3901,3 +3901,65 @@ testability: PASSIVE
 ### STEP 7 — RISK
 
 [RISK] avatarux-studios: 85 — BetPanda affiliate API map breakthrough (same-origin /rest, 20+ endpoints, IDOR pattern on player/uid/{id}, config disclosure) elevates concrete exploitability. cPanel takeover remains strongest passive finding at 55 confidence with 48h+ stable evidence but delegation gap to Bluehost blocks standard claim path. Casino multi-tenant header leak on financial endpoints adds critical attack vector if tenant isolation fails under auth. Main game API attack surface for Roobet/Stake/Gamdom/RainBet still unmapped but BetPanda proves brand assets exist and are testable. Risk = HIGH — fresh exploitable targets identified, live exploitation requires auth sessions for IDOR/tenant-bypass depth.
+===== ANALYST nemotron3 2026-09-07 15:56:14 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/
+total 248
+drwxr-xr-x 12 runner runner  4096 Sep  7 15:36 .
+drwxr-xr-x  3 runner runner  4096 Sep  7 15:35 ..
+drwxr-xr-x  7 runner runner  4096 Sep  7 15:36 .git
+drwxr-xr-x  3 runner runner  4096 Sep  7 15:35 .github
+-rw-r--r--  1 runner runner  1738 Sep  7 15:35 README.md
+-rw-r--r--  1 runner runner    43 Sep  7 15:36 analyst-out.txt
+-rw-r--r--  1 runner runner 78036 Sep  7 15:36 analyst-prompt.txt
+-rw-r--r--  1 runner runner 74200 Sep  7 15:36 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 leads
+-rw-r--r--  1 runner runner  6633 Sep  7 15:35 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 reports
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 reposcan-raw
+-rw-r--r--  1 runner runner  3249 Sep  7 15:35 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 scripts
+-rw-r--r--  1 runner runner    33 Sep  7 15:35 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  7 15:35 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  7 15:35 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  7 15:35 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  7 15:35 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  7 15:35 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 triage
+[0m
+[0m→ [0mRead analyst-out.txt
+[0m→ [0mRead scope.yml
+[0m→ [0mRead state_nemotron3.json
+[0m→ [0mRead probe-results.md
+[0m✱ [0mGlob "**/leads/*.txt"[90m 0 matches[0m
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/leads/
+total 468
+drwxr-xr-x  2 runner runner   4096 Sep  7 15:35 .
+drwxr-xr-x 12 runner runner   4096 Sep  7 15:36 ..
+-rw-r--r--  1 runner runner 138202 Sep  7 15:35 lead-bigpickle.md
+-rw-r--r--  1 runner runner   1530 Sep  7 15:35 lead-laguna.md
+-rw-r--r--  1 runner runner   1500 Sep  7 15:35 lead-ling3.md
+-rw-r--r--  1 runner runner   1560 Sep  7 15:35 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  7 15:35 lead-mimo.md
+-rw-r--r--  1 runner runner 299836 Sep  7 15:35 lead-nemotron3.md
+-rw-r--r--  1 runner runner   9091 Sep  7 15:35 reposcan-avatarux-studios.md
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/inventory/
+total 44
+drwxr-xr-x  2 runner runner  4096 Sep  7 15:35 .
+drwxr-xr-x 12 runner runner  4096 Sep  7 15:36 ..
+-rw-r--r--  1 runner runner 34576 Sep  7 15:35 avatarux-studios.md
+[0m
+[0m→ [0mRead leads/lead-nemotron3.md
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=388][0m
+[0m→ [0mRead inventory/avatarux-studios.md
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=775][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=1119][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=1441][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=1765][0m
