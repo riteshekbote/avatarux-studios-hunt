@@ -311,3 +311,11 @@ www.avatarux.com
 - CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
 - NEW No new subdomains discovered via crt.sh (recent queries: 502/404/timeout)
 - NEW No new probe data since 2026-09-06 22:21:53 UTC — awaiting credentialed sessions for top 2 AUTH_HELPED hypotheses
+
+## 2026-09-07 10:05:27 UTC
+- NEW betpandacasino.io/rest/public/config returned Spring JSON 404 (not mirror of affiliates leak) — hypothesis falsified, last passive corroboration gap closed
+- NEW help.desk.avatarux.com/servicedesk/customer/portal/2 changed from 200 → 303 — second JSM portal instance now redirects, attack surface reduced
+- NEW cpanel.avatarux.com NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain — takeover mechanism unproven, downgraded to monitoring
+- CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
+- CHANGED No new subdomains discovered via crt.sh (recent queries: 502/404/timeout)
+- CHANGED No new probe data since 2026-09-06 22:21:53 UTC — awaiting credentialed sessions for top 2 AUTH_HELPED hypotheses
