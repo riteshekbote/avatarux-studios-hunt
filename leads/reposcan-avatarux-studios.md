@@ -97,3 +97,37 @@ TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
 ## REPOSCAN 2026-09-06 23:28:31 UTC
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
+## REPOSCAN 2026-09-07 01:17:00 UTC
+Source-code audit complete — zero candidate repos.
+
+GitHub enumeration results:
+- Org `avatarux-games-clients`: exists, 0 public repos
+- Org `avatarux-com`: exists, 0 public repos
+- User `avatarux`: exists, 0 public repos
+- Search `org:avatarux`: 0 results
+- Search `avatarux-studios type:org`: 0 results
+
+cands.txt: "no org candidates"
+scope.yml github_orgs: "none-configured"
+
+[HYP] (none)
+class: OTHER
+asset: (no public repos to audit)
+confidence: 100
+reasoning: |
+  Both AvatarUX GitHub orgs (avatarux-games-clients, avatarux-com) have zero public repositories.
+  No candidate repos were provided in cands.txt. The scope.yml explicitly lists github_orgs as
+  "none-configured". Source-code secret scanning is not possible without public repos.
+impact: INFO — no source-code attack surface exposed on GitHub; org keeps repos private
+verify_steps: |
+  curl -s "https://api.github.com/orgs/avatarux-games-clients/repos?per_page=100&type=public" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))"
+  curl -s "https://api.github.com/orgs/avatarux-com/repos?per_page=100&type=public" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))"
+## REPOSCAN 2026-09-07 01:19:32 UTC
+[HYP] (none)
+class: OTHER
+asset: (no public repos to audit)
+confidence: 100
+reasoning: |
+impact: INFO — no source-code attack surface exposed on GitHub
+verify_steps: |
+TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
