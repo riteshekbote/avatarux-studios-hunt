@@ -153,3 +153,4 @@
 - 2026-09-07 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
 - 2026-09-07 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it
 - 2026-09-07 REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
+- 2026-09-07 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded

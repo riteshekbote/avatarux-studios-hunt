@@ -1226,3 +1226,31 @@ evidence_needed: credentialed casino session — POST financial endpoint with x-
 verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
 impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
 testability: AUTH_HELPED
+## 2026-09-07 04:55:48 UTC [target] (model bigpickle)
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed via config.json apiBaseUrl; /rest/public/config leaks operatorId=1 (re-verified 200 this cycle); endpoint map includes /rest/player/uid/{id}; live probe 401-gated (len 48); path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id header schema + echoes betpandacasino_io; header IGNORED on public manifest (roobet_com/stake_com echo betpandacasino_io) → auth-scoped routing unverified; multitenancy across Roobet/Stake/Gamdom/BetPanda via GLOBAL_FLIPT_URL bundle; /rest/public/config NOT mirrored (Spring 404 re-verified).
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows balance/context switch or cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] BetPanda Blog REST Author-Profile Exposure
+class: OTHER
+asset: blog.betpandacasino.io/wp-json/wp/v2/users
+confidence: 45
+reasoning: REST fence removed this cycle — /users 200 leaks 2 admin-prefixed author accounts (admin_betpanda, admin_ovidiu) + IDs + gravatar hashes; prior cycles measured data endpoints 401. Capability-gated routes still 401, drafts 400; content = public SEO articles (20 posts scanned, no internal/admin URLs).
+evidence_needed: any non-public material behind the newly-open REST (drafts/unlisted media/plugin config) — none found (400/401 on all privileged routes).
+verify_steps: done — settings/me/application-passwords/redirection/wp-abilities/site-health all 401; status=draft 400; posts/media content public-only.
+impact: username/author + media index disclosure — LOW/informational, adjacent to REJECTED class
+testability: PASSIVE
