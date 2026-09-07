@@ -21,3 +21,9 @@
   - | Q1 Scope | **VALID** | BetPanda asset, in scope |
   - | Q2 Reachable | **VALID** | Public REST API endpoints respond to unauthenticated requests |
   - | cpanel.avatarux.com Dangling DNS | **VALID** | 6.1 (Medium) |
+
+- 4 lead(s) marked VALID at 2026-09-07 12:09:22 UTC
+  - | Q7 Reasonable triager | YES | Stable dangling DNS with clear escalation path is a valid finding |
+  - | Q4 Provable | PARTIAL | Endpoint map confirmed from JS bundle (`/rest/player/uid/{id}?currency={curr}`); but IDOR requires authenticated session to prove — cannot demonstrate without valid affiliate
+  - **Verdict: HOLD** — Blocked on auth. Need a valid affiliate session to test `GET /rest/player/uid/1?currency=EUR` vs `uid/2` for response differentiation. Without credentials, this remains a hypothesi
+  - | Q4 Provable | NO | All endpoints return 405 on GET; OPTIONS leaks header schema but no data; POST requires valid auth |
