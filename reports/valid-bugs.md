@@ -27,3 +27,6 @@
   - | Q4 Provable | PARTIAL | Endpoint map confirmed from JS bundle (`/rest/player/uid/{id}?currency={curr}`); but IDOR requires authenticated session to prove — cannot demonstrate without valid affiliate
   - **Verdict: HOLD** — Blocked on auth. Need a valid affiliate session to test `GET /rest/player/uid/1?currency=EUR` vs `uid/2` for response differentiation. Without credentials, this remains a hypothesi
   - | Q4 Provable | NO | All endpoints return 405 on GET; OPTIONS leaks header schema but no data; POST requires valid auth |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:46:20 UTC
+  - | Q3 Impact | **YES** | Timing differential could enumerate valid accounts |
