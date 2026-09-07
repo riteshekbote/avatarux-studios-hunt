@@ -159,3 +159,6 @@ https://crt.sh/?q=%.avatarux.com -> ERR The read operation timed out
 
 ## 2026-09-07 15:56:14 UTC
 
+
+## 2026-09-07 19:36:49 UTC
+https://cpanel.avatarux.com/ -> ERR <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE

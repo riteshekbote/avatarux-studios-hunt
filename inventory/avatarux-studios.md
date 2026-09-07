@@ -321,3 +321,11 @@ www.avatarux.com
 - CHANGED No new probe data since 2026-09-06 22:21:53 UTC — awaiting credentialed sessions for top 2 AUTH_HELPED hypotheses
 
 ## 2026-09-07 15:56:14 UTC
+
+## 2026-09-07 19:36:48 UTC
+- NEW cable.betpanda.io probe completed — bare Express server, root returns ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404 {"error":"
+- NEW cpanel.avatarux.com NS/SOA confirms apex delegation to Bluehost (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain — standard Cloudflare zone claim impossible without progra
+- NEW betpandacasino.io/rest/public/config returns Spring JSON 404 — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
+- NEW help.desk.avatarux.com/servicedesk/customer/portal/2 changed 200→303 — second JSM portal instance now redirects, attack surface reduced
+- CHANGED No new subdomains via crt.sh (recent: 502/404/timeout)
+- CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
