@@ -383,3 +383,5 @@ www.avatarux.com
 - CHANGED betpandacasino.io/rest/public/config confirmed 404 (Spring JSON) — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
 - CHANGED help.desk.avatarux.com portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
 - CHANGED cable.betpanda.io confirmed bare Express server — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; no functi
+
+## 2026-09-08 23:12:48 UTC

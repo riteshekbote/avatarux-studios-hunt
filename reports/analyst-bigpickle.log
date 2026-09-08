@@ -8999,3 +8999,19 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 80 — top-2 findings (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED with impact materializing only under credentialed testing; cPanel takeover mechanism unproven (Bluehost delegation gap); anonymous reachable surface now fully enumerated and closed (config leak/manifest/OPTIONS stable, properties family 404, portal 303, cpanel 1001). Probability of further passive-only discovery is effectively zero — no progress possible without program-side credentialed sessions.
+===== ANALYST bigpickle 2026-09-08 23:12:48 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead .
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mmkdir -p /tmp/recon09 && \
+curl -s -o /tmp/recon09/aff_config.json -w "affiliates /rest/public/config: %{http_code}\n" https://affiliates.betpanda.io/rest/public/config ; sleep 1 ; \
+curl -s -o /tmp/recon09/aff_cfg.json -w "affiliates /config/config.json: %{http_code}\n" https://affiliates.betpanda.io/config/config.json ; sleep 1 ; \
+curl -s -o /tmp/recon09/cas_config.json -w "casino /config/config.json: %{http_code}\n" https://betpandacasino.io/config/config.json ; sleep 1 ; \
+curl -s -o /tmp/recon09/cas_manifest.json -w "casino /rest/properties/manifest: %{http_code}\n" https://betpandacasino.io/rest/properties/manifest ; sleep 1 ; \
+curl -s -o /dev/null -w "help.desk root: %{http_code}\n" https://help.desk.avatarux.com/ ; sleep 1 ; \
+curl -s -o /dev/null -w "cpanel root: %{http_code}\n" https://cpanel.avatarux.com/ ; sleep 1 ; \
+curl -s -o /tmp/recon09/player_uid.txt -w "affiliates /rest/player/uid/1: %{http_code}\n" https://affiliates.betpanda.io/rest/player/uid/1 ; \
+echo "--- hashes ---" ; sha256sum /tmp/recon09/aff_config.json /tmp/recon09/aff_cfg.json /tmp/recon09/cas_config.json /tmp/recon09/cas_manifest.json /tmp/recon09/player_uid.txt failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
