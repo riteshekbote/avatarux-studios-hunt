@@ -182,3 +182,7 @@
 - 2026-09-08 ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — known accepted leak, unchanged this cycle.
 - 2026-09-08 ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 — passive surface stable, no new exposure.
 - 2026-09-08 ACCEPTED OTHER @ help.desk.avatarux.com: both JSM portals now 303-gated, root 302 — reduced attack surface stable.
+- 2026-09-08 ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 this cycle — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms leak stable (known accepted misconfig, unchanged).
+- 2026-09-08 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 — casino does NOT mirror affiliates leak; hypothesis falsified.
+- 2026-09-08 REJECTED MISCONFIG @ cable.betpanda.io: undocumented endpoint exposure hypothesis FALSIFIED — bare Express server, no functional endpoints.
+- 2026-09-08 REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig.
