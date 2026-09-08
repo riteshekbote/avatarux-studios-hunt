@@ -159,3 +159,23 @@
 - 2026-09-07 REJECTED MISCONFIG @ cable.betpanda.io: undocumented endpoint exposure hypothesis FALSIFIED — no surface to enumerate
 - 2026-09-07 REJECTED MISCONFIG @ affiliates.betpanda.io/cms: strapiApiUrl:"/cms" resolves to the SPA index.html shell (Vite main.ef021e68.js, title=Affiliate), identical to any nonexistent path 200 — client-side relative base, NOT a live Strapi CMS/admin surface; no new attack path.
 - 2026-09-07 ACCEPTED OTHER @ betpandacasino.io/config/config.json: 200 returns {"baseUrl":"https://betpandacasino.io/rest"} — mirrors affiliate baseUrl config, corroborates same-origin /rest API base; non-sensitive, no new leak.
+- 2026-09-08 ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/config re-verified 200 this cycle — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms leak stable (known accepted misconfig, unchanged).
+- 2026-09-08 ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-preferred-app-context allow-headers with ACAO pinned to https://betpandacasino.io — passive surface stable, no new exposure.
+- 2026-09-08 ACCEPTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; no functional endpoints exist
+- 2026-09-08 REJECTED MISCONFIG @ cable.betpanda.io: undocumented endpoint exposure hypothesis FALSIFIED — no surface to enumerate
+- 2026-09-08 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unproven reconfirmed, downgraded
+- 2026-09-08 ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+- 2026-09-08 ACCEPTED IDOR @ affiliates.betpanda.io: API backend same-origin at /rest; endpoint map complete; IDOR pattern confirmed but requires second credentialed session
+- 2026-09-08 ACCEPTED MISCONFIG @ betpandacasino.io: /rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt} all GET→405 — financial/JWT endpoints POST-gated; OPTIONS leaks tenant-routing header schema + x-site-name-id echo
+- 2026-09-08 ACCEPTED OTHER @ help.desk.avatarux.com: Second JSM customer portal instance at /servicedesk/customer/portal/2 now 303 — attack surface reduced
+- 2026-09-08 ACCEPTED OTHER @ custom-lp.betpanda.io: Live behind Cloudflare challenge, new BetPanda infrastructure discovered via crt.sh
+- 2026-09-08 ACCEPTED OTHER @ fp.betpanda.io: Live behind Cloudflare challenge, likely fingerprint/fraud detection service
+- 2026-09-08 ACCEPTED OTHER @ flags.betpanda.io: Flipt feature-flag service (env=betpanda) confirmed via casino bundle GLOBAL_FLIPT_URL
+- 2026-09-08 REJECTED MISCONFIG @ betpandacasino.io x-site-name-id: header ignored on public manifest — no passive multi-tenant switch (evidence contradicts hypothesis)
+- 2026-09-08 REJECTED MISCONFIG @ help.desk.avatarux.com Confluence /wiki/rest/api/space: 303 to root stable — anonymous space enumeration closed behind Atlassian Edge
+- 2026-09-08 REJECTED OTHER @ nano-public S3: bucket listing AccessDenied — NOT a bucket-listing misconfig; objects public by ACL only
+- 2026-09-08 REJECTED MISCONFIG @ betpandacasino.io/rest actuator|api-docs|swagger: all 404 — no exposed management surface
+- 2026-09-08 REJECTED MISCONFIG @ cpcalendars: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-08 REJECTED MISCONFIG @ cpcontacts: HTTP 500 confirmed benign disabled feature, parked
+- 2026-09-08 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is a REJECTED class (program scope) — leads list must not rerank it
+- 2026-09-08 REJECTED OTHER @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 → casino does NOT mirror the affiliates leak; hypothesis falsified, last passive corroboration gap closed
