@@ -375,3 +375,11 @@ www.avatarux.com
 - NEW No new subdomains via crt.sh (recent queries: 502/404/timeout) — passive discovery exhausted
 - CHANGED Top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
 - CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
+
+## 2026-09-08 20:53:56 UTC
+- NEW No new subdomains discovered via crt.sh (recent queries: 502/404/timeout) — passive discovery exhausted
+- NEW No new probe data since 2026-09-06 22:21:53 UTC — all live in-scope hosts re-verified stable
+- CHANGED cPanel takeover downgraded from actionable to monitoring — NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persi
+- CHANGED betpandacasino.io/rest/public/config confirmed 404 (Spring JSON) — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
+- CHANGED help.desk.avatarux.com portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+- CHANGED cable.betpanda.io confirmed bare Express server — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; no functi

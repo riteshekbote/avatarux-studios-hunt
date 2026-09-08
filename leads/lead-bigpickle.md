@@ -1515,3 +1515,33 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: JSM portals 303-gated, root 302 — reduced attack surface stable.
 [LEARN] REJECTED OTHER @ affiliates.betpanda.io/rest/public/recover-password: 200 response on path-email variant — reconfirmed as REJECTED class (forgot-password enumeration/timing), must not be reranked.
 [RISK] avatarux-studios: 80 — top-2 findings remain unevidenced and AUTH_HELPED (IDOR/tenant-isolation impact only materializes under credentialed testing); cPanel takeover mechanism unproven (Bluehost delegation gap); anonymous surface fully closed — no further progress without program credentials.
+## 2026-09-08 20:53:45 UTC [target] (model bigpickle)
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 this cycle (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms byte-stable); /rest/player/uid/1 401-gated anonymously; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id echo; /rest/properties/{home,config} now proven 404 (family closed beyond manifest); header IGNORED on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] cPanel Subdomain Takeover via Dangling Cloudflare DNS
+class: MISCONFIG
+asset: cpanel.avatarux.com (CNAME → avatarux.com → 162.159.136.54, CF 1001)
+confidence: 40
+reasoning: 1001 persists 48h+ stable; NS/SOA shows apex Bluehost delegation (ns1/ns2.bluehost.com) with no separately claimable subdomain delegation; claim mechanism unproven.
+evidence_needed: authoritative confirmation that Cloudflare 1001 hostname is claimable (CF zone-add with TXT ownership), which standard anonymous flow cannot establish.
+verify_steps: none passive; requires authorized claim attempt — not run.
+impact: full host impersonation of cpanel.avatarux.com — HIGH if mechanism proven
+testability: HUMAN_ONLY
+[NEXT] HUMAN: passive surface now fully closed — this cycle confirmed the casino properties family is exhausted (/rest/properties/{home,config} 404) and the affiliates leak + casino manifest re-verified stable with zero drift. Neither remaining hypothesis (Affiliate IDOR 78, Casino tenant-isolation 55) can advance anonymously. Request program-authorized test credentials for affiliates.betpanda.io and betpandacasino.io (or a credentialed session pair) to run the two POST/GET verify_steps; without them no further discovery is possible.
+[RISK] avatarux-studios: 80 — top-2 findings (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED with impact materializing only under credentialed testing; cPanel takeover mechanism unproven (Bluehost delegation gap); anonymous reachable surface now fully enumerated and closed (config leak/manifest/OPTIONS stable, properties family 404, portal 303, cpanel 1001). Probability of further passive-only discovery is effectively zero — no progress possible without program-side credentialed sessions.
