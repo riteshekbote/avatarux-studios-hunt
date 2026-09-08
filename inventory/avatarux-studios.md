@@ -347,3 +347,12 @@ www.avatarux.com
 - NEW help.desk.avatarux.com second JSM portal `/servicedesk/customer/portal/2` now 303 (was 200) — attack surface reduced
 - CHANGED No new subdomains via crt.sh (recent queries: 502/404/timeout)
 - CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
+
+## 2026-09-08 09:53:23 UTC
+- NEW help.desk.avatarux.com portal enumeration {1..10} all 303 confirmed (2026-09-08 00:31, 05:15) — attack surface fully reduced behind Atlassian Edge
+- NEW No new subdomains via crt.sh (recent: 502/404/timeout) — passive discovery exhausted
+- CHANGED cpanel.avatarux.com takeover downgraded — NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists 48h+ but stan
+- CHANGED betpandacasino.io/rest/public/config returns Spring JSON 404 — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
+- CHANGED cable.betpanda.io confirmed bare Express server — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; "undocume
+- CHANGED All live in-scope hosts re-verified stable (cpanel SSL fail/1001, affiliates 200, casino 200, help.desk 302)
+- CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions

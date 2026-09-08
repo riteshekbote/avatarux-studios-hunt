@@ -1412,3 +1412,4 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 — passive surface stable, no new exposure.
 [LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: both JSM portals now 303-gated, root 302 — reduced attack surface stable.
 [RISK] avatarux-studios: 80 — top-2 findings remain unevidenced and AUTH_HELPED (IDOR/tenant-isolation impact only materializes under credentialed testing); cPanel takeover mechanism unproven (Bluehost delegation gap); anonymous surface fully closed — no further progress without program credentials. Ranked risk unchanged from prior cycles; scrub remains correct.
+## 2026-09-08 09:48:13 UTC [target] (model bigpickle)
