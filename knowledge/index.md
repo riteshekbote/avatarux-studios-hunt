@@ -219,3 +219,21 @@
 - 2026-09-09 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
 - 2026-09-09 ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
 - 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: x-site-name-id ignored on public manifest — no passive multi-tenant switch
+- 2026-09-09 ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP (20.127.238.137), geo (US-VA), sessionId, allTimeNumBets=$15.35B, full restricted-countries list; intentionally preloaded in HTML but operational/financial data exposure is non-standard on in-scope brand
+- 2026-09-09 ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog with RTP data, internal provider IDs, S3 bucket structure (roobet-dev-public-images-prod), region blacklists
+- 2026-09-09 REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF or open-proxy possible
+- 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle — operatorId=1, supportEmail, strapiApiUrl leak stable
+- 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id with ACAO pinned to betpandacasino.io — passive surface stable
+- 2026-09-09 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+- 2026-09-09 ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+- 2026-09-09 ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+- 2026-09-09 REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+- 2026-09-09 ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+- 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+- 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+- 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+- 2026-09-09 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+- 2026-09-09 ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4-10 HTTP 200 expose tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — attack surface expanded vs prior "all 303" claim
+- 2026-09-09 ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→WordPress — legacy/stale config, not active mail server
+- 2026-09-09 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — known accepted leak, unchanged

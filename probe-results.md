@@ -206,3 +206,8 @@ https://autoconfig.avatarux.com/ -> 200 len=?
 https://avatarux.com/ -> 200 len=?
 https://autoconfig.avatarux.com/autoconfig/v1.1/ -> 200 len=?
 https://autoconfig.avatarux.com/ -> 200 len=?
+
+## 2026-09-09 18:48:11 UTC
+https://help.desk.avatarux.com/servicedesk/customer/portal/{1..20 -> HTTP 303
+https://help.desk.avatarux.com/wiki/ -> 200 len=?
+https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401

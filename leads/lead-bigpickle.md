@@ -1629,3 +1629,97 @@ testability: HUMAN_ONLY
 [LEARN] REJECTED OTHER @ affiliates.betpanda.io/rest/public/recover-password: 200 response on path-email variant — reconfirmed as REJECTED class (forgot-password enumeration/timing), must not be reranked.
 [RISK] avatarux-studios: **80** — top-2 findings (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED with impact materializing only under credentialed testing; cPanel takeover mechanism unproven (Bluehost delegation gap); anonymous reachable surface now fully enumerated and closed (config leak/manifest/OPTIONS stable, properties family 404, portal 303, cpanel 1001). Probability of further passive-only discovery is effectively zero — no progress possible without program-side credentialed sessions.
 ## 2026-09-09 15:39:45 UTC [target] (model bigpickle)
+## 2026-09-09 18:46:28 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io/rest/player/uid/{id},8.2,api
+[PRIO] betpandacasino.io/rest/user/*,7.5,api
+[PRIO] roobet.com/_api/settings/get,6.5,api
+[PRIO] cpanel.avatarux.com,3.5,takeover
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 this cycle (operatorId=1, unchanged); endpoint map includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] Roobet Anonymous API Config/Financial Metric Exposure
+class: MISCONFIG
+asset: roobet.com/_api/settings/get + /_api/tp-games/essentials
+confidence: 52
+reasoning: Two anonymous endpoints return 200 without auth: settings/get leaks server client IP (20.127.238.137), geo classification, sessionId establishment, allTimeNumBets=$15.35B aggregate, full restricted-countries config; tp-games/essentials leaks 8.7MB game catalog with RTP data, internal provider IDs, S3 bucket structure, region blacklists; <link rel="preload"> in HTML confirms intentionally public but exposure of financial aggregate and backend game config is non-standard.
+evidence_needed: Confirm whether sessionId can be reused for authenticated actions (session fixation); verify if RTP data is normally admin-only.
+verify_steps: GET /_api/settings/get → verify sessionId is server-assigned, not client-controlled; check if session persists across requests without auth.
+impact: Operational/financial metric disclosure; potential session fixation if sessionId reuse possible — LOW-MODERATE
+testability: PASSIVE
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id + ACAO pinned betpandacasino.io; header IGNORED on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[PARKED] cPanel Takeover (40): delegation gap (Bluehost ns1/ns2) blocks standard Cloudflare zone claim; mechanism unproven; monitoring only.
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — strongest evidence, AUTH_HELPED
+[FINAL] 2. betpandacasino.io tenant isolation (55) — AUTH_HELPED, lower evidence
+[FINAL] 3. roobet.com anonymous API (52) — new surface, impact low-moderate; sessionId reuse unknown
+[NEXT] HUMAN: Both remaining high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted this cycle (affiliates leak 200 byte-identical, /rest/player/uid/1 401, casino manifest/config 200, portal/2 303, cpanel SSL fail). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP (20.127.238.137), geo (US-VA), sessionId, allTimeNumBets=$15.35B, full restricted-countries list; intentionally preloaded in HTML but operational/financial data exposure is non-standard on in-scope brand
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog with RTP data, internal provider IDs, S3 bucket structure (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF or open-proxy possible
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle — operatorId=1, supportEmail, strapiApiUrl leak stable
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id with ACAO pinned to betpandacasino.io — passive surface stable
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 findings (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface re-verified exhausted; new Roobet API leak (52) adds breadth but not depth; probability of further passive-only discovery effectively zero — no progress possible without credentialed sessions.
+[PRIO] affiliates.betpanda.io/rest/player/uid/{id},8.2,api
+[PRIO] betpandacasino.io/rest/user/*,7.5,api
+[PRIO] roobet.com/_api,6.5,api
+[PRIO] cpanel.avatarux.com,3.5,takeover
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 this cycle (operatorId=1, unchanged); endpoint map includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id + ACAO pinned betpandacasino.io; header IGNORED on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] Roobet Anonymous API Config/Financial Metric Exposure
+class: MISCONFIG
+asset: roobet.com/_api/settings/get + /_api/tp-games/essentials
+confidence: 52
+reasoning: Anonymous 200: settings/get leaks server client IP (20.127.238.137), geo classification, sessionId, allTimeNumBets=$15.35B, full restricted-countries config; tp-games/essentials leaks 8.7MB catalog w/ RTP data, internal provider IDs, S3 bucket structure, region blacklists; overloaded but XFF ignored (server IP intact, no spoofing bypass).
+evidence_needed: confirm whether sessionId is reusable for authenticated actions (fixation) or stateless ephemeral.
+verify_steps: GET /_api/settings/get twice → compare sessionId stability; no mutating or auth-bypass actions.
+impact: operational/financial metric disclosure; backend game-config leak — LOW-MODERATE
+testability: PASSIVE
+[PARKED] cPanel Takeover (40): Bluehost apex delegation gap; mechanism unproven; monitoring only.
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. roobet.com anonymous API (52) — new surface, low-moderate impact
+[NEXT] HUMAN: Both high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted (affiliates leak 200 byte-identical, player/uid 401, casino manifest/config/OPTIONS 200, portal 303, cpanel 1001, roobet only safe 200 metrics). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
