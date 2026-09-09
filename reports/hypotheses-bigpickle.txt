@@ -1,4 +1,16 @@
-## 2026-09-09 21:30:34 UTC [target] (model bigpickle)
+## 2026-09-09 23:34:35 UTC [target] (model bigpickle)
+[NEXT] HUMAN: Both high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted (affiliates leak 200 byte-identical, player/uid 401, casino manifest/config/OPTIONS 200, portal 303, cpanel 1001, roobet only safe 200 metrics). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
 confidence: 78
 reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 this cycle (operatorId=1, unchanged); endpoint map includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
 evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
@@ -106,3 +118,47 @@ testability: PASSIVE
 [LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
 [LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
 [RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
+[PRIO] api.roobet.com,7.9,a9b10t8g1c8f10 — new high-value money API, Cloudflare-gated
+[PRIO] betpandacasino.io/rest/user/*,6.95,a8b10t7g2c5f6 — financial POST surface, AUTH_HELPED
+[PRIO] affiliates.betpanda.io/rest/player/uid/{id},6.9,a8b9t8g3c4f6 — BOLA pattern, AUTH_HELPED
+[PRIO] help.desk.avatarux.com portals 4-10,6.4,a6b6t7g9c3f7 — confirmed tenant/Statsig leak, PASSIVE
+[HYP] Roobet WS GraphQL/Admin Endpoint Exposure on api.roobet.com
+class: OTHER
+asset: api.roobet.com (wss:// + :8088, /pusher/*)
+confidence: 48
+reasoning: Bundle leaks ROOBET_WS_API_URL wss://api.roobet.com/ + ROOBET_WS_GQL_ADMIN_PORT 8088 (realtime GraphQL client); api.roobet.com live behind Cloudflare but 403-forced for this client on :443 (bot-fight) while the SPA reaches it; if WS GraphQL accepts unauthenticated subscribe queries after gate, realtime balances/odds/PII streams are exposed.
+evidence_needed: browser/authorized-context WS handshake + one unauthenticated GraphQL query response (or confirmation the 403 persists for whitelisted clients).
+verify_steps: in authorized context: WS handshake wss://api.roobet.com/ then introspect; fallback HEAD https://api.roobet.com/graphql; do not run now (edge-gated, needs whitelisted client).
+impact: cross-user realtime data / game-state exposure — HIGH if proven; currently gate-confirmed not exploitable
+testability: HUMAN_ONLY
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 byte-identical (operatorId=1); player/uid 401-gated anonymously; path-param uid classic BOLA; no counter-evidence.
+evidence_needed: response diff {alt_uid} vs {own_uid} across two credentialed affiliate sessions.
+verify_steps: GET /rest/player/uid/{own_uid} baseline → replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id + ACAO pinned betpandacasino.io; header ignored on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[PARKED] Roobet anonymous metrics disclosure: sessionId ephemeral → fixation extension falsified; settings/get + tp-games/essentials are preloaded client data → informational, REJECTED-class, not reranked
+[PARKED] api.roobet.com WS/GraphQL (48): confidence ≥40 but HUMAN_ONLY (edge 403); hold pending authorized/browser context
+[PARKED] cPanel Takeover (40): Bluehost apex delegation gap; mechanism unproven; monitoring only
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. help.desk.avatarux.com portals 4-10 tenant/Statsig enumeration — PASSIVE confirmed this cycle
+[FINAL] 4. api.roobet.com surface mapping (48) — HUMAN_ONLY edge-gated
+[NEXT] HUMAN: Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, plus whitelisted/browser-context access to the newly-mapped api.roobet.com (wss GraphQL + /pusher/*) — its base is bundle-confirmed but Cloudflare 403s programmatic clients, so passive probing cannot progress; passive surface otherwise re-verified exhausted.
+[LEARN] ACCEPTED OTHER @ roobet.com bundle: leaks ROOBET_API_URL=api.roobet.com, wss://api.roobet.com/, WS GQL admin port 8088, BetBy brand id 2186449803775455232, oppwa payment widget URL, Contentful CDN keys — inventory "api.roobet.com (undiscovered)" resolved
+[LEARN] ACCEPTED OTHER @ api.roobet.com: Cloudflare-fronted (172.64.151.243/104.18.36.13); root + /pusher/auth → 403 Attention-Required (bot-fight, UA-agnostic); :8088 unreachable — mapped but edge-gated for this client
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: per-portal probe /{2,3}=303, portals 4-10=200; portal/4 leaks tenant-id df607198-… + atlassianOrgId ead67a75-… + workspace d4da630a-… + Statsig env prod-euwest/shard jira-prod-eu-3; prior "all 303" was brace-literal artifact
+[LEARN] REJECTED AUTH @ roobet.com/_api/settings/get: sessionId changes between consecutive GETs (ephemeral) — session-fixation extension falsified; remaining leak is preloaded stats/geo/config (informational)
+[RISK] avatarux-studios: **80** — top-2 (Affiliate IDOR 78, Casino tenant-isolation 55) remain unevidenced and AUTH_HELPED; freshly-mapped Roobet API (api.roobet.com, high-value money surface) is Cloudflare-403 edge-gated so exploitation needs authorized browser context; help.desk portals 4-10 tenant/Statsig leak PASSIVE-confirmed but MEDIUM informational; no passive-only path advances exploitation without program-supplied credentialed sessions or a whitelisted client for api.roobet.com.

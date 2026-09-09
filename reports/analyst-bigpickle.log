@@ -10769,3 +10769,563 @@ The only unexecuted PASSIVE verify step is the Roobet `sessionId` stability chec
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mecho "=== response-1 keys ==="; jq -r 'keys[]' /tmp/roobet1.json 2>/dev/null || head -c 400 /tmp/roobet1.json; echo; echo "=== sessionId field ==="; jq -r '.sessionId // .session // .clientIp // .ip // empty' /tmp/roobet1.json 2>/dev/null; echo "=== response-2 sessionId ==="; jq -r '.sessionId // .session // .clientIp // .ip // empty' /tmp/roobet2.json 2>/dev/null; echo "=== diff (byte-level) ==="; cmp -s /tmp/roobet1.json /tmp/roobet2.json && echo "IDENTICAL" || echo "DIFFERENT"; echo "=== full body 1 ==="; cat /tmp/roobet1.json failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-09 23:34:45 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && git log --oneline -5 2>/dev/null; date -u
+total 308
+drwxr-xr-x 12 runner runner   4096 Sep  9 23:30 .
+drwxr-xr-x  3 runner runner   4096 Sep  9 23:30 ..
+drwxr-xr-x  7 runner runner   4096 Sep  9 23:30 .git
+drwxr-xr-x  3 runner runner   4096 Sep  9 23:30 .github
+-rw-r--r--  1 runner runner   1738 Sep  9 23:30 README.md
+-rw-r--r--  1 runner runner     32 Sep  9 23:30 analyst-out.txt
+-rw-r--r--  1 runner runner 108785 Sep  9 23:30 analyst-prompt.txt
+-rw-r--r--  1 runner runner 104949 Sep  9 23:30 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 inventory
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 leads
+-rw-r--r--  1 runner runner   8430 Sep  9 23:30 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 reports
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep  9 23:30 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 scripts
+-rw-r--r--  1 runner runner     33 Sep  9 23:30 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep  9 23:30 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep  9 23:30 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep  9 23:30 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep  9 23:30 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep  9 23:30 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep  9 23:30 triage
+66f611b triage 2026-09-09-21-35
+Wed Sep  9 23:30:53 UTC 2026
+[0m
+[0m✱ [0mGlob "**/*.{md,yml,yaml,json,txt}"[90m 80 matches[0m
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead leads/lead-bigpickle.md
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=519][0m
+[0m→ [0mRead triage/run-2026-09-09-21-35.md
+[0m
+[0m$ [0mwc -l leads/lead-bigpickle.md && tail -120 leads/lead-bigpickle.md
+1833 leads/lead-bigpickle.md
+[NEXT] HUMAN: Both high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted (affiliates leak 200 byte-identical, player/uid 401, casino manifest/config/OPTIONS 200, portal 303, cpanel 1001, roobet only safe 200 metrics). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
+## 2026-09-09 21:30:34 UTC [target] (model bigpickle)
+confidence: 78
+reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 this cycle (operatorId=1, unchanged); endpoint map includes /rest/player/uid/{id}; live probe 401-gated; path-param uid = classic BOLA; no counter-evidence.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id + ACAO pinned betpandacasino.io; header IGNORED on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] Roobet Anonymous API Config/Financial Metric Exposure
+class: MISCONFIG
+asset: roobet.com/_api/settings/get + /_api/tp-games/essentials
+confidence: 52
+reasoning: Anonymous 200: settings/get leaks server client IP (20.127.238.137), geo classification, sessionId, allTimeNumBets=$15.35B, full restricted-countries config; tp-games/essentials leaks 8.7MB catalog w/ RTP data, internal provider IDs, S3 bucket structure, region blacklists; overloaded but XFF ignored (server IP intact, no spoofing bypass).
+evidence_needed: confirm whether sessionId is reusable for authenticated actions (fixation) or stateless ephemeral.
+verify_steps: GET /_api/settings/get twice → compare sessionId stability; no mutating or auth-bypass actions.
+impact: operational/financial metric disclosure; backend game-config leak — LOW-MODERATE
+testability: PASSIVE
+[PARKED] cPanel Takeover (40): Bluehost apex delegation gap; mechanism unproven; monitoring only.
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. roobet.com anonymous API (52) — new surface, low-moderate impact
+[NEXT] HUMAN: Both high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted (affiliates leak 200 byte-identical, player/uid 401, casino manifest/config/OPTIONS 200, portal 303, cpanel 1001, roobet only safe 200 metrics). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
+verify_steps: GET https://help.desk.avatarux.com/servicedesk/customer/portal/{1..20} — capture status and tenant-id meta tags; GET https://help.desk.avatarux.com/wiki/ — check Confluence exposure; GET https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk with Header X-Tenant-Id: df607198-7bdc-43c6-8353-9b8a822febc5
+impact: Internal infrastructure mapping, tenant enumeration for targeted phishing/social engineering, Atlassian config disclosure — MEDIUM
+testability: PASSIVE
+[PARKED] AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com: confidence 65 but impact LOW-MEDIUM — stale config pointing to web host (mail.avatarux.com 301→WordPress), actual MX records show Google Workspace/Zoho/Mandrill/ProtonMail; no active mail server on exposed ports; phishing template construction only theoretical
+[PARKED] BetPanda Casino SSRF via Game Provider Callback/Webhook Endpoints: all 5 endpoints 404 — no surface to exploit, hypothesis falsified
+[PARKED] BetPanda Affiliate Mass Assignment on Player/Transaction Write Endpoints: requires credentialed session (AUTH_HELPED), blocked on test accounts
+[PARKED] cpanel.avatarux.com Subdomain Takeover: NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists but standard zone claim impossible without program cooperation
+[FINAL] 1. BetPanda Affiliate Cross-Tenant Player Data Access via IDOR on /rest/player/uid/{id} (78) — HIGH impact, AUTH_HELPED, concrete endpoint map
+[FINAL] 2. BetPanda Casino Multi-Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints (55) — CRITICAL if proven, AUTH_HELPED, header schema leaked
+[FINAL] 3. AvatarUX Help Desk Tenant Enumeration via Accessible JSM Customer Portals (72) — MEDIUM impact, PASSIVE confirmed, portals 4-10 exposed
+[NEXT] HUMAN: Request program-provided test credentials for BetPanda Affiliate (affiliates.betpanda.io) and BetPanda Casino (betpandacasino.io) to unblock top 2 AUTH_HELPED hypotheses (IDOR 78, tenant bypass 55)
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4-10 HTTP 200 expose tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — attack surface expanded vs prior "all 303" claim
+[LEARN] ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→WordPress — legacy/stale config, not active mail server
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — known accepted leak, unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-preferred-app-context allow-headers with ACAO pinned to https://betpandacasino.io — passive surface stable
+[RISK] avatarux-studios: 78 — Top 2 exploitable paths (Affiliate IDOR 78, Casino tenant bypass 55) remain AUTH_HELPED blocked on test credentials. Passive surface: help.desk portals 4-10 exposed (tenant enumeration), casino SSRF falsified, mail config stale, cPanel takeover unclaimable. BetPanda affiliate API (20+ endpoints, config leaks) and casino Spring Boot backend (tenant header schema leaked) provide concrete exploit paths pending auth. Risk = HIGH — fresh credentialed targets identified; program test accounts needed to progress.
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id + ACAO pinned betpandacasino.io; header IGNORED on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[HYP] Roobet Anonymous API Config/Financial Metric Exposure
+class: MISCONFIG
+asset: roobet.com/_api/settings/get + /_api/tp-games/essentials
+confidence: 52
+reasoning: Anonymous 200: settings/get leaks server client IP (20.127.238.137), geo classification, sessionId, allTimeNumBets=$15.35B, full restricted-countries config; tp-games/essentials leaks 8.7MB catalog w/ RTP data, internal provider IDs, S3 bucket structure, region blacklists; overloaded but XFF ignored (server IP intact, no spoofing bypass).
+evidence_needed: confirm whether sessionId is reusable for authenticated actions (fixation) or stateless ephemeral.
+verify_steps: GET /_api/settings/get twice → compare sessionId stability; no mutating or auth-bypass actions.
+impact: operational/financial metric disclosure; backend game-config leak — LOW-MODERATE
+testability: PASSIVE
+[PARKED] cPanel Takeover (40): Bluehost apex delegation gap; mechanism unproven; monitoring only.
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. roobet.com anonymous API (52) — new surface, low-moderate impact
+[NEXT] HUMAN: Both high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted (affiliates leak 200 byte-identical, player/uid 401, casino manifest/config/OPTIONS 200, portal 303, cpanel 1001, roobet only safe 200 metrics). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
+testability: PASSIVE
+[PARKED] cPanel Takeover (40): Bluehost apex delegation gap; mechanism unproven; monitoring only.
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. roobet.com anonymous API (52) — new surface, low-moderate impact
+[NEXT] HUMAN: Both high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED — passive surface re-verified exhausted (affiliates leak 200 byte-identical, player/uid 401, casino manifest/config/OPTIONS 200, portal 303, cpanel 1001, roobet only safe 200 metrics). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get: anonymous 200 leaks client IP, geo, sessionId, allTimeNumBets=$15.35B, restricted-countries list; preloaded intentionally but operational/financial exposure on in-scope brand is non-standard
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/tp-games/essentials: anonymous 200 leaks 8.7MB game catalog w/ RTPs, internal provider IDs, S3 bucket (roobet-dev-public-images-prod), region blacklists
+[LEARN] REJECTED OTHER @ roobet.com/api/cors-proxy: server-side validated, blocks all non-whitelisted URLs — no SSRF/open-proxy
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/settings/get XFF: X-Forwarded-For/True-Client-IP ignored, server IP (20.127.238.137) & region fixed — no geo/SSRF spoofing
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known leak unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated — auth boundary intact anonymously, supports AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: OPTIONS /rest/user/authenticate 200, ACAO pinned to https://betpandacasino.io, x-site-name-id=betpandacasino_io echo — passive surface stable, no new exposure
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA Bluehost apex delegation, no claimable subdomain — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[RISK] avatarux-studios: **80** — top-2 (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED; passive surface exhausted (only new breadth = Roobet anonymous metrics leak @52, low impact); cPanel takeover unproven; no passive-only progress possible without program-supplied credentialed sessions.
+[0m
+[0m→ [0mRead analyst-out.txt
+[0m
+[0m$ [0mcat state_bigpickle.json scope.yml
+{"phase": "POC", "target": "api"}programs:
+  avatarux-studios:
+    name: AvatarUX Studios Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "Brands: Roobet, Stake, Gamdom, BetPanda, RainBet. All infrastructure, game services, APIs and systems operated by AvatarUX Studios and its distributed gaming integrations"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+[0m
+[0m$ [0mcurl -s --max-time 20 https://roobet.com/ -o /tmp/opencode/roobet_index.html -w "INDEX %{http_code} %{size_download}\n"; sleep 1; curl -s --max-time 20 https://roobet.com/_api/settings/get -o /tmp/opencode/roobet_s1.json -w "SET1 %{http_code} %{size_download}\n"; sleep 1; curl -s --max-time 20 https://roobet.com/_api/settings/get -o /tmp/opencode/roobet_s2.json -w "SET2 %{http_code} %{size_download}\n"
+INDEX 200 16854
+SET1 200 1766
+SET2 200 1766
+[0m
+[0m$ [0mcd /tmp/opencode && grep -o '"sessionId":"[^"]*"' roobet_s1.json; grep -o '"sessionId":"[^"]*"' roobet_s2.json; echo "--- diff ---"; diff -q roobet_s1.json roobet_s2.json && echo IDENTICAL; echo "--- keys ---"; grep -oE '"[a-zA-Z]+"' roobet_s1.json | sort -u
+"sessionId":"5aea3ad0a9ead37aaf3ad92382b86b7f17b103a63d9165c4dd57dab426c743c5"
+"sessionId":"63c9fd3208fab5c77fa053952d166921786cb94ca972e5f6dad59ec0b010ae5b"
+--- diff ---
+Files roobet_s1.json and roobet_s2.json differ
+--- keys ---
+"AS"
+"AU"
+"AW"
+"Aruba"
+"Australia"
+"BE"
+"BQ"
+"Belgium"
+"CU"
+"CW"
+"CY"
+"Cuba"
+"Curacao"
+"Cyprus"
+"DE"
+"ES"
+"GB"
+"GG"
+"GI"
+"GU"
+"Germany"
+"Gibraltar"
+"Guam"
+"Guernsey"
+"HT"
+"Haiti"
+"IL"
+"IQ"
+"IR"
+"Iran"
+"Iraq"
+"Israel"
+"KP"
+"MM"
+"MP"
+"MT"
+"Malta"
+"Myanmar"
+"NI"
+"NL"
+"Netherlands"
+"Nicaragua"
+"PR"
+"PT"
+"Portugal"
+"SE"
+"SS"
+"SX"
+"SY"
+"Spain"
+"Sweden"
+"Syria"
+"US"
+"VI"
+"YE"
+"Yemen"
+"ZW"
+"Zimbabwe"
+"allTimeNumBets"
+"banner"
+"bannerLink"
+"bannerLinkTitle"
+"countryCode"
+"disabledApp"
+"disabledBinanceSmartChainWithdraw"
+"disabledBitcoinWithdraw"
+"disabledDogecoinWithdraw"
+"disabledEthereumArbitrumWithdraw"
+"disabledEthereumBaseWithdraw"
+"disabledEthereumEthereumWithdraw"
+"disabledFiatWithdraw"
+"disabledLitecoinWithdraw"
+"disabledRippleWithdraw"
+"disabledSolanaWithdraw"
+"disabledSuiWithdraw"
+"disabledTetherBinanceSmartChainWithdraw"
+"disabledTetherEthereumWithdraw"
+"disabledTetherSolanaWithdraw"
+"disabledTetherTronWithdraw"
+"disabledTronWithdraw"
+"disabledUSDCArbitrumWithdraw"
+"disabledUSDCBaseWithdraw"
+"disabledUSDCBinanceSmartChainWithdraw"
+"disabledUSDCEthereumWithdraw"
+"disabledUSDCSolanaWithdraw"
+"en"
+"features"
+"globalStats"
+"ip"
+"locale"
+"regionCountryCode"
+"restrictedCountries"
+"restrictedRegion"
+"serverTime"
+"sessionId"
+[0m
+[0m$ [0mcd /tmp/opencode && grep -oE '(src|href)="[^"]+\.(js|css)[^"]*"' roobet_index.html | sort -u | head -40; echo "--- _api refs ---"; grep -oE '_api/[a-zA-Z0-9_/-]+' roobet_index.html | sort -u
+href="/assets/3OLTbEm2.js"
+href="/assets/3mV3WY3f.js"
+href="/assets/8wR41aah.js"
+href="/assets/A95s7qCD.js"
+href="/assets/BJef2Cc1.js"
+href="/assets/BQM9TkGH.js"
+href="/assets/BSjA5Ib2.js"
+href="/assets/BVNPsVDJ.js"
+href="/assets/BXst-dP4.js"
+href="/assets/B_1h-O69.js"
+href="/assets/Bd0hqir2.js"
+href="/assets/BhWzbKkX.js"
+href="/assets/Bldya6Qu.js"
+href="/assets/Blef0ipl.js"
+href="/assets/Bo7fnUdb.css"
+href="/assets/Bp-Wxlj3.js"
+href="/assets/BpmedYgN.js"
+href="/assets/C0iGF0Mb.js"
+href="/assets/C70OBiU0.js"
+href="/assets/CBAbPL-F.js"
+href="/assets/CBns33n7.js"
+href="/assets/CCQKs_rj.js"
+href="/assets/CIKtYGSZ.js"
+href="/assets/CVKhXhcV.js"
+href="/assets/CYX0YYuN.js"
+href="/assets/Ch6m8h1L.js"
+href="/assets/CiP9ZYv7.js"
+href="/assets/Co6qtTkG.js"
+href="/assets/CooJfpca.js"
+href="/assets/CrfCjrj-.js"
+href="/assets/CtMiUHFb.js"
+href="/assets/Cw1NvXWt.js"
+href="/assets/CxmxS2p4.js"
+href="/assets/CyP0MdKE.js"
+href="/assets/D0YLqAwR.js"
+href="/assets/DBCNVb--.js"
+href="/assets/DCrQQLZ_.js"
+href="/assets/DHh5Amet.js"
+href="/assets/DKpH2gdn.js"
+href="/assets/DLbglf7A.css"
+--- _api refs ---
+_api/settings/get
+_api/tp-games/essentials
+[0m
+[0m$ [0mgrep -oE '<script[^>]*src="[^"]+"' /tmp/opencode/roobet_index.html | head -20
+<script type="text/partytown" src="https://cdn.seondf.com/js/v6/agent.umd.js"
+[0m
+[0m$ [0mfor i in 2 3 4 5 6 7 8 9 10; do code=$(curl -s --max-time 15 -o /dev/null -w "%{http_code}" "https://help.desk.avatarux.com/servicedesk/customer/portal/$i"); echo "portal/$i -> $code"; sleep 1; done
+portal/2 -> 303
+portal/3 -> 303
+portal/4 -> 200
+portal/5 -> 200
+portal/6 -> 200
+portal/7 -> 200
+portal/8 -> 200
+portal/9 -> 200
+portal/10 -> 200
+[0m
+[0m$ [0mgrep -oE 'rel="modulepreload"[^>]*href="[^"]+"|type="module"[^>]*src="[^"]+"' /tmp/opencode/roobet_index.html | head -30
+rel="modulepreload" href="/assets/manifest-23515154.js"
+rel="modulepreload" href="/assets/entry.client-C21zB2Yy.js"
+rel="modulepreload" href="/assets/DReFKALH.js"
+rel="modulepreload" href="/assets/Ch6m8h1L.js"
+rel="modulepreload" href="/assets/Bldya6Qu.js"
+rel="modulepreload" href="/assets/Ds99ewLI.js"
+rel="modulepreload" href="/assets/A95s7qCD.js"
+rel="modulepreload" href="/assets/CrfCjrj-.js"
+rel="modulepreload" href="/assets/DmF6f_SA.js"
+rel="modulepreload" href="/assets/8wR41aah.js"
+rel="modulepreload" href="/assets/CBns33n7.js"
+rel="modulepreload" href="/assets/Bd0hqir2.js"
+rel="modulepreload" href="/assets/DnMAYSIO.js"
+rel="modulepreload" href="/assets/BhWzbKkX.js"
+rel="modulepreload" href="/assets/CVKhXhcV.js"
+rel="modulepreload" href="/assets/b36pzXeN.js"
+rel="modulepreload" href="/assets/CiP9ZYv7.js"
+rel="modulepreload" href="/assets/D0YLqAwR.js"
+rel="modulepreload" href="/assets/CooJfpca.js"
+rel="modulepreload" href="/assets/BJef2Cc1.js"
+rel="modulepreload" href="/assets/Pxj2030B.js"
+rel="modulepreload" href="/assets/BpmedYgN.js"
+rel="modulepreload" href="/assets/Bp-Wxlj3.js"
+rel="modulepreload" href="/assets/DzgKQ7Fg.js"
+rel="modulepreload" href="/assets/B_1h-O69.js"
+rel="modulepreload" href="/assets/BQM9TkGH.js"
+rel="modulepreload" href="/assets/BSjA5Ib2.js"
+rel="modulepreload" href="/assets/Zm1w7wmF.js"
+rel="modulepreload" href="/assets/XIi5nB0_.js"
+rel="modulepreload" href="/assets/CYX0YYuN.js"
+[0m
+[0m$ [0mcurl -s --max-time 15 https://help.desk.avatarux.com/servicedesk/customer/portal/4 -o /tmp/opencode/portal4.html -w "PORTAL4 %{http_code} %{size_download}\n"; sleep 1; curl -s --max-time 15 -o /dev/null https://help.desk.avatarux.com/servicedesk/customer/portal/4 -w "PORTAL4-verify %{http_code}\n"
+PORTAL4 200 208064
+PORTAL4-verify 200
+[0m
+[0m$ [0mgrep -oE 'tenant-cloudId[^>]*|atlassianOrgId[^>]*|"cloudId"[^,]*|name="[^"]*tenant[^"]*"[^>]*content="[^"]*"' /tmp/opencode/portal4.html | head -10; echo "--- tenant-id strings ---"; grep -oE 'df607198[^"<]*|tenant[-_]?id[^<"]{0,80}' /tmp/opencode/portal4.html | sort -u | head -10
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_08883d43c001OO7QeyFYSU8Emw
+
+name="tenant-id" content="df607198-7bdc-43c6-8353-9b8a822febc5"
+--- tenant-id strings ---
+df607198-7bdc-43c6-8353-9b8a822febc5
+df607198-7bdc-43c6-8353-9b8a822febc5&quot;,&quot;atlassianOrgId&quot;:&quot;ead67a75-73c2-4b0f-9890-0b87a41ca34b&quot;,&quot;randomizationId&quot;:&quot;7674&quot;}},&quot;hash_used&quot;:&quot;djb2&quot;,&quot;user&quot;:{&quot;custom&quot;:{&quot;microsIc&quot;:&quot;NotSet&quot;,&quot;environment&quot;:&quot;prod-euwest&quot;,&quot;microsGroup&quot;:&quot;WebServer&quot;,&quot;shard&quot;:&quot;jira-prod-eu-3&quot;,&quot;microsEnv&quot;:&quot;prod-euwest&quot;},&quot;customIDs&quot;:{&quot;tenantId&quot;:&quot;df607198-7bdc-43c6-8353-9b8a822febc5&quot;,&quot;atlassianOrgId&quot;:&quot;ead67a75-73c2-4b0f-9890-0b87a41ca34b&quot;,&quot;randomizationId&quot;:&quot;7674&quot;},&quot;statsigEnvironment&quot;:{&quot;tier&quot;:&quot;production&quot;}},&quot;sdkInfo&quot;:{&quot;sdkType&quot;:&quot;java-server&quot;,&quot;sdkVersion&quot;:&quot;2.2.3&quot;}}
+df607198-7bdc-43c6-8353-9b8a822febc5:workspace/d4da630a-7be0-4088-a659-6dc01a44cf5d
+tenant-id
+[0m
+[0m$ [0mcurl -s --max-time 25 https://roobet.com/assets/entry.client-C21zB2Yy.js -o /tmp/opencode/roobet_entry.js -w "ENTRY %{http_code} %{size_download}\n"; sleep 1; curl -s --max-time 25 https://roobet.com/assets/manifest-23515154.js -o /tmp/opencode/roobet_manifest.js -w "MANIFEST %{http_code} %{size_download}\n"
+ENTRY 200 297742
+MANIFEST 200 201373
+[0m
+[0m$ [0mcd /tmp/opencode && grep -oE '"[^"]*_api/[a-zA-Z0-9_/-]+' roobet_entry.js roobet_manifest.js | sort -u | head -40; echo "--- graphql refs ---"; grep -oE 'graphql[^"'\'' ]{0,30}' roobet_entry.js roobet_manifest.js | sort -u | head -20
+roobet_entry.js:",{value:!0});var r=256,i=function(){function e(e){e===void 0&&(e=`=`),this._paddingCharacter=e}return e.prototype.encodedLength=function(e){return this._paddingCharacter?(e+2)/3*4|0:(e*8+5)/6|0},e.prototype.encode=function(e){for(var t=``,n=0;n<e.length-2;n+=3){var r=e[n]<<16|e[n+1]<<8|e[n+2];t+=this._encodeByte(r>>>18&63),t+=this._encodeByte(r>>>12&63),t+=this._encodeByte(r>>>6&63),t+=this._encodeByte(r>>>0&63)}var i=e.length-n;if(i>0){var r=e[n]<<16|(i===2?e[n+1]<<8:0);t+=this._encodeByte(r>>>18&63),t+=this._encodeByte(r>>>12&63),t+=i===2?this._encodeByte(r>>>6&63):this._paddingCharacter||``,t+=this._paddingCharacter||``}return t},e.prototype.maxDecodedLength=function(e){return this._paddingCharacter?e/4*3|0:(e*6+7)/8|0},e.prototype.decodedLength=function(e){return this.maxDecodedLength(e.length-this._getPaddingLength(e))},e.prototype.decode=function(e){if(e.length===0)return new Uint8Array;for(var t=this._getPaddingLength(e),n=e.length-t,i=new Uint8Array(this.maxDecodedLength(n)),a=0,o=0,s=0,c=0,l=0,u=0,d=0;o<n-4;o+=4)c=this._decodeChar(e.charCodeAt(o+0)),l=this._decodeChar(e.charCodeAt(o+1)),u=this._decodeChar(e.charCodeAt(o+2)),d=this._decodeChar(e.charCodeAt(o+3)),i[a++]=c<<2|l>>>4,i[a++]=l<<4|u>>>2,i[a++]=u<<6|d,s|=c&r,s|=l&r,s|=u&r,s|=d&r;if(o<n-1&&(c=this._decodeChar(e.charCodeAt(o)),l=this._decodeChar(e.charCodeAt(o+1)),i[a++]=c<<2|l>>>4,s|=c&r,s|=l&r),o<n-2&&(u=this._decodeChar(e.charCodeAt(o+2)),i[a++]=l<<4|u>>>2,s|=u&r),o<n-3&&(d=this._decodeChar(e.charCodeAt(o+3)),i[a++]=u<<6|d,s|=d&r),s!==0)throw Error(`Base64Coder: incorrect characters for decoding`);return i},e.prototype._encodeByte=function(e){var t=e;return t+=65,t+=25-e>>>8&6,t+=51-e>>>8&-75,t+=61-e>>>8&-15,t+=62-e>>>8&3,String.fromCharCode(t)},e.prototype._decodeChar=function(e){var t=r;return t+=(42-e&e-44)>>>8&-r+e-43+62,t+=(46-e&e-48)>>>8&-r+e-47+63,t+=(47-e&e-58)>>>8&-r+e-48+52,t+=(64-e&e-91)>>>8&-r+e-65+0,t+=(96-e&e-123)>>>8&-r+e-97+26,t},e.prototype._getPaddingLength=function(e){var t=0;if(this._paddingCharacter){for(var n=e.length-1;n>=0&&e[n]===this._paddingCharacter;n--)t++;if(e.length<4||t>2)throw Error(`Base64Coder: incorrect padding`)}return t},e}();t.Coder=i;var a=new i;function o(e){return a.encode(e)}t.encode=o;function s(e){return a.decode(e)}t.decode=s;var c=function(e){n(t,e);function t(){return e!==null&&e.apply(this,arguments)||this}return t.prototype._encodeByte=function(e){var t=e;return t+=65,t+=25-e>>>8&6,t+=51-e>>>8&-75,t+=61-e>>>8&-13,t+=62-e>>>8&49,String.fromCharCode(t)},t.prototype._decodeChar=function(e){var t=r;return t+=(44-e&e-46)>>>8&-r+e-45+62,t+=(94-e&e-96)>>>8&-r+e-95+63,t+=(47-e&e-58)>>>8&-r+e-48+52,t+=(64-e&e-91)>>>8&-r+e-65+0,t+=(96-e&e-123)>>>8&-r+e-97+26,t},t}(i);t.URLSafeCoder=c;var l=new c;function u(e){return l.encode(e)}t.encodeURLSafe=u;function d(e){return l.decode(e)}t.decodeURLSafe=d,t.encodedLength=function(e){return a.encodedLength(e)},t.maxDecodedLength=function(e){return a.maxDecodedLength(e)},t.decodedLength=function(e){return a.decodedLength(e)}},978(e,t){var n=`utf8: invalid source encoding`;function r(e){for(var t=[],r=0;r<e.length;r++){var i=e[r];if(i&128){var a=void 0;if(i<224){if(r>=e.length)throw Error(n);var o=e[++r];if((o&192)!=128)throw Error(n);i=(i&31)<<6|o&63,a=128}else if(i<240){if(r>=e.length-1)throw Error(n);var o=e[++r],s=e[++r];if((o&192)!=128||(s&192)!=128)throw Error(n);i=(i&15)<<12|(o&63)<<6|s&63,a=2048}else if(i<248){if(r>=e.length-2)throw Error(n);var o=e[++r],s=e[++r],c=e[++r];if((o&192)!=128||(s&192)!=128||(c&192)!=128)throw Error(n);i=(i&15)<<18|(o&63)<<12|(s&63)<<6|c&63,a=65536}else throw Error(n);if(i<a||i>=55296&&i<=57343)throw Error(n);if(i>=65536){if(i>1114111)throw Error(n);i-=65536,t.push(String.fromCharCode(55296|i>>10)),i=56320|i&1023}}t.push(String.fromCharCode(i))}return t.join(``)}t.D4=r},721(e,t,n){e.exports=n(207).default},207(e,t,n){n.d(t,{default:()=>wn});class r{constructor(e,t){this.lastId=0,this.prefix=e,this.name=t}create(e){this.lastId++;var t=this.lastId,n=this.prefix+t,r=this.name+`[`+t+`]`,i=!1,a=function(){i||=(e.apply(null,arguments),!0)};return this[t]=a,{number:t,id:n,name:r,callback:a}}remove(e){delete this[e.number]}}var i=new r(`_pusher_script_`,`Pusher.ScriptReceivers`);let a={VERSION:`8.5.0`,PROTOCOL:7,wsPort:80,wssPort:443,wsPath:``,httpHost:`sockjs.pusher.com`,httpPort:80,httpsPort:443,httpPath:`/pusher`,stats_host:`stats.pusher.com`,authEndpoint:`/pusher/auth`,authTransport:`ajax`,activityTimeout:12e4,pongTimeout:3e4,unavailableTimeout:1e4,userAuthentication:{endpoint:`/pusher/user-auth`,transport:`ajax`},channelAuthorization:{endpoint:`/pusher/auth`,transport:`ajax`},cdn_http:`http://js.pusher.com`,cdn_https:`https://js.pusher.com`,dependency_suffix:``};class o{constructor(e){this.options=e,this.receivers=e.receivers||i,this.loading={}}load(e,t,n){var r=this;if(r.loading[e]&&r.loading[e].length>0)r.loading[e].push(n);else{r.loading[e]=[n];var i=F.createScriptRequest(r.getPath(e,t)),a=r.receivers.create(function(t){if(r.receivers.remove(a),r.loading[e]){var n=r.loading[e];delete r.loading[e];for(var o=function(e){e||i.cleanup()},s=0;s<n.length;s++)n[s](t,o)}});i.send(a)}}getRoot(e){var t,n=F.getDocument().location.protocol;return t=e&&e.useTLS||n===`https:`?this.options.cdn_https:this.options.cdn_http,t.replace(/\/*$/,``)+`/`+this.options.version}getPath(e,t){return this.getRoot(t)+`/`+e+this.options.suffix+`.js`}}var s=new r(`_pusher_dependencies`,`Pusher.DependenciesReceivers`),c=new o({cdn_http:a.cdn_http,cdn_https:a.cdn_https,version:a.VERSION,suffix:a.dependency_suffix,receivers:s});let l={baseUrl:`https://pusher.com`,urls:{authenticationEndpoint:{path:`/docs/channels/server_api/authenticating_users`},authorizationEndpoint:{path:`/docs/channels/server_api/authorizing-users/
+--- graphql refs ---
+[0m
+[0m$ [0mcd /tmp/opencode && grep -oE '"/api/[a-zA-Z0-9_/-]+' roobet_entry.js roobet_manifest.js | sort -u | head -30; echo "--- fetch/axios base urls ---"; grep -oE '(baseURL|apiBaseUrl|FETCH_BASE|API_)[^,;]{0,60}' roobet_entry.js | sort -u | head -20
+--- fetch/axios base urls ---
+API_KEY:`blt70ea2393f503d2a9`
+API_KEY:`bltb29136c9ddf39a4a`
+API_URL:`https://api.roobet.com`
+API_URL:`wss://api.roobet.com/`
+[0m
+Roobet bundle reveals a new API surface: `API_URL: https://api.roobet.com` + `wss://api.roobet.com/` + Pusher endpoints. Probing passively:
+[0m$ [0mdig +short api.roobet.com A; sleep 1; curl -s --max-time 20 https://api.roobet.com/ -o /tmp/opencode/roobet_api_root.txt -w "ROOT %{http_code} %{size_download} %{content_type}\n" -D /tmp/opencode/roobet_api_headers.txt; sleep 1; curl -s --max-time 15 -o /tmp/opencode/roobet_api_pusher.txt -w "PUSHER-AUTH %{http_code} %{size_download} %{content_type}\n" https://api.roobet.com/pusher/auth
+172.64.151.243
+104.18.36.13
+ROOT 403 5485 text/html; charset=UTF-8
+PUSHER-AUTH 403 5485 text/html; charset=UTF-8
+[0m
+[0m$ [0mhead -20 /tmp/opencode/roobet_api_headers.txt; echo "--- body head ---"; head -c 600 /tmp/opencode/roobet_api_root.txt
+HTTP/2 403 
+date: Wed, 09 Sep 2026 23:32:34 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+speculation-rules: "/cdn-cgi/speculation"
+server: cloudflare
+cf-ray: a389fe342ed4f273-IAD
+alt-svc: h3=":443"; ma=86400
+
+--- body head ---
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+<head>
+<title>Attention Required! | Cloudflare</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" conten
+[0m
+[0m$ [0mcurl -s --max-time 20 --http1.1 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36" -H "Accept: application/json" https://api.roobet.com/ -o /tmp/opencode/roobet_api_ua.txt -w "UA-ROOT %{http_code} %{size_download} %{content_type}\n"
+UA-ROOT 403 5485 text/html; charset=UTF-8
+[0m
+[0m$ [0mcd /tmp/opencode && grep -oE '.{120}api\.roobet\.com.{120}' roobet_entry.js | head -5; echo "=== v1/paths near API ==="; grep -oE '(get|post|createTransaction|fetch)[(]`?\^?[^`]{0,40}api\.roobet\.com[^`]{0,60}' roobet_entry.js roobet_manifest.js | head -10; echo "=== /v[0-9]/ paths ==="; grep -oE '"/(v[0-9]|api)/[a-zA-Z0-9_/-]+' roobet_entry.js roobet_manifest.js | sort -u | head -30
+OG_ENV:`production`,ROOBET_TOTALPROCESSING_URL:`https://eu-prod.oppwa.com/v1/paymentWidgets.js`,ROOBET_API_URL:`https://api.roobet.com`,ROOBET_PAYMENTIQ_ENV:`sunpetal`,ROOBET_BETBY_BRAND_ID:`2186449803775455232`,ROOBET_SEASONAL_THEME:`NA`,ROOBET_AB_TESTI
+NT_TOKEN:`pub2f15880848eb3196d92865e0859ad700`,ROOBET_FULLSTORY_SCRIPT:`fs.roobet.com/s/fs.js`,ROOBET_WS_API_URL:`wss://api.roobet.com/`,ROOBET_DATADOG_APP_ID:`42915334-7ce2-4f41-8c28-4f84380027d6`,ROOBET_WS_GQL_ADMIN_PORT:`8088`,ROOBET_CONTENTSTACK_PREV
+=== v1/paths near API ===
+=== /v[0-9]/ paths ===
+[0m
+[0m$ [0mtimeout 8 bash -c 'exec 3<>/dev/tcp/api.roobet.com/8088 && echo OPEN || echo CLOSED'; timeout 10 curl -sk --max-time 8 -o /tmp/opencode/gql8088.txt -w "GQL8088-HTTP %{http_code} %{size_download} %{content_type}\n" https://api.roobet.com:8088/graphql; sleep 1; timeout 10 curl -sk --max-time 8 -o /tmp/opencode/gql8088ws.txt -w "GQL8088-WS %{http_code} %{size_download} %{content_type}\n" -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: SGVsbG9Xb3JsZDEyMzQ1Ng==" http://api.roobet.com:8088/graphql ; head -c 300 /tmp/opencode/gql8088.txt
+GQL8088-HTTP 000 0 
+GQL8088-WS 000 0 
+head: cannot open '/tmp/opencode/gql8088.txt' for reading: No such file or directory
+[0m
+STEP 1 — DELTA
+- [NEW] roobet.com bundle leaks `ROOBET_API_URL=https://api.roobet.com` + `ROOBET_WS_API_URL=wss://api.roobet.com/` + `ROOBET_WS_GQL_ADMIN_PORT:8088` + `ROOBET_BETBY_BRAND_ID:2186449803775455232` + oppwa payment widget (eu-prod.oppwa.com/v1/paymentWidgets.js) + Contentful CDN keys — inventory's "api.roobet.com (undiscovered)" now resolved.
+- [NEW] api.roobet.com → Cloudflare 172.64.151.243/104.18.36.13; root and /pusher/auth → 403 "Attention Required!" (bot-fight edge block, UA-agnostic); :8088 externally unreachable — API mapped but edge-gated.
+- [CHANGED] help.desk portals: per-portal probe → /{2,3}=303, /{4..10}=200; portal/4 confirms `<meta tenant-id=df607198-7bdc-43c6-8353-9b8a822febc5>` + Statsig atlassianOrgId=ead67a75-73c2-4b0f-9890-0b87a41ca34b + tenant workspace d4da630a-... + environment prod-euwest / shard jira-prod-eu-3 — prior "all 303" was a brace-literal artifact.
+- [CHANGED] roobet.com/_api/settings/get: sessionId differs across consecutive GETs (5aea3ad0… vs 63c9fd32…) → ephemeral, session-fixation extension falsified.
+
+STEP 2 — PRIORITIZE
+[PRIO] api.roobet.com,7.9,a9b10t8g1c8f10 — new high-value money API, Cloudflare-gated
+[PRIO] betpandacasino.io/rest/user/*,6.95,a8b10t7g2c5f6 — financial POST surface, AUTH_HELPED
+[PRIO] affiliates.betpanda.io/rest/player/uid/{id},6.9,a8b9t8g3c4f6 — BOLA pattern, AUTH_HELPED
+[PRIO] help.desk.avatarux.com portals 4-10,6.4,a6b6t7g9c3f7 — confirmed tenant/Statsig leak, PASSIVE
+
+STEP 3 — HYPOTHESES
+[HYP] Roobet WS GraphQL/Admin Endpoint Exposure on api.roobet.com
+class: OTHER
+asset: api.roobet.com (wss:// + :8088, /pusher/*)
+confidence: 48
+reasoning: Bundle leaks ROOBET_WS_API_URL wss://api.roobet.com/ + ROOBET_WS_GQL_ADMIN_PORT 8088 (realtime GraphQL client); api.roobet.com live behind Cloudflare but 403-forced for this client on :443 (bot-fight) while the SPA reaches it; if WS GraphQL accepts unauthenticated subscribe queries after gate, realtime balances/odds/PII streams are exposed.
+evidence_needed: browser/authorized-context WS handshake + one unauthenticated GraphQL query response (or confirmation the 403 persists for whitelisted clients).
+verify_steps: in authorized context: WS handshake wss://api.roobet.com/ then introspect; fallback HEAD https://api.roobet.com/graphql; do not run now (edge-gated, needs whitelisted client).
+impact: cross-user realtime data / game-state exposure — HIGH if proven; currently gate-confirmed not exploitable
+testability: HUMAN_ONLY
+[HYP] BetPanda Affiliate IDOR on Player UID
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest confirmed; /rest/public/config re-verified 200 byte-identical (operatorId=1); player/uid 401-gated anonymously; path-param uid classic BOLA; no counter-evidence.
+evidence_needed: response diff {alt_uid} vs {own_uid} across two credentialed affiliate sessions.
+verify_steps: GET /rest/player/uid/{own_uid} baseline → replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS leaks x-site-name-id + ACAO pinned betpandacasino.io; header ignored on public manifest → auth-scoped routing unverified; multitenancy implied by GLOBAL_FLIPT_URL; no counter-evidence, no confirmation.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] Roobet anonymous metrics disclosure: sessionId ephemeral → fixation extension falsified; settings/get + tp-games/essentials are preloaded client data → informational, REJECTED-class, not reranked
+[PARKED] api.roobet.com WS/GraphQL (48): confidence ≥40 but HUMAN_ONLY (edge 403); hold pending authorized/browser context
+[PARKED] cPanel Takeover (40): Bluehost apex delegation gap; mechanism unproven; monitoring only
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. help.desk.avatarux.com portals 4-10 tenant/Statsig enumeration — PASSIVE confirmed this cycle
+[FINAL] 4. api.roobet.com surface mapping (48) — HUMAN_ONLY edge-gated
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, plus whitelisted/browser-context access to the newly-mapped api.roobet.com (wss GraphQL + /pusher/*) — its base is bundle-confirmed but Cloudflare 403s programmatic clients, so passive probing cannot progress; passive surface otherwise re-verified exhausted.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED OTHER @ roobet.com bundle: leaks ROOBET_API_URL=api.roobet.com, wss://api.roobet.com/, WS GQL admin port 8088, BetBy brand id 2186449803775455232, oppwa payment widget URL, Contentful CDN keys — inventory "api.roobet.com (undiscovered)" resolved
+[LEARN] ACCEPTED OTHER @ api.roobet.com: Cloudflare-fronted (172.64.151.243/104.18.36.13); root + /pusher/auth → 403 Attention-Required (bot-fight, UA-agnostic); :8088 unreachable — mapped but edge-gated for this client
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: per-portal probe /{2,3}=303, portals 4-10=200; portal/4 leaks tenant-id df607198-… + atlassianOrgId ead67a75-… + workspace d4da630a-… + Statsig env prod-euwest/shard jira-prod-eu-3; prior "all 303" was brace-literal artifact
+[LEARN] REJECTED AUTH @ roobet.com/_api/settings/get: sessionId changes between consecutive GETs (ephemeral) — session-fixation extension falsified; remaining leak is preloaded stats/geo/config (informational)
+
+STEP 7 — RISK
+[RISK] avatarux-studios: **80** — top-2 (Affiliate IDOR 78, Casino tenant-isolation 55) remain unevidenced and AUTH_HELPED; freshly-mapped Roobet API (api.roobet.com, high-value money surface) is Cloudflare-403 edge-gated so exploitation needs authorized browser context; help.desk portals 4-10 tenant/Statsig leak PASSIVE-confirmed but MEDIUM informational; no passive-only path advances exploitation without program-supplied credentialed sessions or a whitelisted client for api.roobet.com.

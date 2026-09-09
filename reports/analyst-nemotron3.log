@@ -6071,3 +6071,8 @@ testability: PASSIVE
 **STEP 7 — RISK**
 
 [RISK] avatarux-studios: 78 — Top 2 exploitable paths (Affiliate IDOR 78, Casino tenant bypass 55) remain AUTH_HELPED blocked on test credentials. Passive surface: help.desk portals 4-10 exposed (tenant enumeration), casino SSRF falsified, mail config stale, cPanel takeover unclaimable. BetPanda affiliate API (20+ endpoints, config leaks) and casino Spring Boot backend (tenant header schema leaked) provide concrete exploit paths pending auth. Risk = HIGH — fresh credentialed targets identified; program test accounts needed to progress.
+===== ANALYST nemotron3 2026-09-09 23:34:45 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[91m[1mError: [0mError from provider (Console): Upstream request failed: [404] Provider returned error

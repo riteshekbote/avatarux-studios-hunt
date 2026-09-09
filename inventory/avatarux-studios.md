@@ -434,3 +434,5 @@ www.avatarux.com
 - CHANGED affiliates.betpanda.io/rest/public/config stable 200 — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, full currency list leaked
 - CHANGED affiliates.betpanda.io/rest/player/uid/{id} returns 401 unauthenticated — IDOR pattern confirmed, requires credentialed session
 - CHANGED betpandacasino.io OPTIONS /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpan
+
+## 2026-09-09 23:34:45 UTC
