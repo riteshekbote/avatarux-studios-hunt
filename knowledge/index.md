@@ -205,3 +205,8 @@
 - 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io) — no passive multi-tenant switch reconfirmed
 - 2026-09-09 REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
 - 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be reranked
+- 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 this cycle — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms leak stable (known accepted misconfig, unchanged).
+- 2026-09-09 ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification rather than passive exposure.
+- 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-preferred-app-context allow-headers with ACAO pinned to https://betpandacasino.io — passive surface stable, no new exposure.
+- 2026-09-09 ACCEPTED OTHER @ help.desk.avatarux.com: JSM portals 303-gated, root 302 — reduced attack surface stable.
+- 2026-09-09 REJECTED OTHER @ affiliates.betpanda.io/rest/public/recover-password: 200 response on path-email variant — reconfirmed as REJECTED class (forgot-password enumeration/timing), must not be reranked.

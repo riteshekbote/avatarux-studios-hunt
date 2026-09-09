@@ -403,3 +403,5 @@ www.avatarux.com
 - CHANGED All live in-scope hosts re-verified stable (cpanel SSL fail/1001, affiliates 200, casino 200, help.desk 302)
 - CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
 - CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
+
+## 2026-09-09 06:15:08 UTC
