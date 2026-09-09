@@ -407,3 +407,10 @@ www.avatarux.com
 ## 2026-09-09 06:15:08 UTC
 
 ## 2026-09-09 11:33:21 UTC
+
+## 2026-09-09 15:39:57 UTC
+- NEW Casino callback/webhook surface exhausted — all 5 endpoints (/rest/callback, /rest/webhook, /rest/notify, /rest/game/callback, /rest/api/game/callback) return 404
+- NEW autoconfig.avatarux.com/autoconfig/v1.1/ returns XML exposing mail.avatarux.com:993 (IMAP/SSL) and mail.avatarux.com:465 (SMTP/SSL) with password-cleartext auth
+- NEW mail.avatarux.com returns 301 → https://avatarux.com/ (WordPress on shared Bluehost), not a functional mail server
+- CHANGED BetPanda Casino SSRF hypothesis (confidence 58) → falsified by passive probes; no callback/webhook surface exists
+- CHANGED AvatarUX Mail Infrastructure Leak hypothesis (confidence 55) → confirmed but impact reduced: autoconfig exposes stale/legacy config pointing to web host, not actual mail servers (MX records show Googl

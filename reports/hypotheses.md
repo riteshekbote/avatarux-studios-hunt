@@ -938,3 +938,16 @@
 - LEARN: ACCEPTED OTHER @ betpandacasino.io: x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io)
 - LEARN: REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
 - LEARN: ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be rer
+
+## RANKED HYPOTHESES 2026-09-09 15:39:57 UTC
+- [65] autoconfig.avatarux.com/autoconfig/v1.1/: AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Request program-provided test credentials for BetPanda Affiliate (affiliates.betpanda.io) and BetPanda Casino (betpandacasino.io) to unblock top 2 AUTH_H
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host redirects to WordPress — legacy/stale con
+- LEARN: ACCEPTED OTHER @ mail.avatarux.com: 301 → avatarux.com (WordPress/Bluehost) — confirms autoconfig points to web host, not mail infrastructure
+- LEARN: ACCEPTED OTHER @ autodiscover.avatarux.com: requires email parameter, no anonymous disclosure
+- LEARN: REJECTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — no functional endpoints
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: x-site-name-id ignored on public manifest — no passive multi-tenant switch

@@ -1628,3 +1628,4 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: JSM portals 303-gated, root 302 — reduced attack surface stable.
 [LEARN] REJECTED OTHER @ affiliates.betpanda.io/rest/public/recover-password: 200 response on path-email variant — reconfirmed as REJECTED class (forgot-password enumeration/timing), must not be reranked.
 [RISK] avatarux-studios: **80** — top-2 findings (IDOR 78, tenant-isolation 55) remain unevidenced and AUTH_HELPED with impact materializing only under credentialed testing; cPanel takeover mechanism unproven (Bluehost delegation gap); anonymous reachable surface now fully enumerated and closed (config leak/manifest/OPTIONS stable, properties family 404, portal 303, cpanel 1001). Probability of further passive-only discovery is effectively zero — no progress possible without program-side credentialed sessions.
+## 2026-09-09 15:39:45 UTC [target] (model bigpickle)

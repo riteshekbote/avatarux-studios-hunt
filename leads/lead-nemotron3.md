@@ -2770,3 +2770,59 @@ testability: AUTH_HELPED
 [LEARN] REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
 [LEARN] ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be reranked
 [RISK] avatarux-studios: 82 — BetPanda affiliate API map (same-origin /rest, 20+ endpoints, config leaks, IDOR pattern) and casino Spring Boot backend (financial endpoints POST-gated, x-site-name-id header schema leaked) provide concrete exploit paths. cPanel takeover downgraded to monitoring (delegation gap to Bluehost blocks claim). Casino SSRF via game callbacks remains untested PASSIVE surface with CRITICAL potential. Main game API attack surface for Roobet/Stake/Gamdom/RainBet still unmapped but BetPanda proves brand assets exist and are testable. Risk = HIGH — fresh exploitable targets identified; top hypotheses (Casino SSRF 58, Mail leak 55) are PASSIVE-first and unblocked.
+## 2026-09-09 15:31:49 UTC [target] (model nemotron3)
+[NEW] Casino callback/webhook surface exhausted — all 5 endpoints (/rest/callback, /rest/webhook, /rest/notify, /rest/game/callback, /rest/api/game/callback) return 404
+[NEW] autoconfig.avatarux.com/autoconfig/v1.1/ returns XML exposing mail.avatarux.com:993 (IMAP/SSL) and mail.avatarux.com:465 (SMTP/SSL) with password-cleartext auth
+[NEW] mail.avatarux.com returns 301 → https://avatarux.com/ (WordPress on shared Bluehost), not a functional mail server
+[CHANGED] BetPanda Casino SSRF hypothesis (confidence 58) → falsified by passive probes; no callback/webhook surface exists
+[CHANGED] AvatarUX Mail Infrastructure Leak hypothesis (confidence 55) → confirmed but impact reduced: autoconfig exposes stale/legacy config pointing to web host, not actual mail servers (MX records show Google Workspace/Zoho/Mandrill/ProtonMail)
+[PRIO] autoconfig.avatarux.com,6.2,attack_surface=6,business_value=4,tech_exposure=7,gate_ease=10,cloud_surface=3,freshness=10
+[PRIO] affiliates.betpanda.io/rest,7.3,attack_surface=8,business_value=8,tech_exposure=7,gate_ease=5,cloud_surface=7,freshness=6
+[PRIO] betpandacasino.io/rest,7.0,attack_surface=7,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=8,freshness=5
+[PRIO] flags.betpanda.io,5.8,attack_surface=5,business_value=6,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=7
+[PRIO] custom-lp.betpanda.io,5.5,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=6,freshness=7
+[PRIO] fp.betpanda.io,5.5,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=6,freshness=7
+[PRIO] cpanel.avatarux.com,3.5,attack_surface=3,business_value=3,tech_exposure=4,gate_ease=10,cloud_surface=3,freshness=2
+[HYP] AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com
+class: MISCONFIG
+asset: autoconfig.avatarux.com/autoconfig/v1.1/
+confidence: 65
+reasoning: autoconfig endpoint returns valid XML with mail.avatarux.com:993 (IMAP/SSL) and mail.avatarux.com:465 (SMTP/SSL), password-cleartext auth. mail.avatarux.com resolves but 301-redirects to avatarux.com (WordPress on Bluehost). Actual MX records: Google Workspace, Zoho, Mandrill, ProtonMail. Exposure reveals legacy/stale mail routing config that could aid phishing or infrastructure mapping.
+evidence_needed: Confirm mail.avatarux.com is not a functional mail server (already verified via 301 to WordPress); verify no auth bypass on exposed ports
+verify_steps: GET https://autoconfig.avatarux.com/autoconfig/v1.1/ (done); GET https://autoconfig.avatarux.com/ (done); CONNECT mail.avatarux.com:993 (requires auth, not passive)
+impact: Internal infrastructure mapping, potential phishing template construction, legacy config disclosure — LOW-MEDIUM
+testability: PASSIVE
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: API map confirmed 20+ endpoints at /rest; /rest/player/uid/{id} returns 401 unauthenticated; /rest/public/config leaks operatorId=1, Strapi config; Vite SPA bundle shows apiBaseUrl=/rest. IDOR pattern confirmed on path parameter but requires second credentialed affiliate session to prove cross-tenant access.
+evidence_needed: Two valid affiliate sessions (different operatorId/tenant) to test cross-access on /rest/player/uid/{victim_id}
+verify_steps: OPTIONS https://affiliates.betpanda.io/rest/player/uid/1 — capture allow-methods; GET with session A → 401; GET with session B (different tenant) → observe 200/403/404
+impact: Cross-tenant player PII access, affiliate commission data leak — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header
+class: BUSLOGIC
+asset: betpandacasino.io/rest/properties/manifest
+confidence: 55
+reasoning: OPTIONS /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context. Public /rest/properties/manifest echoes x-site-name-id: betpandacasino_io. Testing roobet_com/stake_com headers returns same echo — no passive tenant switch. Spring Boot backend; multi-tenant architecture suspected (Roobet/Stake/Gamdom/RainBet brands). Requires authenticated session to test header enforcement on private endpoints.
+evidence_needed: Valid casino session + test x-site-name-id: roobet_com on /rest/user/account-balances-and-bonuses (POST) — observe if tenant context switches
+verify_steps: OPTIONS https://betpandacasino.io/rest/user/authenticate (done); GET https://betpandacasino.io/rest/properties/manifest with Header x-site-name-id: roobet_com (done, echoes betpandacasino_io); POST /rest/user/authenticate with session + x-site-name-id: roobet_com (requires auth)
+impact: Cross-brand data access (Roobet/Stake/Gamdom player data), financial manipulation — CRITICAL
+testability: AUTH_HELPED
+[PARKED] BetPanda Casino SSRF via Game Provider Callback/Webhook Endpoints: all 5 callback/webhook endpoints return 404 — no surface to exploit
+[PARKED] BetPanda Affiliate Mass Assignment on Player/Transaction Write Endpoints: requires credentialed session (AUTH_HELPED), blocked on test accounts
+[FINAL] 1. BetPanda Affiliate IDOR on Player UID Endpoint (78) — HIGH impact, AUTH_HELPED, concrete endpoint map
+[FINAL] 2. BetPanda Casino Tenant Isolation Bypass via x-site-name-id Header (55) — CRITICAL if proven, AUTH_HELPED, header schema leaked
+[FINAL] 3. AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com (65) — LOW-MEDIUM impact, PASSIVE confirmed, stale config
+[NEXT] HUMAN: Request program-provided test credentials for BetPanda Affiliate (affiliates.betpanda.io) and BetPanda Casino (betpandacasino.io) to unblock top 2 AUTH_HELPED hypotheses
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+[LEARN] ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host redirects to WordPress — legacy/stale config, not active mail server
+[LEARN] ACCEPTED OTHER @ mail.avatarux.com: 301 → avatarux.com (WordPress/Bluehost) — confirms autoconfig points to web host, not mail infrastructure
+[LEARN] ACCEPTED OTHER @ autodiscover.avatarux.com: requires email parameter, no anonymous disclosure
+[LEARN] REJECTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — no functional endpoints
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: x-site-name-id ignored on public manifest — no passive multi-tenant switch
+[RISK] avatarux-studios: 78 — Top 2 exploitable paths (Affiliate IDOR 78, Casino tenant bypass 55) remain AUTH_HELPED blocked on test credentials. Passive surface exhausted: casino SSRF falsified, mail config stale, cPanel takeover unclaimable, help.desk reduced. BetPanda affiliate API (20+ endpoints, config leaks) and casino Spring Boot backend (tenant header schema leaked) provide concrete exploit paths pending auth. Risk = HIGH — fresh credentialed targets identified; program test accounts needed to progress.

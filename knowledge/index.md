@@ -210,3 +210,12 @@
 - 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-preferred-app-context allow-headers with ACAO pinned to https://betpandacasino.io — passive surface stable, no new exposure.
 - 2026-09-09 ACCEPTED OTHER @ help.desk.avatarux.com: JSM portals 303-gated, root 302 — reduced attack surface stable.
 - 2026-09-09 REJECTED OTHER @ affiliates.betpanda.io/rest/public/recover-password: 200 response on path-email variant — reconfirmed as REJECTED class (forgot-password enumeration/timing), must not be reranked.
+- 2026-09-09 REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+- 2026-09-09 ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host redirects to WordPress — legacy/stale config, not active mail server
+- 2026-09-09 ACCEPTED OTHER @ mail.avatarux.com: 301 → avatarux.com (WordPress/Bluehost) — confirms autoconfig points to web host, not mail infrastructure
+- 2026-09-09 ACCEPTED OTHER @ autodiscover.avatarux.com: requires email parameter, no anonymous disclosure
+- 2026-09-09 REJECTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — no functional endpoints
+- 2026-09-09 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak
+- 2026-09-09 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- 2026-09-09 ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 — attack surface fully reduced behind Atlassian Edge
+- 2026-09-09 ACCEPTED OTHER @ betpandacasino.io: x-site-name-id ignored on public manifest — no passive multi-tenant switch
