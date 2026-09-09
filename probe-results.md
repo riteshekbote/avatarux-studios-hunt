@@ -188,3 +188,8 @@ https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk -> HTTP 401
 
 ## 2026-09-08 23:12:48 UTC
 
+
+## 2026-09-09 01:37:11 UTC
+https://autoconfig.avatarux.com/ -> 200 len=?
+https://autoconfig.avatarux.com/autoconfig/v1.1/ -> 200 len=?
+https://autodiscover.avatarux.com/autodiscover/autodiscover.xml -> HTTP 400

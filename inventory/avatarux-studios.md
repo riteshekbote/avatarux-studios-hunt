@@ -385,3 +385,21 @@ www.avatarux.com
 - CHANGED cable.betpanda.io confirmed bare Express server — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; no functi
 
 ## 2026-09-08 23:12:48 UTC
+
+## 2026-09-09 01:37:07 UTC
+- NEW help.desk.avatarux.com portal enumeration {1..10} all 303 confirmed — attack surface fully reduced behind Atlassian Edge
+- NEW cable.betpanda.io confirmed bare Express server — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; "undocume
+- NEW betpandacasino.io/rest/public/config confirmed 404 (Spring JSON) — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
+- NEW cpanel.avatarux.com NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain; takeover mechanism unproven, downgraded to monitoring
+- NEW No new subdomains via crt.sh (recent queries: 502/404/timeout) — passive discovery exhausted
+- CHANGED All live in-scope hosts re-verified stable (cpanel SSL fail/1001, affiliates 200, casino 200, help.desk 302)
+- CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
+- CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim
+- NEW help.desk.avatarux.com portal enumeration {1..10} all 303 confirmed — attack surface fully reduced behind Atlassian Edge
+- NEW cable.betpanda.io confirmed bare Express server — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /events /info /config /debug return identical Express 404; "undocume
+- NEW betpandacasino.io/rest/public/config confirmed 404 (Spring JSON) — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
+- NEW cpanel.avatarux.com NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain; takeover mechanism unproven, downgraded to monitoring
+- NEW No new subdomains via crt.sh (recent queries: 502/404/timeout) — passive discovery exhausted
+- CHANGED All live in-scope hosts re-verified stable (cpanel SSL fail/1001, affiliates 200, casino 200, help.desk 302)
+- CHANGED No new probe data since 2026-09-06 22:21:53 UTC — top 2 hypotheses (Affiliate IDOR 78, Casino tenant-isolation 62) remain AUTH_HELPED blocked on credentialed sessions
+- CHANGED cPanel takeover downgraded from actionable to monitoring — delegation gap blocks standard Cloudflare zone claim

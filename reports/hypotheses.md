@@ -885,3 +885,21 @@
 - LEARN: REJECTED MISCONFIG @ cable.betpanda.io: undocumented endpoint exposure hypothesis FALSIFIED — no surface to enumerate
 - LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms apex Bluehost zone delegation (ns1/ns2.bluehost.com), no separate claimable delegation; mechanism-unpr
 - LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: Cloudflare 1001 persists 48h+ — stable dangling DNS confirmed, subdomain takeover candidate remains top passive target
+
+## RANKED HYPOTHESES 2026-09-09 01:37:07 UTC
+- [65] affiliates.betpanda.io/rest/player,: BetPanda Affiliate Mass Assignment on Player/Transaction Write Endpoints (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://betpandacasino.io/rest/callback — check status; GET https://betpandacasino.io/rest/webhook; GET https://betpandacasino.io/rest/notify; GET ht
+- LEARN: REJECTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /event
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 — casino does NOT mirror affiliates /rest/public/config leak; passive c
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain
+- LEARN: ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 confirmed — attack surface fully reduced behind Atlassian Edge
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io)
+- LEARN: REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be rer
+- LEARN: REJECTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /event
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 — casino does NOT mirror affiliates /rest/public/config leak; passive c
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain
+- LEARN: ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 confirmed — attack surface fully reduced behind Atlassian Edge
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io)
+- LEARN: REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be rer
