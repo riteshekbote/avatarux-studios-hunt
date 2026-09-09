@@ -921,3 +921,20 @@
 - LEARN: ACCEPTED OTHER @ betpandacasino.io: x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io)
 - LEARN: REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
 - LEARN: ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be rer
+
+## RANKED HYPOTHESES 2026-09-09 11:33:21 UTC
+- [78] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate IDOR on Player UID Endpoint (from art/lead_bigpickle.txt)
+- [58] betpandacasino.io/rest/callback,: BetPanda Casino SSRF via Game Provider Callback/Webhook Endpoints (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://betpandacasino.io/rest/callback — check status; GET https://betpandacasino.io/rest/webhook; GET https://betpandacasino.io/rest/notify; GET ht
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 this cycle — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms l
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification rather 
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer
+- LEARN: ACCEPTED OTHER @ help.desk.avatarux.com: JSM portals 303-gated, root 302 — reduced attack surface stable.
+- LEARN: REJECTED OTHER @ affiliates.betpanda.io/rest/public/recover-password: 200 response on path-email variant — reconfirmed as REJECTED class (forgot-password enumer
+- LEARN: REJECTED MISCONFIG @ cable.betpanda.io: bare Express server confirmed — root 200 text/plain ASCII banner, all /health /api /graphql /actuator /socket /ws /event
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: returned real Spring JSON 404 — casino does NOT mirror affiliates /rest/public/config leak; passive c
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com); no separate claimable delegation for cpanel subdomain
+- LEARN: ACCEPTED OTHER @ help.desk.avatarux.com: portal enumeration {1..10} all 303 confirmed — attack surface fully reduced behind Atlassian Edge
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: x-site-name-id tenant header ignored on public /rest/properties/manifest (roobet_com/stake_com still echo betpandacasino_io)
+- LEARN: REJECTED OTHER @ cpanel.avatarux.com takeover: delegation gap blocks standard Cloudflare zone claim; no evidence of separate NS/SOA for cpanel subdomain
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io: /rest/public/recover-password/email/{email} returns 204 — REJECTED class (forgot-password enumeration), must not be rer

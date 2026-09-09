@@ -1,4 +1,4 @@
-## 2026-09-09 06:06:20 UTC [target] (model bigpickle)
+## 2026-09-09 11:32:35 UTC [target] (model bigpickle)
 [PRIO] affiliates.betpanda.io/rest/player/uid/{id},8.2,api
 [PRIO] betpandacasino.io/rest/user/*,7.5,api
 [PRIO] cpanel.avatarux.com,3.5,takeover
@@ -32,7 +32,6 @@ testability: HUMAN_ONLY
 [PARKED] BetPanda Affiliate IDOR (78): strongest evidence tier, but **AUTH_HELPED** — cannot verify passively; blocked on credentialed session pair; no counter-evidence; parked until program provides test credentials.
 [PARKED] BetPanda Casino Tenant Isolation (55): lower evidence tier; x-site-name-id ignored on public manifest; OPTIONS leak unverified for auth-scoped routing; **AUTH_HELPED** and blocked.
 [PARKED] cPanel Takeover (40): delegation gap (Bluehost ns1/ns2) blocks standard Cloudflare zone claim; mechanism unproven; monitoring only.
-[NEXT] HUMAN: Both remaining high-value hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55) remain AUTH_HELPED and blocked — passive surface re-verified exhausted this cycle (affiliates leak 200 byte-identical, /rest/player/uid/1 401, casino manifest/config 200, portal/2 303, cpanel stable). **Request program-authorized test credentials/sessions for affiliates.betpanda.io and betpandacasino.io, or human triage of top-2.**
 [LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 this cycle — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms leak stable (known accepted misconfig, unchanged).
 [LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification rather than passive exposure.
 [LEARN] ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-preferred-app-context allow-headers with ACAO pinned to https://betpandacasino.io — passive surface stable, no new exposure.
