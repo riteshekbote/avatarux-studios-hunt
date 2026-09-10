@@ -1207,3 +1207,7 @@
 - LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
 - LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
 - LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+
+## RANKED HYPOTHESES 2026-09-10 21:30:51 UTC
+- [62] roobet.com/_api: Roobet Production API Trusts Whole *.777.dev Staging Namespace in CORS (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: `curl -s -m 15 "https://crt.sh/?q=%25.777.dev&output=json"` → extract unique names; then passive `dig`/`dns -t CNAME` on each label of the *trusted CORS 

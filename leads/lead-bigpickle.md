@@ -2218,3 +2218,33 @@ impact: Tenant/org metadata disclosure enabling targeted Atlassian attacks/phish
 testability: PASSIVE
 [NEXT] PROBE: `curl -s -o /dev/null -w "%{http_code}" -m 10 "https://api.777.dev/" && curl -s -m 10 "https://api.777.dev/" | head -c 400` — characterize the staging API/brand host for the CORS trust-boundary chain (passive GET, 1 rps).
 [RISK] avatarux-studios: **80** — Roobet game-tier anonymous surface now fully mapped and closed (REST = 2 auth-gated endpoints per game; CORS whitelist mapped; mutations over JWT socket.io). The only fresh observation is a LOW-MED CORS trust-boundary (staging 777.dev trusted by prod API) whose impact is chain-dependent. All high-value leads (Affiliate IDOR 78, Casino details 62) remain AUTH_HELPED and stable for 6+ cycles. Anonymous exploitation ceiling confirmed across Roobet, BetPanda affiliate, and BetPanda casino — no progress possible without program-supplied credentialed sessions.
+## 2026-09-10 21:30:39 UTC [target] (model bigpickle)
+[HYP] Roobet Production API Trusts Whole *.777.dev Staging Namespace in CORS
+class: MISCONFIG
+asset: roobet.com/_api (CORS origin policy)
+confidence: 62
+reasoning: OPTIONS+GET on /_api/game/tiki21/currentRoundHash reflect ACAO (cred=true) for exact 777.dev, www.777.dev, api.777.dev, foo.777.dev, dev.777.dev but NOT 777.dev.evil.com / 777dev.com / evil777.dev / topkek / stake / gamdom / betpandacasino.io → rule approximates `^https://(\w+\.)*777\.dev$`. api.777.dev is a live Express sibling of the prod API (identical connect.sid session-clear cookie + CORS stack), zero anonymous routes. Bundle constant ties 777.dev to test stage (`isRoobetTest=host.includes('777.dev')`); api.777.dev resolves on CF IP 104.18.43.25.
+evidence_needed: (a) a dangling/claimable label under *.777.dev (CNAME to claimable service) or XSS on any 777.dev app; (b) victim with active prod session visiting that label.
+verify_steps: passive CT+DNS enumeration of *.777.dev labels hunting dangling CNAMEs — read-only lookups only; GET-reflection already re-verified.
+impact: Credentialed cross-origin read of game round hashes (currentRoundHash) + socket.io transport, over a whole test-stage namespace; LOW-MED, chain-only, no anonymous bypass.
+testability: PASSIVE (mapping verified) / HUMAN chain
+[HYP] BetPanda Casino /rest/user/details Authenticated PII Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 62
+reasoning: unchanged — 200 (301B) anonymous baseline leaks user-state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin); Spring Boot; /rest/user/settings 401 is the contrast.
+evidence_needed: authenticated session producing non-default body.
+verify_steps: GET /rest/user/details once with authenticated browser session, diff vs baseline.
+impact: Authenticated user PII/state disclosure, session-boundary stepping stone. MEDIUM.
+testability: AUTH_HELPED
+[HYP] Atlassian Edge JSM Portal Tenant-ID Enumeration (96+ Portals)
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 85
+reasoning: portals 4–100+ all 200 (~209KB), identical tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId, workspace-ari, Statsig prod-euwest/jira-prod-eu-3. Stable 10+ cycles.
+evidence_needed: none.
+verify_steps: none required — complete.
+impact: Tenant/org metadata disclosure; phishing/Atlassian-attack aid. LOW-MED.
+testability: PASSIVE
+[NEXT] PROBE: `curl -s -m 15 "https://crt.sh/?q=%25.777.dev&output=json"` → extract unique names; then passive `dig`/`dns -t CNAME` on each label of the *trusted CORS namespace* detecting dangling CNAMEs / claimable labels under *.777.dev (the only remaining path to elevate the CORS namespace trust from chain-only to actionable).
+[RISK] avatarux-studios: 80 — the only fresh observation this cycle is the widened `*.777.dev` CORS namespace trust (LOW-MED, strictly chain-dependent: no label memories, no staging XSS found). Anonymous ceiling persists on all three brand clusters (Roobet game tier fully mapped + closed; BetPanda casino/affiliate AUTH-gated at every boundary; AvatarUX help.desk passive-stable). High-value leads (Affiliate IDOR 78, Casino details 62) remain stable AUTH_HELPED for 7+ cycles. No anonymous escalation possible without program-supplied credentialed sessions or a takeable *.777.dev label.

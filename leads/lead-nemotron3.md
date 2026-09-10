@@ -3354,3 +3354,21 @@ testability: PASSIVE
 [LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — known accepted leak, unchanged
 [LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
 [RISK] avatarux-studios: 82 — Top 3 exploitable paths: Casino unauthenticated user state disclosure (85, PASSIVE), Affiliate IDOR (78, AUTH_HELPED), Help Desk tenant enumeration (75, PASSIVE). Fresh credentialed targets identified for BetPanda affiliate/casino APIs; Roobet Socket.IO accessible from game Origin. Passive surface: help.desk 96+ portals exposed, casino SSRF falsified, mail config stale, cPanel takeover unclaimable. Risk = HIGH — multiple AUTH_HELPED paths blocked only on test credentials; one new PASSIVE misconfig confirmed on casino user state endpoint.
+## 2026-09-10 21:29:55 UTC [target] (model nemotron3)
+[NEW] betpandacasino.io/rest/user/details — HTTP 200 returns full user state object (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, currencies, blockedStatus, phoneNumberVerified) UNAUTHENTICATED; NEW endpoint confirmed 2026-09-10
+[NEW] help.desk.avatarux.com portal enumeration expanded: portals 4–100+ all HTTP 200 (~209KB). Prior knowledge only documented portals 4–15. Portals 1–3 return 0B (303). Surface is ~96 accessible portals leaking identical tenant-id/atlassianOrgId/Statsig config.
+[NEW] roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash — all HTTP 401 (12B "Unauthorized"). Confirms 3 additional game endpoints beyond tiki21, all auth-gated identically.
+[NEW] roobet.com/_api/socket.io — Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain; prior 403 was UA/Origin-gated for bare curl.
+[NEW] roobet.com/_api/currency/balances — HTTP 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash) — informational, non-sensitive.
+[NEW] roobet.com/_api CORS whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OPTIONS+GET); topkek.com not whitelisted.
+[NEW] roobet.com/_api/game/tiki21/endRound POST → 401 (12B) — real mutation endpoint confirmed auth-gated identically to GET currentRoundHash.
+[CHANGED] betpandacasino.io/rest/user/{me,profile,info} — all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is only unauthenticated user endpoint.
+[CHANGED] betpandacasino.io/rest/public/config — Spring JSON 404 confirmed, casino does NOT mirror affiliates leak; passive corroboration gap CLOSED.
+[CHANGED] betpandacasino.io callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified.
+[CHANGED] cpanel.avatarux.com — SSL handshake failure persists, Cloudflare 1001 stable but NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation; takeover unproven, monitoring only.
+[CHANGED] affiliates.betpanda.io/rest/public/config — stable 200, byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty).
+[CHANGED] affiliates.betpanda.io/rest/player/uid/{id} — 401 unauthenticated confirmed, IDOR pattern requires credentialed session.
+[CHANGED] betpandacasino.io OPTIONS /rest/user/authenticate — leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpandacasino_io.
+[CHANGED] help.desk.avatarux.com portal body sizes normalized: portals 4–100 consistently 209005–209007B (minor variance, same template). Prior "208039B" for portals 4,5,7,10,15 was likely a stale cache difference; now converged.
+[CHANGED] roobet.com/_api/game/{chess,yeti-towers,pop_towers}/bet POST → 404 route miss — CORS preflight 204 is path-agnostic global config (proven on nonexistent path); bet endpoints do not exist on REST.
+[CHANGED] tiki-21.games.roobet.com bundle: API_HOST=SOCKET_HOST="roobet.com/_api"; game mutations (hit/stand/double/wager) run over socket.io with JWT; REST-only surface per game = currentRoundHash + endRound only.

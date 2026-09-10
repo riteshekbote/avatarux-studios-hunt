@@ -13415,3 +13415,299 @@ testability: PASSIVE
 
 ## STEP 7 — RISK
 [RISK] avatarux-studios: **80** — Roobet game-tier anonymous surface now fully mapped and closed (REST = 2 auth-gated endpoints per game; CORS whitelist mapped; mutations over JWT socket.io). The only fresh observation is a LOW-MED CORS trust-boundary (staging 777.dev trusted by prod API) whose impact is chain-dependent. All high-value leads (Affiliate IDOR 78, Casino details 62) remain AUTH_HELPED and stable for 6+ cycles. Anonymous exploitation ceiling confirmed across Roobet, BetPanda affiliate, and BetPanda casino — no progress possible without program-supplied credentialed sessions.
+===== ANALYST bigpickle 2026-09-10 21:30:51 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "777.dev root: %{http_code} | size=%{size_download} | redir=%{redirect_url}\n" -m 12 "https://777.dev/" ; curl -s -D - -m 12 "https://777.dev/" -o /tmp/opencode/bd777_root.txt -w "TOTAL=%{time_total}\n" ; head -c 500 /tmp/opencode/bd777_root.txt
+777.dev root: 403 | size=5482 | redir=
+HTTP/2 403 
+date: Thu, 10 Sep 2026 21:28:33 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+server: cloudflare
+cf-ray: a39185e78aff979d-IAD
+
+TOTAL=0.034672
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+<head>
+<title>Attention Required! | Cloudflare</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible"
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "api.777.dev root: %{http_code} | size=%{size_download} | redir=%{redirect_url}\n" -m 12 "https://api.777.dev/" ; curl -s -D - -m 12 "https://api.777.dev/" -o /tmp/opencode/bdapi_root.txt -w "TOTAL=%{time_total}\n" ; head -c 500 /tmp/opencode/bdapi_root.txt
+api.777.dev root: 404 | size=1077 | redir=
+HTTP/2 404 
+date: Thu, 10 Sep 2026 21:28:34 GMT
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+content-security-policy: default-src 'none'
+expect-ct: max-age=0
+referrer-policy: no-referrer
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-xss-protection: 0
+cf-cache-status: DYNAMIC
+server: cloudflare
+cf-ray: a39185eacb596678-IAD
+
+TOTAL=0.349204
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /</pre>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39185eacb596678',t:'MTc4OTA3NTcxMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.get
+[0m
+[0m$ [0mcurl -s -D - -m 12 "https://api.roobet.com/pusher/auth" -H "Origin: https://tiki-21.games.roobet.com" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" -o /tmp/opencode/pusher_auth.txt -w "STATUS=%{http_code} size=%{size_download}\n" ; head -c 300 /tmp/opencode/pusher_auth.txt
+HTTP/2 403 
+date: Thu, 10 Sep 2026 21:28:36 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+speculation-rules: "/cdn-cgi/speculation"
+server: cloudflare
+cf-ray: a39185fe1871ed69-IAD
+alt-svc: h3=":443"; ma=86400
+
+STATUS=403 size=5485
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!
+[0m
+[0m$ [0mfor o in "https://777.dev" "https://api.777.dev" "https://www.777.dev" "https://topkek.com" "https://stake.com" "https://gamdom.com" "https://roobet.com" "https://betpandacasino.io"; do
+  a=$(curl -s -o /dev/null -D - -m 10 -X OPTIONS -H "Origin: $o" -H "Access-Control-Request-Method: GET" "https://roobet.com/_api/game/tiki21/currentRoundHash" | tr -d '\r' | grep -i '^access-control-allow-origin' | sed 's/^access-control-allow-origin: //i')
+  h=$(curl -s -o /dev/null -D - -m 10 -X OPTIONS -H "Origin: $o" -H "Access-Control-Request-Method: GET" "https://roobet.com/_api/game/tiki21/currentRoundHash" | tr -d '\r' | grep -i '^access-control-allow-credentials' | sed 's/^access-control-allow-credentials: //i')
+  echo "$o -> ACAO=${a:-NONE} | cred=${h:-NONE}"
+  sleep 1
+done
+https://777.dev -> ACAO=https://777.dev | cred=true
+https://api.777.dev -> ACAO=https://api.777.dev | cred=true
+https://www.777.dev -> ACAO=https://www.777.dev | cred=true
+https://topkek.com -> ACAO=NONE | cred=true
+https://stake.com -> ACAO=NONE | cred=true
+https://gamdom.com -> ACAO=NONE | cred=true
+https://roobet.com -> ACAO=https://roobet.com | cred=true
+https://betpandacasino.io -> ACAO=NONE | cred=true
+[0m
+[0m$ [0mfor p in "pusher/auth" "_api/socket.io/?EIO=4&transport=polling" "_api/currency/balances" "_api/game/tiki21/currentRoundHash" "health" "version" "_api/auth/login"; do
+  echo "== /$p"
+  curl -s -o /tmp/opencode/d777_body.txt -D /tmp/opencode/d777_hdr.txt -m 10 "https://api.777.dev/$p" -H "Origin: https://777.dev" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36" -w "STATUS=%{http_code} size=%{size_download}\n"
+  tr -d '\r' < /tmp/opencode/d777_hdr.txt | grep -iE "^(HTTP|access-control-allow-origin|access-control-allow-credentials|set-cookie|content-type)" | head -5
+  head -c 160 /tmp/opencode/d777_body.txt; echo; echo
+  sleep 1
+done
+== /pusher/auth
+STATUS=404 size=1088
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /pusher/auth</pre>
+<script>(function(){functi
+
+== /_api/socket.io/?EIO=4&transport=polling
+STATUS=404 size=1092
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /_api/socket.io/</pre>
+<script>(function(){fu
+
+== /_api/currency/balances
+STATUS=404 size=1099
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /_api/currency/balances</pre>
+<script>(functi
+
+== /_api/game/tiki21/currentRoundHash
+STATUS=404 size=1110
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /_api/game/tiki21/currentRoundHash</pre>
+<scr
+
+== /health
+STATUS=404 size=1083
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /health</pre>
+<script>(function(){function c(
+
+== /version
+STATUS=404 size=1084
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /version</pre>
+<script>(function(){function c
+
+== /_api/auth/login
+STATUS=404 size=1092
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+access-control-allow-origin: https://777.dev
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /_api/auth/login</pre>
+<script>(function(){fu
+[0m
+[0m$ [0mfor o in "https://foo.777.dev" "https://777.dev.evil.com" "https://777dev.com" "https://evil777.dev" "https://dev.777.dev"; do
+  a=$(curl -s -o /dev/null -D - -m 10 -X OPTIONS -H "Origin: $o" -H "Access-Control-Request-Method: GET" "https://roobet.com/_api/game/tiki21/currentRoundHash" | tr -d '\r' | grep -i '^access-control-allow-origin' | sed 's/^access-control-allow-origin: //i')
+  echo "$o -> ACAO=${a:-NONE}"
+  sleep 1
+done
+https://foo.777.dev -> ACAO=https://foo.777.dev
+https://777.dev.evil.com -> ACAO=NONE
+https://777dev.com -> ACAO=NONE
+https://evil777.dev -> ACAO=NONE
+https://dev.777.dev -> ACAO=https://dev.777.dev
+[0m
+STEP 1 — DELTA
+- [CHANGED] roobet.com/_api CORS trust is a **namespace regex over `*.777.dev`**, not a fixed 3-label list — `https://foo.777.dev` and `https://dev.777.dev` reflect `ACAO`+`cred=true`; suffix/sibling variants `777.dev.evil.com`, `777dev.com`, `evil777.dev` are denied. Staging-trust finding widened.
+- [NEW] api.777.dev confirmed **live Express scaffold sharing Roobet API session stack** (`connect.sid` clear-cookie, ACAO reflects 777.dev family on every path) — but all common routes 404 (`/pusher/auth`, `/_api/socket.io`, `/_api/currency/balances`, `/_api/game/tiki21/currentRoundHash`, `/health`, `/version`): no anonymous staging surface to chain from.
+- [NEW] api.roobet.com/pusher/auth stays **403 CF challenge even with game-SPA Origin + browser UA** — not unlockable like socket.io (which lives on roobet.com/_api).
+- [CHANGED] 777.dev root: 403 Cloudflare "Attention Required" + HSTS-preload — no anonymous app content on test-stage main host.
+
+STEP 2 — PRIORITIZE
+- [PRIO] roobet.com/_api,6.9,CORS namespace trust (a5 b7 t9 g8 c5 f9)
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{id},5.6,IDOR (a5 b9 t7 g1 c4 f5)
+- [PRIO] help.desk.avatarux.com portals,5.3,tenant-id disclosure (a4 b5 t5 g10 c3 f5)
+- [PRIO] betpandacasino.io/rest/user/details,5.0,user-state disclosure (a4 b7 t6 g2 c5 f6)
+
+STEP 3 — HYPOTHESES
+[HYP] Roobet Production API Trusts Whole *.777.dev Staging Namespace in CORS
+class: MISCONFIG
+asset: roobet.com/_api (CORS origin policy)
+confidence: 62
+reasoning: OPTIONS+GET on /_api/game/tiki21/currentRoundHash reflect ACAO (cred=true) for exact 777.dev, www.777.dev, api.777.dev, foo.777.dev, dev.777.dev but NOT 777.dev.evil.com / 777dev.com / evil777.dev / topkek / stake / gamdom / betpandacasino.io → rule approximates `^https://(\w+\.)*777\.dev$`. api.777.dev is a live Express sibling of the prod API (identical connect.sid session-clear cookie + CORS stack), zero anonymous routes. Bundle constant ties 777.dev to test stage (`isRoobetTest=host.includes('777.dev')`); api.777.dev resolves on CF IP 104.18.43.25.
+evidence_needed: (a) a dangling/claimable label under *.777.dev (CNAME to claimable service) or XSS on any 777.dev app; (b) victim with active prod session visiting that label.
+verify_steps: passive CT+DNS enumeration of *.777.dev labels hunting dangling CNAMEs — read-only lookups only; GET-reflection already re-verified.
+impact: Credentialed cross-origin read of game round hashes (currentRoundHash) + socket.io transport, over a whole test-stage namespace; LOW-MED, chain-only, no anonymous bypass.
+testability: PASSIVE (mapping verified) / HUMAN chain
+[HYP] BetPanda Casino /rest/user/details Authenticated PII Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 62
+reasoning: unchanged — 200 (301B) anonymous baseline leaks user-state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin); Spring Boot; /rest/user/settings 401 is the contrast.
+evidence_needed: authenticated session producing non-default body.
+verify_steps: GET /rest/user/details once with authenticated browser session, diff vs baseline.
+impact: Authenticated user PII/state disclosure, session-boundary stepping stone. MEDIUM.
+testability: AUTH_HELPED
+[HYP] Atlassian Edge JSM Portal Tenant-ID Enumeration (96+ Portals)
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 85
+reasoning: portals 4–100+ all 200 (~209KB), identical tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId, workspace-ari, Statsig prod-euwest/jira-prod-eu-3. Stable 10+ cycles.
+evidence_needed: none.
+verify_steps: none required — complete.
+impact: Tenant/org metadata disclosure; phishing/Atlassian-attack aid. LOW-MED.
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+- [FINAL] 1. Roobet CORS *.777.dev namespace trust (62) — mapping fully verified, widened this cycle, not REJECTED class; only chain-dependent.
+- [FINAL] 2. help.desk portals Tenant-ID enumeration (85) — fully confirmed passively, stable.
+- [FINAL] 3. Casino /rest/user/details (62) — AUTH_HELPED, survives with contrast evidence.
+- [PARKED] Affiliate IDOR /rest/player/uid/{id} (78): unchanged, AUTH_HELPED, needs second credentialed session — no new passive action.
+- [PARKED] Roobet socket.io channel subscription (55): no WS client available; monitoring only.
+- [CLOSED] Roobet game mutation OPTIONS preflight (55): resolved — bet paths 404 route-miss, endRound 401 uniform, CORS preflight path-agnostic; question answered, demoted to closed observation.
+- Dropped: none below confidence on old data; no REJECTED-class new items.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: `curl -s -m 15 "https://crt.sh/?q=%25.777.dev&output=json"` → extract unique names; then passive `dig`/`dns -t CNAME` on each label of the *trusted CORS namespace* detecting dangling CNAMEs / claimable labels under *.777.dev (the only remaining path to elevate the CORS namespace trust from chain-only to actionable).
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: trust boundary is a `*.777.dev` namespace regex, not a fixed list — foo.777.dev and dev.777.dev reflected with cred=true; 777.dev.evil.com, 777dev.com, evil777.dev denied. Staging-trust finding widened and fully mapped.
+- [LEARN] ACCEPTED OTHER @ api.777.dev: live Express scaffold with Roobet-API-identical session stack (connect.sid clear cookie, CORS family reflection) but zero anonymous routes — real sibling test-stage, no anonymous surface to chain from.
+- [LEARN] ACCEPTED OTHER @ api.roobet.com/pusher/auth: 403 CF challenge persists with game-SPA Origin + browser UA — pusher/auth edge gate is not unlockable like socket.io (that unlock is specific to roobet.com/_api).
+- [LEARN] ACCEPTED OTHER @ 777.dev: root 403 CF "Attention Required" + HSTS preload — main staging host exposes no anonymous content.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 80 — the only fresh observation this cycle is the widened `*.777.dev` CORS namespace trust (LOW-MED, strictly chain-dependent: no label memories, no staging XSS found). Anonymous ceiling persists on all three brand clusters (Roobet game tier fully mapped + closed; BetPanda casino/affiliate AUTH-gated at every boundary; AvatarUX help.desk passive-stable). High-value leads (Affiliate IDOR 78, Casino details 62) remain stable AUTH_HELPED for 7+ cycles. No anonymous escalation possible without program-supplied credentialed sessions or a takeable *.777.dev label.
