@@ -1092,3 +1092,39 @@
 - LEARN: ACCEPTED OTHER @ api.roobet.com: Cloudflare-fronted (172.64.151.243/104.18.36.13); root + /pusher/auth → 403 Attention-Required (bot-fight, UA-agnostic); :8088 
 - LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: per-portal probe /{2,3}=303, portals 4-10=200; portal/4 leaks tenant-id df607198-… + atlassianOrgId ead67a75-… + wo
 - LEARN: REJECTED AUTH @ roobet.com/_api/settings/get: sessionId changes between consecutive GETs (ephemeral) — session-fixation extension falsified; remaining leak is p
+
+## RANKED HYPOTHESES 2026-09-10 01:35:50 UTC
+- [55] betpandacasino.io/rest/user/account-balances-and-bonuses: BetPanda Casino Multi-Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints (from art/lead_nemotron3.txt)
+- [45] roobet.com/_api/game/tiki21/*: Roobet provably-fair round-RNG/balance endpoints reachable on same-origin roobet.com/_api (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: `curl -s -o /dev/null -w "%{http_code} %{size_download}" -H "Origin: https://tiki-21.games.roobet.com" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win6
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Request program-provided test credentials for BetPanda Affiliate (affiliates.betpanda.io) and BetPanda Casino (betpandacasino.io) to unblock top 2 AUTH_H
+- LEARN: ACCEPTED OTHER @ roobet.com CT/certspotter: full standalone-game+tooling tier mapped — tiki-21.games/yeti-towers.games (200 SPAs), x.roobet.com (CF Access tool)
+- LEARN: ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: standalone games use `API_HOST`/`SOCKET_HOST=roobet.com/_api` (same-origin, NOT api.roobet.com) — resolves the
+- LEARN: ACCEPTED OTHER @ roobet.com/_api: /auth/* POST-only (GET "Cannot GET"), /currency/balances 200-anon catalog-only, /game/tiki21/currentRoundHash 401, /tikitwenty
+- LEARN: REJECTED MISCONFIG @ fs.roobet.com: 302→FullStory (analytics redirect) — benign, not Roobet-hosted.
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4,5,7,10,15 byte-identical 200 (208039B) leak tenant-id + atlassianOrgId — PASSIVE-stable across extended r
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 "You need to be logged in" — auth boundary intact anonymously, supports AUTH_HELPED.
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4-10 HTTP 200 expose tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — a
+- LEARN: ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→WordPress — legacy/stale config, not 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4-10 HTTP 200 expose tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — a
+- LEARN: ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→WordPress — legacy/stale config, not 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4-10 HTTP 200 expose tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — a
+- LEARN: ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→WordPress — legacy/stale config, not 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer

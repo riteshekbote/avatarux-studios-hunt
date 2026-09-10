@@ -1995,3 +1995,50 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: per-portal probe /{2,3}=303, portals 4-10=200; portal/4 leaks tenant-id df607198-… + atlassianOrgId ead67a75-… + workspace d4da630a-… + Statsig env prod-euwest/shard jira-prod-eu-3; prior "all 303" was brace-literal artifact
 [LEARN] REJECTED AUTH @ roobet.com/_api/settings/get: sessionId changes between consecutive GETs (ephemeral) — session-fixation extension falsified; remaining leak is preloaded stats/geo/config (informational)
 [RISK] avatarux-studios: **80** — top-2 (Affiliate IDOR 78, Casino tenant-isolation 55) remain unevidenced and AUTH_HELPED; freshly-mapped Roobet API (api.roobet.com, high-value money surface) is Cloudflare-403 edge-gated so exploitation needs authorized browser context; help.desk portals 4-10 tenant/Statsig leak PASSIVE-confirmed but MEDIUM informational; no passive-only path advances exploitation without program-supplied credentialed sessions or a whitelisted client for api.roobet.com.
+## 2026-09-10 01:35:40 UTC [target] (model bigpickle)
+[PRIO] tiki-21.games.roobet.com,7.6,a6b9t7g8c6f10 — open standalone money-game SPA, bundles public, jwt+round-hash+socket.io stack
+[PRIO] roobet.com/_api game endpoints,7.1,a7b10t7g1c6f10 — real-money addBalance/subBalance + round-RNG endpoints, reachable origin, auth-gated
+[PRIO] affiliates.betpanda.io/rest/player/uid/{id},7.1,a8b9t7g3c6f7 — BOLA pattern, 401 anon, AUTH_HELPED
+[PRIO] betpandacasino.io/rest/user/*,6.8,a7b10t7g1c7f6 — cross-tenant JWT/balance, AUTH_HELPED
+[PRIO] help.desk.avatarux.com portals 4-15,5.8,a5b5t6g8c5f7 — tenant/org-id leak, PASSIVE-confirmed
+[HYP] Roobet provably-fair round-RNG/balance endpoints reachable on same-origin roobet.com/_api
+class: BUSLOGIC
+asset: roobet.com/_api/game/tiki21/* + /tikitwentyone/* (mirror on gated api.roobet.com)
+confidence: 45
+reasoning: tiki21 bundle maps /game/tiki21/currentRoundHash (401 anon, exists) + /game/tiki21/endRound + /tikitwentyone/{addBalance,subBalance,updateBalanceType} (OPTIONS 204 → routed, GET 404, POST-only); games pass `jwt=(sessionToken||accessToken)`; money-game RNG/fairness flow on this reachable host is entirely unresearched; anonymous boundary holds but credentialed behavior unknown.
+evidence_needed: credentialed roobet session — replay currentRoundHash across rounds/accounts seeking a client-supplied id; verify seed/nonce disclosure endpooint; POST subBalance with altered roundId/betId.
+verify_steps: done anonymously (401/204/404 map above). Next requires session: GET /_api/game/tiki21/currentRoundHash with account A then B; compare hashes for same round index; then POST /_api/tikitwentyone/subBalance with forged betId vs baseline. Do not run without authorized creds.
+impact: real-money balance mutation / round prediction on in-scope casino game — HIGH if proven
+testability: AUTH_HELPED
+[HYP] Standalone-game /site/* + socket.io realtime channel config leak on roobet.com/_api
+class: MISCONFIG
+asset: tiki-21.games.roobet.com / roobet.com/_api/site/*
+confidence: 40
+reasoning: bundle builds `/site/${window.$APP_ID}${I}.${C}.${g}` + `?jwt=<token>` and imports socket.io (SOCKET_HOST=roobet.com/_api); anonymous socket.io polling handshake on /_api returned 403 for a plain curl; SPA itself and all bundles public 200; app-id/config/realtime channel flow unenumerated.
+evidence_needed: 2xx on/`socket.io` handshake or /site/* from a browser-Origin request, exposing provider/game config or realtime stream w/o valid jwt.
+verify_steps: GET "https://roobet.com/_api/socket.io/?EIO=4&transport=polling" with `Origin: https://tiki-21.games.roobet.com` + browser UA + cookie jar (read-only); if 403 persists → PARK.
+impact: game/provider config or realtime stream disclosure — LOW-MED
+testability: PASSIVE
+[HYP] crash-gs/dice.roobet.com native WS money-game servers accept unauthenticated connections
+class: OTHER
+asset: crash-gs.roobet.com, dice.roobet.com (Cloudflare IPs, HTTPS 000)
+confidence: 40
+reasoning: hosts resolve to Cloudflare edge but serve no HTTP (000 on /); crash/dice are realtime games — state machines run over native WS; whether the WS upgrade path requires a pre-auth jwt is unknown and unexplored.
+evidence_needed: WS upgrade wss:// on these hosts observing auth challenge (401/refused) vs anonymous open channel.
+verify_steps: (WS-only, no mutations) handshake wss://crash-gs.roobet.com/ (and /socket /ws) with no payload; confirm auth boundary before any data frame. HUMAN/browser-context since curl WS tooling absent here.
+impact: realtime game-state observation/manipulation across in-scope casino — HIGH if open
+testability: HUMAN_ONLY
+[PARKED] Standalone-game /site+socket.io config (40): /site requires `?jwt=`, socket.io handshake 403 programmatic; only a browser-Origin probe could differentiate — marginal, park pending authorized context.
+[PARKED] crash-gs/dice WS (40): HUMAN_ONLY with no credentials or WS tooling in this environment; monitoring-only.
+[FINAL] 1. affiliates.betpanda.io IDOR (78) — AUTH_HELPED, no counter-evidence (re-verified 401 anon this cycle)
+[FINAL] 2. betpandacasino.io tenant-isolation (55) — AUTH_HELPED
+[FINAL] 3. roobet.com/_api game money/fairness (45) — AUTH_HELPED, newly reachable surface
+[FINAL] 4. help.desk portals 4-15 tenant/org-id leak (72) — PASSIVE, byte-identical confirmed
+[NEXT] PROBE: `curl -s -o /dev/null -w "%{http_code} %{size_download}" -H "Origin: https://tiki-21.games.roobet.com" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125 Safari/537.36" "https://roobet.com/_api/socket.io/?EIO=4&transport=polling"` — if still 403, realtime channel is client-gated; park the thread and escalate via HUMAN: request program test credentials for **roobet.com (to test /_api/game/tiki21/* + /tikitwentyone/* round/RNG path)**, affiliates.betpanda.io, and betpandacasino.io — the three AUTH_HELPED money surfaces.
+[LEARN] ACCEPTED OTHER @ roobet.com CT/certspotter: full standalone-game+tooling tier mapped — tiki-21.games/yeti-towers.games (200 SPAs), x.roobet.com (CF Access tool), crash-gs/dice (WS game servers), help/edge/toast/reviews/mexico/lp/fs; surface expansion, no verified exposure.
+[LEARN] ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: standalone games use `API_HOST`/`SOCKET_HOST=roobet.com/_api` (same-origin, NOT api.roobet.com) — resolves the api.roobet.com 403 impasse for the game tier.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api: /auth/* POST-only (GET "Cannot GET"), /currency/balances 200-anon catalog-only, /game/tiki21/currentRoundHash 401, /tikitwentyone/* POST-only (OPTIONS 204), socket.io 403 — method+auth boundary holds anonymously; no new data exposure.
+[LEARN] REJECTED MISCONFIG @ fs.roobet.com: 302→FullStory (analytics redirect) — benign, not Roobet-hosted.
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4,5,7,10,15 byte-identical 200 (208039B) leak tenant-id + atlassianOrgId — PASSIVE-stable across extended range.
+[LEARN] ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 "You need to be logged in" — auth boundary intact anonymously, supports AUTH_HELPED.
+[RISK] avatarux-studios: **80** — passive breadth grew (Roobet standalone-game tier + reachable same-origin `/_api` money endpoints) but every new money/fairness endpoint is method/auth-gated (204/401/404) with zero anonymous data exposure; api.roobet.com impasse resolved only architecturally, not exploitably. All top impact hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55, Roobet _api game fairness 45) are AUTH_HELPED — the program's remaining exposure fully depends on program-supplied credentialed sessions across three brands; anonymous-only progress is exhausted.
