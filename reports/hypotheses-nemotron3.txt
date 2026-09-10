@@ -1,30 +1,26 @@
-## 2026-09-10 15:57:05 UTC [target] (model nemotron3)
-[NEW] betpandacasino.io/rest/user/details — HTTP 200 returns unauthenticated user state model (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, currencies, blockedStatus, phoneNumber) — NEW endpoint, data model disclosure
-[NEW] help.desk.avatarux.com portals 4–100 — surface expanded from 7 to 96+ portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, Statsig config (prod-euwest, shard jira-prod-eu-3)
-[NEW] roobet.com/_api/socket.io — Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain
-[NEW] roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash — all HTTP 401 (12B), confirms 3 additional game endpoints beyond tiki21, uniform auth middleware
-[NEW] roobet.com/_api/currency/balances — HTTP 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash)
-[CHANGED] betpandacasino.io/rest/user/{me,profile,info} — all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is only unauthenticated user endpoint
-[CHANGED] betpandacasino.io/rest/public/config — Spring JSON 404 confirmed, casino does NOT mirror affiliates leak; passive corroboration gap CLOSED
-[CHANGED] betpandacasino.io callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified
-[CHANGED] cpanel.avatarux.com — SSL handshake failure persists, Cloudflare 1001 stable but NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation; takeover unproven, monitoring only
-[CHANGED] affiliates.betpanda.io/rest/public/config — stable 200, byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty)
-[CHANGED] affiliates.betpanda.io/rest/player/uid/{id} — 401 unauthenticated confirmed, IDOR pattern requires credentialed session
-[CHANGED] betpandacasino.io OPTIONS /rest/user/authenticate — leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpandacasino_io
-[PRIO] betpandacasino.io/rest,7.4,attack_surface=7,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=8,freshness=5
-[PRIO] affiliates.betpanda.io/rest,7.1,attack_surface=8,business_value=8,tech_exposure=7,gate_ease=5,cloud_surface=7,freshness=6
-[PRIO] help.desk.avatarux.com/servicedesk/customer/portal,6.7,attack_surface=7,business_value=5,tech_exposure=6,gate_ease=10,cloud_surface=4,freshness=9
-[PRIO] roobet.com/_api,6.4,attack_surface=6,business_value=7,tech_exposure=7,gate_ease=4,cloud_surface=7,freshness=8
-[PRIO] autoconfig.avatarux.com/autoconfig/v1.1/,6.35,attack_surface=6,business_value=4,tech_exposure=7,gate_ease=10,cloud_surface=3,freshness=10
-[PRIO] flags.betpanda.io,5.55,attack_surface=5,business_value=6,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=7
-[PRIO] custom-lp.betpanda.io,5.5,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=6,freshness=7
-[PRIO] fp.betpanda.io,5.5,attack_surface=5,business_value=6,tech_exposure=6,gate_ease=3,cloud_surface=6,freshness=7
-[PRIO] cpanel.avatarux.com,4.15,attack_surface=3,business_value=3,tech_exposure=4,gate_ease=10,cloud_surface=3,freshness=2
+## 2026-09-10 18:59:04 UTC [target] (model nemotron3)
+[NEW] betpandacasino.io `/rest/user/details` — HTTP 200 returns full user state object (loggedIn, blocked, emailVerified, kycVerified, country, currentLevel, currencies, blockedStatus, phoneNumber) unauthenticated; NEW endpoint confirmed 2026-09-10
+[NEW] help.desk.avatarux.com portal enumeration expanded: portals **4–100+** all HTTP 200 (~209KB). Prior knowledge only documented portals 4–15. Portals 1–3 return 0B (303). Surface is ~96 accessible portals leaking identical tenant-id/atlassianOrgId/Statsig config.
+[NEW] roobet.com `/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash` — all HTTP 401 (12B "Unauthorized"). Confirms 3 additional game endpoints beyond tiki21, all auth-gated identically.
+[NEW] roobet.com `/_api/socket.io` — Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain; prior 403 was UA/Origin-gated for bare curl.
+[NEW] roobet.com `/_api/currency/balances` — HTTP 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash) — informational, non-sensitive.
+[CHANGED] betpandacasino.io/rest/user/{me,profile,info} — all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is only unauthenticated user endpoint.
+[CHANGED] betpandacasino.io/rest/public/config — Spring JSON 404 confirmed, casino does NOT mirror affiliates leak; passive corroboration gap CLOSED.
+[CHANGED] betpandacasino.io callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified.
+[CHANGED] cpanel.avatarux.com — SSL handshake failure persists, Cloudflare 1001 stable but NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation; takeover unproven, monitoring only.
+[CHANGED] affiliates.betpanda.io/rest/public/config — stable 200, byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty).
+[CHANGED] affiliates.betpanda.io/rest/player/uid/{id} — 401 unauthenticated confirmed, IDOR pattern requires credentialed session.
+[CHANGED] betpandacasino.io OPTIONS /rest/user/authenticate — leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpandacasino_io.
+[PRIO] betpandacasino.io/rest/user/details,8.05,attack_surface=8,business_value=8,tech_exposure=7,gate_ease=10,cloud_surface=6,freshness=9
+[PRIO] help.desk.avatarux.com/servicedesk/customer/portal,7.10,attack_surface=9,business_value=5,tech_exposure=6,gate_ease=10,cloud_surface=4,freshness=8
+[PRIO] affiliates.betpanda.io/rest/player/uid/{id},7.10,attack_surface=8,business_value=8,tech_exposure=7,gate_ease=5,cloud_surface=7,freshness=6
+[PRIO] roobet.com/_api/socket.io,6.80,attack_surface=7,business_value=7,tech_exposure=8,gate_ease=4,cloud_surface=7,freshness=8
+[PRIO] roobet.com/_api/game,6.40,attack_surface=6,business_value=7,tech_exposure=7,gate_ease=4,cloud_surface=7,freshness=8
 [HYP] BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details
 class: MISCONFIG
 asset: betpandacasino.io/rest/user/details
 confidence: 85
-reasoning: NEW endpoint /rest/user/details returns HTTP 200 with full user state object (loggedIn, blocked, emailVerified, kycVerified, country, currentLevel, currencies, blockedStatus, phoneNumber) without authentication. Other user endpoints (/me, /profile, /info) return 404, /settings returns 401. Spring Boot backend confirmed by JSON error format. Data model disclosure reveals auth/authorization structure, KYC fields, level progression, currency handling.
+reasoning: NEW endpoint /rest/user/details returns HTTP 200 with full user state object (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, currencies, blockedStatus, phoneNumberVerified) without authentication. Other user endpoints (/me, /profile, /info) return 404, /settings returns 401. Spring Boot backend confirmed by JSON error format. Data model disclosure reveals auth/authorization structure, KYC fields, level progression, currency handling.
 evidence_needed: Confirm if endpoint returns different data with valid session vs anonymous; test if it leaks PII when authenticated
 verify_steps: GET https://betpandacasino.io/rest/user/details — capture full response body/headers; GET https://betpandacasino.io/rest/user/details with Accept: application/json vs text/html; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers; with valid casino session GET /rest/user/details — compare response
 impact: User state model disclosure enables reconnaissance for targeted attacks, potential logic flaws in state transitions, KYC bypass enumeration — MEDIUM

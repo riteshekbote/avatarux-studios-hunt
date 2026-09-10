@@ -2176,3 +2176,45 @@ testability: PASSIVE
 [LEARN] ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types (tiki21 was previously known). Uniform response size (12B) suggests same auth middleware.
 [LEARN] ACCEPTED OTHER @ betpandacasino.io /rest/user/{me,profile,info}: all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is the only unauthenticated user endpoint.
 [RISK] avatarux-studios: **80** — passive breadth expanded slightly (new /rest/user/details endpoint, portal enumeration confirmed to 100+, roobet game-tier surface newly accessible), but every actionable hypothesis remains AUTH_HELPED or PASSIVE-only. The casino /rest/user/details is a new surface but returns unauthenticated defaults without session cookies. The affiliate IDOR (78) remains the highest-impact finding but needs a second credentialed session. The roobet game mutation endpoint probe (OPTIONS preflight) is the only fresh passive action that could move a score. Anonymous exploitation ceiling is reached for BetPanda/AvatarUX corporate assets; further progress fully depends on credentialed sessions across three brands (Roobet, BetPanda affiliate, BetPanda casino).
+## 2026-09-10 19:01:08 UTC [target] (model bigpickle)
+[NEW] roobet.com/_api CORS whitelist maps 777.dev (Roobet/Cozy test-stage) + api.777.dev with credentials=true on production game data endpoint (ACAO reflected on GET currentRoundHash 401) — staging origin trusted by prod API.
+[NEW] roobet.com oddity: topkek.com (Cozy prod) NOT whitelisted, but test env 777.dev IS. 777.dev live behind Cloudflare (403 root, HSTS-preload), api.777.dev resolves on same CF IP 104.18.43.25.
+[NEW] /_api/game/tiki21/endRound POST -> 401 (12B) — real mutation endpoint confirmed auth-gated identically to GET currentRoundHash. Auth boundary consistent; no differentiated gap.
+[CHANGED] /_api/game/{chess,yeti-towers,pop_towers}/bet POST -> 404 route miss (REST bet paths do NOT exist; games bet over socket.io). CORS preflight 204 path-agnostic global config (nonexistent path also 204).
+[CHANGED] Tiki21 bundle: API_HOST=SOCKET_HOST="roobet.com/_api"; game actions (hit/stand/double/wager) via socket.io w/ JWT from ?jwt= / localStorage; REST surface per game = currentRoundHash + endRound only.
+[NEW] 401 on currentRoundHash clears session cookies (connect.sid, userId, twofactorRequired) — Express session cookie names disclosed (informational).
+[NEXT] PROBE: fetch root of api.777.dev and http(s)://777.dev staging apps to characterize staging surface for chaining (passive GET only).
+[LEARN] REJECTED MISCONFIG @ roobet.com/_api/game/{...}/bet: POST 404 route miss — CORS preflight 204 is path-agnostic global config (proven on nonexistent path); bet endpoints do not exist on REST.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OPTIONS+GET); topkek.com not whitelisted.
+[LEARN] ACCEPTED AUTH @ roobet.com/_api/game/tiki21/endRound: POST 401 (12B) identical to currentRoundHash — mutation auth boundary consistent, no bypass.
+[LEARN] ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface is currentRoundHash + endRound.
+[RISK] avatarux-studios: 80 — anonymous ceiling persists; new CORS trust-boundary observation (staging 777.dev trusted by prod API) is LOW-MED and chaining-dependent, not critical. No actionable escalation without credentialed sessions.
+[HYP] Roobet Production API Trusts Staging Origin in CORS Whitelist
+class: MISCONFIG
+asset: roobet.com/_api (CORS whitelist; staging origin 777.dev)
+confidence: 55
+reasoning: Observed ACAO reflection with allow-credentials=true for Origin `https://777.dev` on OPTIONS preflight and on GET `/_api/game/tiki21/currentRoundHash` (401). Bundle constant confirms 777.dev = Roobet/Cozy test-stage (`isRoobetTest=host.includes('777.dev')`). api.777.dev resolves on the same Cloudflare IP, and 777.dev root serves 403 behind a Cloudflare gate — a real, live sibling environment. Any content/redirect/XSS on `*.777.dev`, or claim of an unmonitored label there, produces credentialed cross-origin read/write to prod game endpoints (cookie-set auth for REST; JWT for socket.io mutations).
+evidence_needed: stronger ownership record tying 777.dev/provider to Roobet (WHOIS/CT linkage), and any live staging app on 777.dev showing lower security posture.
+verify_steps: passive GET `https://777.dev/` and `https://api.777.dev/` root/banner; optional OPTIONS preflight with more candidate origins to complete whitelist map (no new rights needed — observation already conclusive).
+impact: Bounded: credentialed cross-origin reads of round/state (currentRoundHash) + forced `endRound` for a victim with active session browsing attacker-controlled 777.dev content. LOW-MED; compounds if staging surface has weaker auth. Not a direct anonymous bypass.
+testability: PASSIVE (verified) / exploiting requires stage compromise — chain-only.
+[HYP] BetPanda Casino /rest/user/details Authenticated PII Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 62
+reasoning: 200 (301B) anonymous returns full user-state model (loggedIn, country:"US", kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin); Spring Boot backend; /rest/user/settings is the 401 "No http-session" contrast. Authenticated sessions likely populate real PII/balance fields.
+evidence_needed: authenticated session producing non-default body w/ real user data.
+verify_steps: GET /rest/user/details once with an authenticated browser session; diff vs anonymous baseline (passive).
+impact: Authenticated user PII/state exposure; stepping stone to session-boundary testing. MEDIUM.
+testability: AUTH_HELPED
+[HYP] Atlassian Edge Tenant ID Enumeration Across JSM Portals
+class: MISCONFIG
+asset: help.desk.avatarux.com/servicedesk/customer/portal/{4..100}
+confidence: 85
+reasoning: 96+ portals return 200 (~209KB) leaking identical tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId, workspace-ari, Statsig prod-euwest/jira-prod-eu-3, Rovo agent template. Stable 10+ cycles. Fully confirmed passively.
+evidence_needed: none.
+verify_steps: none required — already complete.
+impact: Tenant/org metadata disclosure enabling targeted Atlassian attacks/phishing. LOW-MED.
+testability: PASSIVE
+[NEXT] PROBE: `curl -s -o /dev/null -w "%{http_code}" -m 10 "https://api.777.dev/" && curl -s -m 10 "https://api.777.dev/" | head -c 400` — characterize the staging API/brand host for the CORS trust-boundary chain (passive GET, 1 rps).
+[RISK] avatarux-studios: **80** — Roobet game-tier anonymous surface now fully mapped and closed (REST = 2 auth-gated endpoints per game; CORS whitelist mapped; mutations over JWT socket.io). The only fresh observation is a LOW-MED CORS trust-boundary (staging 777.dev trusted by prod API) whose impact is chain-dependent. All high-value leads (Affiliate IDOR 78, Casino details 62) remain AUTH_HELPED and stable for 6+ cycles. Anonymous exploitation ceiling confirmed across Roobet, BetPanda affiliate, and BetPanda casino — no progress possible without program-supplied credentialed sessions.
