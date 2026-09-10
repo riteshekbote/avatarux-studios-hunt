@@ -2042,3 +2042,38 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4,5,7,10,15 byte-identical 200 (208039B) leak tenant-id + atlassianOrgId — PASSIVE-stable across extended range.
 [LEARN] ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 "You need to be logged in" — auth boundary intact anonymously, supports AUTH_HELPED.
 [RISK] avatarux-studios: **80** — passive breadth grew (Roobet standalone-game tier + reachable same-origin `/_api` money endpoints) but every new money/fairness endpoint is method/auth-gated (204/401/404) with zero anonymous data exposure; api.roobet.com impasse resolved only architecturally, not exploitably. All top impact hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55, Roobet _api game fairness 45) are AUTH_HELPED — the program's remaining exposure fully depends on program-supplied credentialed sessions across three brands; anonymous-only progress is exhausted.
+## 2026-09-10 06:41:46 UTC [target] (model bigpickle)
+[HYP] Roobet Socket.IO Realtime Channel Subscription for Game State Observation
+class: BUSLOGIC
+asset: roobet.com/_api/socket.io
+confidence: 55
+reasoning: Socket.io Engine.IO handshake succeeds (200, valid sid, WS upgrade supported, maxPayload=1000) from game SPA Origin (tiki-21.games.roobet.com); SPA bundles confirm games use SOCKET_HOST=roobet.com/_api for realtime game state (bet rounds, multipliers, player actions); JWT auth is applied per-game-room subscription after connection, not at handshake; a page on the game SPA domain can establish persistent WS connection and attempt to subscribe to game rooms; maxPayload=1000 constrains message size but not channel count.
+evidence_needed: Observable game state events (bet rounds, player actions, multiplier results) arriving on socket without valid JWT; or error messages revealing game/auth logic structure (room names, event types).
+verify_steps: Connect websocket client wss://roobet.com/_api/socket.io/?EIO=4&transport=websocket with Origin: https://tiki-21.games.roobet.com; send Socket.IO CONNECT packet to game rooms derived from SPA bundle (game names visible in main.*.js); observe for data frames or auth rejection messages.
+impact: Real-time game state observation across in-scope Roobet games — enables Oracle manipulation, result prediction, or cross-game data correlation — MEDIUM-HIGH if unauthenticated channels exist; LOW if all rooms reject without JWT.
+testability: HUMAN_ONLY (requires WebSocket client not available via curl/HTTP)
+[HYP] BetPanda Affiliate IDOR on Player UID Endpoint
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{id}
+confidence: 78
+reasoning: same-origin /rest API confirmed via /config/config.json apiBaseUrl; /rest/public/config leaks operatorId=1 (re-verified 200 byte-identical this cycle); endpoint map (20+ routes) includes /rest/player/uid/{id}; live probe 401-gated (len 48); path-param uid = classic BOLA; no counter-evidence across 10+ cycles; AUTH_HELPED.
+evidence_needed: response diff across two credentialed affiliate sessions — {alt_uid} vs {own_uid} returning another affiliate's player/commission/payout data.
+verify_steps: GET /rest/player/uid/{own_uid} baseline (session A) then replay {alt_uid}; requires authorized second session, not run now.
+impact: cross-affiliate player PII/commissions/payouts — HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino Tenant Isolation on Financial POST Endpoints
+class: BUSLOGIC
+asset: betpandacasino.io/rest/user/{account-balances-and-bonuses,authenticate,refresh,zendesk/jwt}
+confidence: 55
+reasoning: GET→405 POST-gated; OPTIONS re-verified leaks x-site-name-id in allow-headers + ACAO pinned to betpandacasino_io; header IGNORED on public manifest (roobet_com/stake_com still echo betpandacasino_io) → only pre-auth surface tested; auth-scoped routing unverified; multitenancy across Roobet/Stake/Gamdom/BetPanda via GLOBAL_FLIPT_URL bundle.
+evidence_needed: credentialed casino session — POST financial endpoint with x-site-name-id roobet_com vs baseline shows balance/context switch or cross-tenant response.
+verify_steps: OPTIONS /rest/user/authenticate (re-read schema) → POST /rest/user/refresh + alt x-site-name-id vs baseline; requires authorized credentials, not run now.
+impact: cross-casino balance/JWT theft (Roobet/Stake/Gamdom) — CRITICAL if proven
+testability: AUTH_HELPED
+[PARKED] cPanel Subdomain Takeover (25): NS/SOA confirms Bluehost apex delegation; no claimable provider; evidence-disproven per own analysis 2026-09-06. Monitoring only.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain; prior 403 was UA/Origin-gated for bare curl. First new accessible surface in 6+ cycles.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/game/tiki21/currentRoundHash: 401 persists even with game Origin header — auth boundary holds on data endpoints; Origin only unlocks socket.io transport layer.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/currency/balances: 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash) — informational, non-sensitive; not user balances.
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms) — known accepted leak unchanged.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-preferred-app-context allow-headers with ACAO pinned to betpandacasino_io — passive surface stable, no new exposure.
+[RISK] avatarux-studios: **80** — the socket.io transport breakthrough on roobet.com/_api is the first new attack surface in 6+ cycles and resolves the api.roobet.com 403 impasse architecturally (game tier uses same-origin /_api, not api.roobet.com). However, all three top-impact hypotheses (Affiliate IDOR 78, Casino tenant-isolation 55, Roobet socket.io game-state 55) remain AUTH_HELPED or HUMAN_ONLY — none have anonymous data exposure. The passive surface is exhausted; further exploitation progress fully depends on program-supplied credentialed sessions across three brands (Roobet, BetPanda affiliate, BetPanda casino).

@@ -1128,3 +1128,21 @@
 - LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
 - LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
 - LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer
+
+## RANKED HYPOTHESES 2026-09-10 06:44:22 UTC
+- [78] affiliates.betpanda.io/rest/player/uid/{id}: BetPanda Affiliate Cross-Tenant Player Data Access via IDOR on /rest/player/uid/{id} (from art/lead_nemotron3.txt)
+- [55] roobet.com/_api/socket.io: Roobet Socket.IO Realtime Channel Subscription for Game State Observation (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://help.desk.avatarux.com/servicedesk/customer/portal/{1..20} — enumerate all portals to map full tenant surface and extract tenant-id/orgId fro
+- LEARN: ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com 
+- LEARN: ACCEPTED OTHER @ roobet.com/_api/game/tiki21/currentRoundHash: 401 persists even with game Origin header — auth boundary holds on data endpoints; Origin only un
+- LEARN: ACCEPTED OTHER @ roobet.com/_api/currency/balances: 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash) — informational
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 byte-identical this cycle (operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms)
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com: portals 4-10 HTTP 200 expose tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — a
+- LEARN: ACCEPTED MISCONFIG @ autoconfig.avatarux.com: XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→WordPress — legacy/stale config, not 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+- LEARN: ACCEPTED OTHER @ betpandacasino.io: manifest 200 + /config/config.json 200 (baseUrl=/rest) + OPTIONS /rest/user/authenticate 200 leaking x-site-name-id/x-prefer

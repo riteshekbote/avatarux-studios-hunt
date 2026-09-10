@@ -454,3 +454,13 @@ www.avatarux.com
 - CHANGED affiliates.betpanda.io/rest/public/config stable 200 — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, full currency list leaked
 - CHANGED affiliates.betpanda.io/rest/player/uid/{id} returns 401 unauthenticated — IDOR pattern confirmed, requires credentialed session
 - CHANGED betpandacasino.io OPTIONS /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpan
+
+## 2026-09-10 06:44:22 UTC
+- NEW help.desk.avatarux.com portals 4-10 return HTTP 200 (not 303) exposing tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5) and atlassianOrgId in page source — attack surface EXPANDED vs prior "all 303" c
+- NEW autoconfig.avatarux.com/autoconfig/v1.1/ returns valid XML with mail.avatarux.com:993/465 password-cleartext — legacy mail config confirmed, mail host 301→WordPress (not mail infra)
+- CHANGED betpandacasino.io/rest/public/config returns Spring JSON 404 — casino does NOT mirror affiliates /rest/public/config leak; passive corroboration gap CLOSED
+- CHANGED betpandacasino.io callback/webhook surface exhausted — all 5 endpoints (/rest/callback, /rest/webhook, /rest/notify, /rest/game/callback, /rest/api/game/callback) return 404; SSRF hypothesis falsified
+- CHANGED cpanel.avatarux.com SSL handshake failure persists — Cloudflare 1001 stable but delegation gap to Bluehost blocks standard zone claim; takeover unproven, monitoring only
+- CHANGED affiliates.betpanda.io/rest/public/config stable 200 — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, full currency list leaked
+- CHANGED affiliates.betpanda.io/rest/player/uid/{id} returns 401 unauthenticated — IDOR pattern confirmed, requires credentialed session
+- CHANGED betpandacasino.io OPTIONS /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpan
