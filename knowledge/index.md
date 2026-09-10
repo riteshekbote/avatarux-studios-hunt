@@ -284,3 +284,4 @@
 - 2026-09-10 ACCEPTED OTHER @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OPTIONS+GET); topkek.com not whitelisted.
 - 2026-09-10 ACCEPTED AUTH @ roobet.com/_api/game/tiki21/endRound: POST 401 (12B) identical to currentRoundHash — mutation auth boundary consistent, no bypass.
 - 2026-09-10 ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface is currentRoundHash + endRound.
+- 2026-09-10 ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface per game = currentRoundHash + endRound only.

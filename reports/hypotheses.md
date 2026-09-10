@@ -1211,3 +1211,22 @@
 ## RANKED HYPOTHESES 2026-09-10 21:30:51 UTC
 - [62] roobet.com/_api: Roobet Production API Trusts Whole *.777.dev Staging Namespace in CORS (from art/lead_bigpickle.txt)
 - NEXT(hypotheses-bigpickle.txt): PROBE: `curl -s -m 15 "https://crt.sh/?q=%25.777.dev&output=json"` → extract unique names; then passive `dig`/`dns -t CNAME` on each label of the *trusted CORS 
+
+## RANKED HYPOTHESES 2026-09-10 23:25:55 UTC
+- [85] betpandacasino.io/rest/user/details: BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (from art/lead_nemotron3.txt)
+- [68] roobet.com/_api: Roobet Prod API Trusts Entire *.777.dev Staging Namespace in CORS (incl. game-SPA staging origins) (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: paginate certspotter issuances for 777.dev past last ID 15472055464 to exhaust the label stream (read-only), then GET HTTP status of any newly surfaced l
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://betpandacasino.io/rest/user/details — capture full response body and headers; GET https://betpandacasino.io/rest/user/details with Accept: ap
+- LEARN: ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config
+- LEARN: ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types (tiki21 was previously kno
+- LEARN: ACCEPTED OTHER @ betpandacasino.io /rest/user/{me,profile,info}: all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is the only unau
+- LEARN: ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+- LEARN: ACCEPTED OTHER @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OP
+- LEARN: ACCEPTED AUTH @ roobet.com/_api/game/tiki21/endRound: POST 401 (12B) identical to currentRoundHash — mutation auth boundary consistent, no bypass.
+- LEARN: ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface per game = currentRound

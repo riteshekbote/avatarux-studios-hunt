@@ -535,3 +535,5 @@ www.avatarux.com
 - CHANGED help.desk.avatarux.com portal body sizes normalized: portals 4–100 consistently 209005–209007B (minor variance, same template). Prior "208039B" for portals 4,5,7,10,15 was likely a stale cache differe
 - CHANGED roobet.com/_api/game/{chess,yeti-towers,pop_towers}/bet POST → 404 route miss — CORS preflight 204 is path-agnostic global config (proven on nonexistent path); bet endpoints do not exist on REST.
 - CHANGED tiki-21.games.roobet.com bundle: API_HOST=SOCKET_HOST="roobet.com/_api"; game mutations (hit/stand/double/wager) run over socket.io with JWT; REST-only surface per game = currentRoundHash + endRound o
+
+## 2026-09-10 23:25:55 UTC

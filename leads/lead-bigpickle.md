@@ -2248,3 +2248,33 @@ impact: Tenant/org metadata disclosure; phishing/Atlassian-attack aid. LOW-MED.
 testability: PASSIVE
 [NEXT] PROBE: `curl -s -m 15 "https://crt.sh/?q=%25.777.dev&output=json"` → extract unique names; then passive `dig`/`dns -t CNAME` on each label of the *trusted CORS namespace* detecting dangling CNAMEs / claimable labels under *.777.dev (the only remaining path to elevate the CORS namespace trust from chain-only to actionable).
 [RISK] avatarux-studios: 80 — the only fresh observation this cycle is the widened `*.777.dev` CORS namespace trust (LOW-MED, strictly chain-dependent: no label memories, no staging XSS found). Anonymous ceiling persists on all three brand clusters (Roobet game tier fully mapped + closed; BetPanda casino/affiliate AUTH-gated at every boundary; AvatarUX help.desk passive-stable). High-value leads (Affiliate IDOR 78, Casino details 62) remain stable AUTH_HELPED for 7+ cycles. No anonymous escalation possible without program-supplied credentialed sessions or a takeable *.777.dev label.
+## 2026-09-10 23:25:02 UTC [target] (model bigpickle)
+[HYP] Roobet Prod API Trusts Entire *.777.dev Staging Namespace in CORS (incl. game-SPA staging origins)
+class: MISCONFIG
+asset: roobet.com/_api
+confidence: 68
+reasoning: OPTIONS+GET on /_api reflect ACAO (cred=true) for any syntactic `*.777.dev` origin incl. `tiki-21.games.777.dev` (204 verified this cycle). Certspotter enumerates 10+ staging labels all live on the same CF zone (NS norm/rita = Roobet-adjacent infra); `tiki-21.games.777.dev` cert mirrors the in-scope game SPA subdomain. DNS record letter-labels also honored (foo.777.dev reflected, non-resolving → rule is hostname-suffix match, not resolution check). CORS rule documented, staging namespace ownership linkage now triply corroborated.
+evidence_needed: any attacker-influenceable content inside *.777.dev (none found — all labels 403 CF-gated, no dangling CNAMEs), OR a non-gated staging label leaking weaker auth.
+verify_steps: DONE passively. Optional remaining: complete certspotter pagination to exhaust the 777.dev label stream; re-GET HTTP status of any new label surfaced.
+impact: confirmed credentialed cross-origin read (currentRoundHash) + socket.io transport for any victim with an active session browsing attacker-controlled content in a trusted staging namespace. Bounded by needing staged content/JWT. LOW-MED, chain-only.
+testability: PASSIVE (mapping verified) / HUMAN_ONLY (exploit)
+[HYP] BetPanda Casino /rest/user/details Authenticated PII/State Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 62
+reasoning: unchanged — 200 (301B) anonymous baseline returns full user-state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin); /rest/user/settings 401 "No http-session" is the auth contrast; Spring Boot signature.
+evidence_needed: authenticated session producing non-default body with real PII/balances.
+verify_steps: GET /rest/user/details once with authenticated browser session, diff vs anonymous baseline.
+impact: authenticated user PII/state disclosure + session-boundary progression. MEDIUM.
+testability: AUTH_HELPED
+[HYP] Atlassian Edge JSM Portal Tenant-ID Enumeration (96+ Portals)
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 85
+reasoning: portals 4–100 all 200 (~209KB), identical tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId ead67a75-…, workspace-ari, Statsig prod-euwest/jira-prod-eu-3; stable 10+ cycles.
+evidence_needed: none.
+verify_steps: none required — complete.
+impact: tenant/org metadata disclosure aiding Atlassian-targeted attacks; LOW-MED.
+testability: PASSIVE
+[NEXT] PROBE: paginate certspotter issuances for 777.dev past last ID 15472055464 to exhaust the label stream (read-only), then GET HTTP status of any newly surfaced label to check for a non-gated staging surface.
+[RISK] avatarux-studios: 80 — anonymous ceiling holds across all clusters. Only movement this cycle is documentation-level (777.dev staging namespace mapped + CORS trust re-verified cross-env); it is chain-only and does not bypass any auth boundary. High-value leads (Affiliate IDOR 78-adjacent, Casino details 62) remain AUTH_HELPED for 8+ cycles; no anonymous escalation possible without program-supplied credentialed sessions or a non-gated surface inside *.777.dev.
