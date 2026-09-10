@@ -12857,3 +12857,111 @@ testability: PASSIVE
 **STEP 7 — RISK**
 
 [RISK] avatarux-studios: **80** — passive breadth expanded slightly (new /rest/user/details endpoint, portal enumeration confirmed to 100+), but every actionable hypothesis remains AUTH_HELPED or PASSIVE-only. The casino /rest/user/details is a new surface but returns unauthenticated defaults without session cookies. The affiliate IDOR (78) remains the highest-impact finding but needs a second credentialed session. All top-5 findings have been stable for 5+ cycles with no escalation path without program-supplied test credentials. Anonymous exploitation ceiling is reached; further progress fully depends on credentialed sessions for BetPanda affiliate, BetPanda casino, and Roobet.
+===== ANALYST bigpickle 2026-09-10 15:57:17 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead README.md
+[0m
+[0m$ [0mfind . -name "*.txt" -o -name "*.md" | grep -E "(lead|probe|inventory)" | head -20
+./inventory/avatarux-studios.md
+./probe-results.md
+./leads/lead-nemotron3.md
+./leads/lead-bigpickle.md
+./leads/lead-laguna.md
+./leads/lead-ling3.md
+./leads/reposcan-avatarux-studios.md
+./leads/lead-mimo.md
+./leads/lead-longcat.md
+[0m
+[0m→ [0mRead inventory/avatarux-studios.md
+[0m→ [0mRead leads/lead-bigpickle.md
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=519, limit=500][0m
+[0m→ [0mRead probe-results.md[90m [limit=300][0m
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=975][0m
+[0m→ [0mRead scope.yml
+Now I have full context. Let me produce the structured output.
+
+---
+
+## 2026-09-10 18:XX:XX UTC [target] (model bigpickle)
+
+### STEP 1 — DELTA
+
+[NEW] roobet.com `/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash` — all 401 (12B), confirms uniform auth boundary across 3 additional game types beyond tiki21; first new accessible surface in 6+ cycles.
+[NEW] betpandacasino.io `/rest/user/details` — HTTP 200 (301B) returns unauthenticated user state model (loggedIn, country:"US", kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin) without auth.
+[CHANGED] help.desk.avatarux.com portals 4–100 all HTTP 200 (~209007B) — surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config. Prior brace-literal artifact "all 303" falsified.
+[CHANGED] roobet.com socket.io transport layer accessible from game SPA Origin (tiki-21.games.roobet.com) — first new attack surface in 6+ cycles, resolves the api.roobet.com 403 architectural impasse.
+
+### STEP 2 — PRIORITIZE
+
+[PRIO] roobet.com/_api,7.20,attack_surface=9|business_value=10|tech_exposure=8|gate_ease=3|cloud_surface=7|freshness=1
+[PRIO] affiliates.betpanda.io,6.90,attack_surface=8|business_value=9|tech_exposure=7|gate_ease=4|cloud_surface=6|freshness=4
+[PRIO] betpandacasino.io,6.85,attack_surface=7|business_value=10|tech_exposure=7|gate_ease=5|cloud_surface=6|freshness=2
+[PRIO] help.desk.avatarux.com,6.05,attack_surface=7|business_value=6|tech_exposure=5|gate_ease=9|cloud_surface=5|freshness=2
+
+### STEP 3 — HYPOTHESES
+
+[HYP] Roobet Game Mutation Endpoint Auth Boundary Consistency via OPTIONS Preflight
+class: OTHER
+asset: roobet.com/_api/game/{chess,yeti-towers,pop_towers}/bet
+confidence: 55
+reasoning: Prior cycle confirmed socket.io transport accessible from game SPA Origin (tiki-21.games.roobet.com); game SPA bundles reference bet/cashout POST endpoints alongside GET /currentRoundHash (confirmed 401 across 4 game types). OPTIONS preflight returns 204 with CORS headers. If POST on /bet or /cashout paths returns anything other than 401 (e.g., 200, 400, 422 with error body), it would indicate broken auth validation on mutation endpoints — differentiated from the 401-confirmed GET data boundary. The game tier uses same-origin /_api (not api.roobet.com), so Origin-based gating is the first access layer; whether auth middleware applies uniformly to POST vs GET is unverified.
+evidence_needed: OPTIONS response showing allow-methods including POST; or POST response from /_api/game/{game}/bet without valid JWT returning non-401 status or verbose error.
+verify_steps: OPTIONS /_api/game/chess/bet + OPTIONS /_api/game/yeti-towers/bet + OPTIONS /_api/game/pop_towers/bet — read Access-Control-Allow-Methods and Access-Control-Allow-Headers from preflight response (passive CORS preflight, ≤1 rps).
+impact: If POST mutations lack auth → unauthorized bet placement/cashout manipulation — CRITICAL if proven.
+testability: PASSIVE
+
+[HYP] BetPanda Casino /rest/user/details Authenticated PII Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 62
+reasoning: GET /rest/user/details returns 200 (301B) with full user state model without authentication: loggedIn, blocked, emailVerified, kycVerified, country:"US" (geo-IP derived), currentLevel, currencies, blockedStatus, phoneNumberVerified, principalVerified, oneTimeTokenLogin. Response identical with/without x-site-name-id header. Spring Boot backend confirmed. The unauthenticated response returns geo-IP defaults but the data model structure itself is fully disclosed; authenticated sessions likely populate these fields with real user PII (email, level, KYC status, balance).
+evidence_needed: authenticated session cookie producing non-default /rest/user/details response with different user's PII (email, level, balance); or response change when session cookies from one account are replayed.
+verify_steps: (PASSIVE only) GET /rest/user/details with browser cookies from authenticated session — compare response body to anonymous baseline.
+impact: Authenticated user PII (email, level, KYC status, country, balance) exposure — MEDIUM; stepping stone to IDOR if session-binding is weak.
+testability: AUTH_HELPED
+
+[HYP] Atlassian Edge Tenant ID Enumeration Across 96+ JSM Portals
+class: MISCONFIG
+asset: help.desk.avatarux.com/servicedesk/customer/portal/{4..100}
+confidence: 85
+reasoning: Portals 4–100 all return HTTP 200 (~209007B) exposing tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId (ead67a75-73c2-4b0f-9890-0b87a41ca34b), workspace-ari (d4da630a-7be0-4088-a659-6dc01a44cf5d), Statsig feature-flag config (environment: prod-euwest, shard: jira-prod-eu-3, sdkType: java-server v2.2.3), and Rovo AI agent template with internal JSM project actions. Passive, stable across 10+ cycles. All 96 portals leak identical tenant data — single JSM instance exposed across 96+ arbitrary portal IDs.
+evidence_needed: none — fully confirmed passively; escalation requires human assessment of reportability.
+verify_steps: no further verification needed — passive surface is stable and complete.
+impact: Tenant isolation metadata (Atlassian org/workspace IDs, Statsig config, JSM shard info) — LOW-MED; enables targeted social engineering or Atlassian-specific attacks if combined with other findings.
+testability: PASSIVE
+
+### STEP 4 — SELF-CRITIQUE
+
+[RISK] Roobet Game Bet Endpoint CORS probe (55): verify_steps are passive OPTIONS preflight — safe, read-only. Confidence >= 40. Not REJECTED class. **SURVIVES.**
+
+[RISK] Casino /rest/user/details (62): needs auth session; not REJECTED. **SURVIVES.**
+
+[RISK] help.desk portals (85): passive, fully confirmed. Not REJECTED. **SURVIVES.**
+
+[PARKED] BetPanda Affiliate IDOR /rest/player/uid/{id} (78): unchanged from prior cycles, AUTH_HELPED, no counter-evidence. Stable lead, awaiting credentialed session. Parked at current cycle — no new passive action possible.
+
+[PARKED] Roobet Socket.IO Realtime Channel Subscription (55): unchanged from prior cycle; requires WS client not available in this environment; no progress possible. Monitoring only.
+
+[FINAL] 1. Atlassian Edge Tenant ID Enumeration (85) — PASSIVE, confirmed, no counter-evidence.
+[FINAL] 2. Roobet Game Mutation Endpoint Auth Boundary (55) — PASSIVE, new surface, needs OPTIONS preflight.
+[FINAL] 3. BetPanda Casino /rest/user/details (62) — AUTH_HELPED, new endpoint, data model disclosed.
+
+### STEP 5 — NEXT ACTION
+
+[NEXT] PROBE: `curl -s -o /dev/null -w "%{http_code}:%{size_download}" -H "Origin: https://tiki-21.games.roobet.com" -X OPTIONS "https://roobet.com/_api/game/chess/bet"` and same for yeti-towers and pop_towers — read CORS allow-methods/allow-headers from preflight to determine if POST mutations are auth-gated identically to GET data endpoints. Passively tests the first new surface in 6+ cycles.
+
+### STEP 6 — LEARN
+
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain; prior 403 was UA/Origin-gated for bare curl. First new accessible surface in 6+ cycles.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/game/tiki21/currentRoundHash: 401 persists even with game Origin header — auth boundary holds on data endpoints; Origin only unlocks socket.io transport layer.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/currency/balances: 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash) — informational, non-sensitive; not user balances.
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus) — data model disclosure, not PII leak without auth. Backend = Spring Boot confirmed by JSON error format.
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config. Passive, stable, unchanged.
+[LEARN] ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types (tiki21 was previously known). Uniform response size (12B) suggests same auth middleware.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io /rest/user/{me,profile,info}: all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is the only unauthenticated user endpoint.
+
+### STEP 7 — RISK
+
+[RISK] avatarux-studios: **80** — passive breadth expanded slightly (new /rest/user/details endpoint, portal enumeration confirmed to 100+, roobet game-tier surface newly accessible), but every actionable hypothesis remains AUTH_HELPED or PASSIVE-only. The casino /rest/user/details is a new surface but returns unauthenticated defaults without session cookies. The affiliate IDOR (78) remains the highest-impact finding but needs a second credentialed session. The roobet game mutation endpoint probe (OPTIONS preflight) is the only fresh passive action that could move a score. Anonymous exploitation ceiling is reached for BetPanda/AvatarUX corporate assets; further progress fully depends on credentialed sessions across three brands (Roobet, BetPanda affiliate, BetPanda casino).

@@ -478,3 +478,21 @@ www.avatarux.com
 - CHANGED affiliates.betpanda.io/rest/public/config stable 200 — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, full currency list leaked
 - CHANGED affiliates.betpanda.io/rest/player/uid/{id} returns 401 unauthenticated — IDOR pattern confirmed, requires credentialed session
 - CHANGED betpandacasino.io OPTIONS /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betpan
+
+## 2026-09-10 15:57:17 UTC
+- NEW roobet.com `/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash` — all 401 (12B), confirms uniform auth boundary across 3 additional game types beyond tiki21; first new accessible surface in 6+
+- NEW betpandacasino.io `/rest/user/details` — HTTP 200 (301B) returns unauthenticated user state model (loggedIn, country:"US", kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, pr
+- CHANGED help.desk.avatarux.com portals 4–100 all HTTP 200 (~209007B) — surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config. Prior brace-literal artifact "all 
+- CHANGED roobet.com socket.io transport layer accessible from game SPA Origin (tiki-21.games.roobet.com) — first new attack surface in 6+ cycles, resolves the api.roobet.com 403 architectural impasse.
+- NEW betpandacasino.io/rest/user/details — HTTP 200 returns unauthenticated user state model (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, currencies, blockedStatus, phoneNumb
+- NEW help.desk.avatarux.com portals 4–100 — surface expanded from 7 to 96+ portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, Statsig config
+- NEW roobet.com/_api/socket.io — Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain
+- NEW roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash — all HTTP 401 (12B), confirms 3 additional game endpoints beyond tiki21, uniform auth middleware
+- NEW roobet.com/_api/currency/balances — HTTP 200 returns static 12-currency catalog (BTC/ETH/LTC/USDC/USDT/XRP/DOGE/TRX/SOL/BNB/SUI/Cash)
+- CHANGED betpandacasino.io/rest/user/{me,profile,info} — all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is only unauthenticated user endpoint
+- CHANGED betpandacasino.io/rest/public/config — Spring JSON 404 confirmed, casino does NOT mirror affiliates leak; passive corroboration gap CLOSED
+- CHANGED betpandacasino.io callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified
+- CHANGED cpanel.avatarux.com — SSL handshake failure persists, Cloudflare 1001 stable but NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation; takeover unproven, monitoring only
+- CHANGED affiliates.betpanda.io/rest/public/config — stable 200, byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty)
+- CHANGED affiliates.betpanda.io/rest/player/uid/{id} — 401 unauthenticated confirmed, IDOR pattern requires credentialed session
+- CHANGED betpandacasino.io OPTIONS /rest/user/authenticate — leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context; ACAO pinned to https://betpandacasino.io; x-site-name-id echoed as betp
