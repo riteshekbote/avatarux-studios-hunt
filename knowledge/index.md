@@ -319,3 +319,10 @@
 - 2026-09-11 REJECTED MISCONFIG @ betpandacasino.io /rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak.
 - 2026-09-11 REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique.
 - 2026-09-11 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password enumeration is REJECTED class — must not be reranked.
+- 2026-09-11 ACCEPTED OTHER @ staging-services/staging-monorepo/staging-socket/aiostaging.rainbet.com: RainBet backend-dev tier confirmed behind CF Access/challenge — all 404/403/302-CF-Access, no anonymous surface; device-tier enumeration closed.
+- 2026-09-11 REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposure is mgmt-UI+AMQP only, severity retained at MED.
+- 2026-09-11 REJECTED OTHER @ staging-services.rainbet.com/docs meta JWT: CF-Access meta token auth_status=NONE — informational, REJECTED class (descriptive headers), correctly gated.
+- 2026-09-11 ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details + help.desk portals 4–100: reconfirmed 200 byte-stable this cycle — report-ready, unchanged.
+- 2026-09-11 ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no CF/ACL; /api/overview 401 Basic gated. In-scope RainBet messaging infrastructure.
+- 2026-09-11 ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DigitalOcean App Platform origin UUID) leaks through Cloudflare on 200-empty.
+- 2026-09-11 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.

@@ -562,3 +562,19 @@ www.avatarux.com
 - CHANGED roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: all 401 (12B) — uniform auth boundary across 4 game types
 - CHANGED affiliates.betpanda.io/rest/public/config: stable 200 byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms)
 - CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; takeover unproven, monitoring only
+
+## 2026-09-11 16:01:20 UTC
+- NEW rainbet-com-rabbitmq.rainbet.com:15671/15672 — RabbitMQ Management UI (Cowboy) + AMQP 5671/5672 exposed on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no Cloudflare/ACL; /api/overview 
+- NEW rainbet-us-staging-rabbitmq.rainbet.com:15671/15672 — Same exposure on second broker (staging label)
+- NEW staging-api.rainbet.com — Leaks x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) through Cloudflare on 200-empty
+- NEW betpandacasino.io/rest/user/details — HTTP 200 returns full unauthenticated user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVer
+- NEW help.desk.avatarux.com portals 4–100+ — All HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, Statsig config (prod-euwest, shard jira-prod-eu-3); s
+- NEW roobet.com/_api CORS — Production reflects ACAO: https://777.dev + https://api.777.dev with ACAC:true on game data endpoints; topkek.com (prod) NOT whitelisted; 777.dev is staging behind CF (403 root,
+- NEW roobet.com/_api/socket.io — Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com; prior 403 was UA/Origin-gated
+- NEW roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash — All 401 (12B), uniform auth boundary across 4 game types
+- CHANGED cpanel.avatarux.com — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists but takeover mechanism unproven, 
+- CHANGED betpandacasino.io/rest/public/config — Spring JSON 404 confirmed; casino does NOT mirror affiliates leak; passive corroboration gap CLOSED
+- CHANGED betpandacasino.io callback/webhook surface — All 5 endpoints 404; SSRF hypothesis falsified
+- CHANGED affiliates.betpanda.io/rest/public/config — Stable 200 byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty)
+- CHANGED affiliates.betpanda.io/rest/player/uid/1 — 401-gated confirmed; auth boundary intact anonymously
+- CHANGED RainBet RabbitMQ cluster — Exactly 2 live hosts confirmed (rbtmq-dev/preprod/preprod-us/stg-us NXDOMAIN); enumeration closed

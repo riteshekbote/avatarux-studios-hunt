@@ -15414,3 +15414,145 @@ testability: AUTH_HELPED (blocked on credentials)
 4. Affiliate IDOR /rest/player/uid/{id} blocked only on credentials (78) — reportable AUTH_HELPED
 
 All PASSIVE reportable threads are ready for submission. The next submission should contain: (a) RainBet exposed RabbitMQ cluster, (b) betpandacasino.io /rest/user/details unauth disclosure, (c) help.desk JSM portal tenant enum. Depth escalation contingent on credentialed sessions only — no further passive lambda will increase any score.
+===== ANALYST bigpickle 2026-09-11 16:01:20 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor h in staging-services.rainbet.com staging-socket.rainbet.com staging-slot-integrations.rainbet.com aiostaging.rainbet.com staging-monorepo.rainbet.com staging-auth.rainbet.com staging-balance.rainbet.com; do printf "%s -> " "$h"; getent hosts "$h" | awk '{print $1}' | paste -sd, -; done
+staging-services.rainbet.com -> 2606:4700::6812:13b5,2606:4700::6812:12b5
+staging-socket.rainbet.com -> 2606:4700::6812:12b5,2606:4700::6812:13b5
+staging-slot-integrations.rainbet.com -> 
+aiostaging.rainbet.com -> 2606:4700::6812:13b5,2606:4700::6812:12b5
+staging-monorepo.rainbet.com -> 2606:4700::6812:12b5,2606:4700::6812:13b5
+staging-auth.rainbet.com -> 
+staging-balance.rainbet.com ->
+[0m
+[0m$ [0mcurl -sk -o /dev/null -w "rbmq-api-overview HTTP %{http_code} size %{size_download}\n" --max-time 15 http://rainbet-com-rabbitmq.rainbet.com:15671/api/overview; curl -sk -o /dev/null -w "cus-staging-api HTTP %{http_code} size %{size_download} header x-do-app-origin: %header{x-do-app-origin}\n" --max-time 15 https://staging-api.rainbet.com/
+rbmq-api-overview HTTP 000 size 0
+cus-staging-api HTTP 200 size 0 header x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504
+[0m
+[0m$ [0mfor h in staging-services staging-socket aiostaging staging-monorepo; do code=$(curl -sk -o /dev/null -w "%{http_code}|%{size_download}" --max-time 15 "https://$h.rainbet.com/"); echo "$h.rainbet.com -> $code"; sleep 1; done
+staging-services.rainbet.com -> 404|33
+staging-socket.rainbet.com -> 404|0
+aiostaging.rainbet.com -> 403|5485
+staging-monorepo.rainbet.com -> 404|63
+[0m
+[0m$ [0mfor u in "https://rainbet-com-rabbitmq.rainbet.com:15671/" "https://rainbet-com-rabbitmq.rainbet.com:15672/" "https://rainbet-us-staging-rabbitmq.rainbet.com:15671/" "https://rainbet-us-staging-rabbitmq.rainbet.com:15672/"; do code=$(curl -sk -o /dev/null -w "%{http_code}|%{size_download}" --max-time 12 "$u"); echo "$u -> $code"; sleep 1; done
+https://rainbet-com-rabbitmq.rainbet.com:15671/ -> 200|3056
+https://rainbet-com-rabbitmq.rainbet.com:15672/ -> 000|0
+https://rainbet-us-staging-rabbitmq.rainbet.com:15671/ -> 000|0
+https://rainbet-us-staging-rabbitmq.rainbet.com:15672/ -> 000|0
+[0m
+[0m$ [0mfor p in /health /healthz /api /v1 /swagger-ui/ /swagger /v1/swagger.json /docs/ /openapi.json /actuator /graphql /socket.io/ /version; do code=$(curl -sk -o /tmp/o -w "%{http_code}|%{size_download}" --max-time 10 "https://staging-services.rainbet.com$p"); echo "services $p -> $code"; done
+services /health -> 404|33
+services /healthz -> 404|33
+services /api -> 404|33
+services /v1 -> 404|33
+services /swagger-ui/ -> 404|33
+services /swagger -> 404|33
+services /v1/swagger.json -> 404|33
+services /docs/ -> 302|143
+services /openapi.json -> 404|33
+services /actuator -> 404|33
+services /graphql -> 404|33
+services /socket.io/ -> 404|33
+services /version -> 404|33
+[0m
+[0m$ [0mcurl -sk -D - -o /dev/null --max-time 10 "https://staging-services.rainbet.com/docs/" | head -20; echo "---monorepo---"; for p in / /health /v1 /api /docs/ /swagger-ui/; do code=$(curl -skL -o /dev/null -w "%{http_code}|%{url_effective}" --max-time 10 "https://staging-monorepo.rainbet.com$p"); echo "$p -> $code"; sleep 1; done
+HTTP/2 302 
+date: Fri, 11 Sep 2026 15:53:49 GMT
+content-type: text/html; charset=UTF-8
+content-length: 143
+location: https://challenge-5te-pages.cloudflareaccess.com/cdn-cgi/access/login/staging-services.rainbet.com?kid=31d4206e72536db899ef756ebdc817b58776ed784288564e4d7e4e48af49ef28&meta=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjA3MzJmMmE2ODE2N2ZlYWMxOGYzNmUxMWM1NjJlMTU4NTcxMWUwMGFjNjk3NjFiYmEwZWU2NGFiMzQwMGNhNzIifQ.eyJ0eXBlIjoibWV0YSIsImF1ZCI6IjMxZDQyMDZlNzI1MzZkYjg5OWVmNzU2ZWJkYzgxN2I1ODc3NmVkNzg0Mjg4NTY0ZTRkN2U0ZTQ4YWY0OWVmMjgiLCJob3N0bmFtZSI6InN0YWdpbmctc2VydmljZXMucmFpbmJldC5jb20iLCJyZWRpcmVjdF91cmwiOiIvZG9jcy8iLCJzZXJ2aWNlX3Rva2VuX3N0YXR1cyI6ZmFsc2UsImlzX3dhcnAiOmZhbHNlLCJpc19nYXRld2F5IjpmYWxzZSwiZXhwIjoxNzg5MTQyMzI5LCJuYmYiOjE3ODkxNDIwMjksImlhdCI6MTc4OTE0MjAyOSwiYXV0aF9zdGF0dXMiOiJOT05FIiwibXRsc19hdXRoIjp7ImNlcnRfaXNzdWVyX2RuIjoiIiwiY2VydF9zZXJpYWwiOiIiLCJjZXJ0X2lzc3Vlcl9za2kiOiIiLCJjZXJ0X3ByZXNlbnRlZCI6ZmFsc2UsImNvbW1vbl9uYW1lIjoiIiwiYXV0aF9zdGF0dXMiOiJOT05FIn0sInJlYWxfY291bnRyeSI6IlVTIiwiYXBwX3Nlc3Npb25faGFzaCI6ImYwNTMwZGY2NDZiZGU1ZGRjYjZhNTBhNzE2YWI4MmIzNTZkM2M0ZTMwM2E5OWNjNzQ4N2U4YTI2NTg0ZjQ1YWIifQ.d0uDHeOfGcVAwjDoWSTjbSJDVs80Oej3DS_XULlyOYO5IrthqmG3arxMB_S5ISiSf6GehnTBgazOXUR7-UYv3LgZtKhEPaeES3230gsNt0TG7j6RMC0ksjUNLGEhHHOVY5Y7pcWoNUtaWAYAYNxxMPGCARgxvbibuR4QN5HoQubRKYEKUE39gLNkLHW0pt6J7tFIbpJT_0WJ9E-Q76504jHUqtbLpyxFXz2rh7YgAW0-y-bQrgojFRbzJxI5DPb7o0syeNsvgdpHlDlX3IUY0KCK9QaEacTg0TSf8FuwHlEQbqzvHaVQODFrSOjnETdfsowAzuEJYaRK5GbA-3Zw6A&redirect_url=%2Fdocs%2F
+www-authenticate: Cloudflare-Access resource_metadata="https://staging-services.rainbet.com/.well-known/cloudflare-access-protected-resource/docs/"
+access-control-allow-credentials: true
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+set-cookie: CF_AppSession=8e545316346c417d; Expires=Sat, 12 Sep 2026 15:53:49 GMT; Path=/; Secure; HttpOnly
+set-cookie: __cf_bm=VlpyI_ear7Yu1X9aAlMdjdGRUyTk3_vLHkjA7gulQsA-1789142029.0447612-1.0.1.1-6jmwcBwPBBIl9x6T8mN.9f7eCNhdAGdWtoVozO91_KlZH7TEs_tQN4x8PjYKssFlEPOlWUva.LYr3WC0cTxKeIl2BHPxrE4uEbgY3w4889wMRJs0QLSv68BkuG8AxKYZ; HttpOnly; SameSite=None; Secure; Path=/; Domain=rainbet.com; Expires=Fri, 11 Sep 2026 16:23:49 GMT
+access-control-expose-headers: Cf-Mitigated
+server: cloudflare
+cf-ray: a397d8f18a5ff05a-DFW
+alt-svc: h3=":443"; ma=86400
+
+---monorepo---
+/ -> 404|https://staging-monorepo.rainbet.com/
+/health -> 404|https://staging-monorepo.rainbet.com/health
+/v1 -> 404|https://staging-monorepo.rainbet.com/v1
+/api -> 404|https://staging-monorepo.rainbet.com/api
+/docs/ -> 403|https://staging-monorepo.rainbet.com/docs/
+/swagger-ui/ -> 404|https://staging-monorepo.rainbet.com/swagger-ui/
+[0m
+[0m$ [0mcurl -sk -o /dev/null -w "api/overview https -> %{http_code}|%{size_download}\n" --max-time 15 "https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview"; curl -sk -o /dev/null -w "root https -> %{http_code}|%{size_download}\n" --max-time 15 "https://rainbet-com-rabbitmq.rainbet.com:15671/";
+api/overview https -> 401|0
+root https -> 200|3056
+[0m
+[0m$ [0mcurl -sk -o /tmp/details -w "casino /rest/user/details -> %{http_code}|%{size_download}\n" --max-time 15 "https://betpandacasino.io/rest/user/details"; curl -sk -o /dev/null -w "helpdesk portal/4 -> %{http_code}|%{size_download}\n" --max-time 15 "https://help.desk.avatarux.com/servicedesk/customer/portal/4"; head -c 220 /tmp/details
+casino /rest/user/details -> 200|301
+helpdesk portal/4 -> 200|208053
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVerified":false,"country":"US","currencies":[],"phoneNumberVeri
+[0m
+STEP 1 — DELTA
+- NEW RainBet backend-dev tier (Rainbow CT 2026-09-11 06:45) live+probed this cycle: `staging-services.rainbet.com` (docs → 302 to CF Access login, meta JWT auth_status=NONE, www-authenticate Cloudflare-Access), `staging-monorepo.rainbet.com` (404, /docs/ 403 challenge), `staging-socket.rainbet.com` (404 empty), `aiostaging.rainbet.com` (403 both CF IPs). All behind CF Access/challenge — no anonymous surface.
+- NEW `staging-auth/staging-balance/staging-slot-integrations.rainbet.com` NXDOMAIN.
+- CHANGED rainbet-com-rabbitmq.rainbet.com:15671 re-verified over HTTPS — root 200 (3056B Cowboy mgmt login), /api/overview 401 Basic (0B): nemotron3 "85 Anonymous /api access" claim NOT supported; exposure = public mgmt UI + AMQP only.
+- CHANGED rainbet-us-staging-rabbitmq.rainbet.com:15671/15672 now connect-fail (was 200 last cycle) — recheck next cycle.
+- CHANGED betpandacasino.io/rest/user/details reconfirmed 200 (301B, stable body); help.desk portal/4 reconfirmed 200 (208053B).
+
+STEP 2 — PRIORITIZE
+- [PRIO] betpandacasino.io/rest/user/details,7.0,a8b8t6g10c5f6
+- [PRIO] rainbet-com-rabbitmq.rainbet.com mgmtUI+AMQP,6.6,a5b8t7g7c4f8
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{id},6.2,a7b9t6g3c5f3
+- [PRIO] help.desk.avatarux.com portals 4–100,5.6,a6b5t5g9c3f4
+
+STEP 3 — HYPOTHESES
+[HYP] BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 85
+reasoning: HTTP 200 (301B) returns full user-state model (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, blockedStatus, currencies, phoneNumberVerified) with no auth. Spring Boot backend confirmed by JSON 404/405 signature. /rest/user/{me,profile,info} all 404; /rest/user/settings 401 "No http-session" — details is the only unauthenticated user endpoint. Reconfirmed 200 byte-stable this cycle.
+evidence_needed: none — exposure confirmed, stable, passive.
+verify_steps: done — GET https://betpandacasino.io/rest/user/details → 200.
+impact: Data-model disclosure maps exact field names for auth-gated endpoints (authenticate→credential stuffing, account-balances-and-bonuses→financial, refresh→session); KYC/level/blocked field profiling. MEDIUM.
+testability: PASSIVE (confirmed)
+
+[HYP] RainBet Production RabbitMQ Cluster Publicly Exposed (Mgmt UI + AMQP)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671 / rainbet-us-staging-rabbitmq.rainbet.com
+confidence: 74
+reasoning: Both brokers on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no Cloudflare/ACL. :15671 root = RabbitMQ mgmt login 200 (Cowboy). /api/overview re-verified 401 Basic over HTTPS — /api is NOT anonymous (nemotron3 "85 anon API" overstated). AMQP 5671/5672 publicly OPEN. Broker = betting/payment event backbone. us-staging ports flux this cycle (000), flag for recheck.
+evidence_needed: none for exposure; cred-stuffing/default-creds would need authorized active test (not passive).
+verify_steps: done — GET https://rainbet-com-rabbitmq.rainbet.com:15671/ → 200 login; /api/overview → 401.
+impact: Betting/payment event backbone reachable from internet; mgmt UI exposed to brute-force of weak creds, AMQP fuzzing, queue census → financial/data integrity risk if creds fall. MEDIUM.
+testability: PASSIVE (confirmed)
+
+[HYP] AvatarUX JSM Portal Tenant Enumeration (96+ Portals Leaking tenant-id/atlassianOrgId)
+class: MISCONFIG
+asset: help.desk.avatarux.com/servicedesk/customer/portal/{4..100}
+confidence: 75
+reasoning: Portals 4–100 HTTP 200 (~208-209KB), exposing tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId ead67a75-…, workspace d4da630a-…, Statsig env prod-euwest/shard jira-prod-eu-3 in page source. Portals 1–3 0B/303. Stable across cycles; portal/4 reconfirmed 200 this cycle.
+evidence_needed: none — exposure confirmed, stable, passive.
+verify_steps: done — GET https://help.desk.avatarux.com/servicedesk/customer/portal/{4..100} → 200 identical template leak.
+impact: Tenant/org/workspace ID enumeration for targeted phishing, API abuse, and lateral-movement planning against Atlassian infrastructure. MEDIUM/LOW.
+testability: PASSIVE (confirmed)
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] nemotron3 RainBet RabbitMQ "Anonymous Access via Unauthenticated /api Endpoints" @ 85: /api/overview re-verified 401 Basic — claim unsupported; underlying public mgmt-UI/AMQP MISCONFIG retained at 74.
+- [PARKED] staging-services.rainbet.com CF-Access meta JWT in /docs/ redirect: auth_status=NONE meta token, www-authenticate header — descriptive-header/informational, REJECTED class. Correctly gated by CF Access; no anonymous surface.
+- [PARKED] rainbet-us-staging-rabbitmq 15671/15672 000: transient/unconfirmed, not a finding; monitor.
+- [FINAL] 1. betpandacasino.io/rest/user/details (85, PASSIVE) — reconfirmed byte-stable this cycle. Top rank retained.
+- [FINAL] 2. help.desk.avatarux.com JSM portal tenant enum (75, PASSIVE) — reconfirmed 200. Retained.
+- [FINAL] 3. affiliates.betpanda.io/rest/player/uid/{id} (78, AUTH_HELPED) — concrete BOLA endpoint, blocked on credentials. Retained.
+- [FINAL] 4. RainBet RabbitMQ cluster public exposure (74, PASSIVE) — corrected framing (no anonymous /api), stable 2-host cluster. Retained.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: submit the three PASSIVE findings (casino /rest/user/details 301B user-state model; help.desk JSM portals 4–100 tenant-id/atlassianOrgId enum; RainBet RabbitMQ mgmt-UI+AMQP on raw DO origins) at bugs.olivermaicher.eu, and request credentialed sessions for affiliates.betpanda.io (IDOR /rest/player/uid/{uid}) + betpandacasino.io (post-auth financial JWT endpoints).
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED OTHER @ staging-services/staging-monorepo/staging-socket/aiostaging.rainbet.com: RainBet backend-dev tier confirmed behind CF Access/challenge — all 404/403/302-CF-Access, no anonymous surface; device-tier enumeration closed.
+[LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposure is mgmt-UI+AMQP only, severity retained at MED.
+[LEARN] REJECTED OTHER @ staging-services.rainbet.com/docs meta JWT: CF-Access meta token auth_status=NONE — informational, REJECTED class (descriptive headers), correctly gated.
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details + help.desk portals 4–100: reconfirmed 200 byte-stable this cycle — report-ready, unchanged.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 83 — unchanged. Three PASSIVE reportable findings ready (casino user-state model 85, JSM tenant enum 75, RainBet broker exposure 74); idor path (78) waits on credentials. New RainBet staging tier is properly gated — no surface added. No REJECTED-class rerank.
