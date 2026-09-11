@@ -307,3 +307,15 @@
 - 2026-09-11 REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
 - 2026-09-11 REJECTED OTHER @ rbtmq-dev/preprod/preprod-us/stg-us: NXDOMAIN — broker cluster exactly 2 hosts, enumeration closed.
 - 2026-09-11 ACCEPTED MISCONFIG @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OPTIONS+GET); topkek.com not whitelisted.
+- 2026-09-11 ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com + rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no CF/ACL; /api/* 401 Basic gated. In-scope RainBet messaging backbone.
+- 2026-09-11 ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin UUID 1ce4ff55 leaked through Cloudflare on 200-empty.
+- 2026-09-11 ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus) — data model disclosure. Backend = Spring Boot confirmed.
+- 2026-09-11 ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config. Passive, stable.
+- 2026-09-11 ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types.
+- 2026-09-11 ACCEPTED OTHER @ roobet.com/_api socket.io: Engine.IO handshake succeeds from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain.
+- 2026-09-11 ACCEPTED OTHER @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true.
+- 2026-09-11 ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations via socket.io (hit/stand/double/wager) with JWT; REST surface = currentRoundHash + endRound only.
+- 2026-09-11 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only.
+- 2026-09-11 REJECTED MISCONFIG @ betpandacasino.io /rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak.
+- 2026-09-11 REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique.
+- 2026-09-11 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password enumeration is REJECTED class — must not be reranked.

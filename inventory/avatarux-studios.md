@@ -548,3 +548,17 @@ www.avatarux.com
 - NEW Roobet stand-alone game-tier (tiki-21/yeti-towers etc + /_api + socket.io) NOT mirrored on Stake/Gamdom/RainBet (no *.games/crash-*/dice labels) — Roobet stack stays unique.
 - CHANGED all four brand clusters now confirmed in-scope resident; RainBet adds the only genuinely new anonymous hard-surface (broker cluster) since 2026-09-10 /rest/user/details.
 - CHANGED Final cluster sweep: rbtmq-dev/rbtmq-preprod/rbtmq-preprod-us/rbtmq-stg-us all NXDOMAIN (no A) — the exposed broker cluster is exactly TWO live hosts (rainbet-com-rabbitmq A=159.203.34.207, rainbet-us
+
+## 2026-09-11 11:51:07 UTC
+- CHANGED cpanel.avatarux.com: takeover mechanism now definitively unproven — NS/SOA confirms apex Bluehost zone delegation, no claimable subdomain delegation exists. Downgraded from CRITICAL actionable to moni
+- CHANGED help.desk.avatarux.com portals 4–100: prior "all 303" was brace-literal artifact; portals 4–100 all HTTP 200 (~209KB) leaking tenant-id/atlassianOrgId/Statsig. Surface is ~96 accessible portals, uncha
+- CHANGED RainBet RabbitMQ cluster: exactly 2 live hosts confirmed (rbtmq-dev/preprod/preprod-us/stg-us NXDOMAIN); enumeration closed.
+- NEW rainbet-com-rabbitmq.rainbet.com (159.203.34.207) + rainbet-us-staging-rabbitmq.rainbet.com (165.227.255.111): RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) exposed on raw DigitalOcean origi
+- NEW staging-api.rainbet.com: leaks x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) through Cloudflare on 200-empty
+- NEW Roobet CORS: production /_api reflects ACAO for https://777.dev + https://api.777.dev with ACAC=true on game data endpoints; topkek.com (prod) NOT whitelisted
+- CHANGED help.desk.avatarux.com: portals 4–100+ all HTTP 200 (~209KB), leaking identical tenant-id (df607198-...), atlassianOrgId, Statsig config (prod-euwest, shard jira-prod-eu-3); surface expanded from 7 to
+- CHANGED betpandacasino.io/rest/user/details: NEW endpoint HTTP 200 returns full user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerifie
+- CHANGED roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain
+- CHANGED roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: all 401 (12B) — uniform auth boundary across 4 game types
+- CHANGED affiliates.betpanda.io/rest/public/config: stable 200 byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms)
+- CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; takeover unproven, monitoring only
