@@ -14175,3 +14175,320 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 80 — anonymous ceiling holds across all clusters. Only movement this cycle is documentation-level (777.dev staging namespace mapped + CORS trust re-verified cross-env); it is chain-only and does not bypass any auth boundary. High-value leads (Affiliate IDOR 78-adjacent, Casino details 62) remain AUTH_HELPED for 8+ cycles; no anonymous escalation possible without program-supplied credentialed sessions or a non-gated surface inside *.777.dev.
+===== ANALYST bigpickle 2026-09-11 01:46:58 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m• [0mExplore repo structure[90m Explore Agent[0m
+[0m✓ [0mExplore repo structure[90m Explore Agent[0m
+[0m→ [0mRead .
+[0m✱ [0mGlob "art/*lead*"[90m in . · 0 matches[0m
+[0m✱ [0mGlob "art/*hypotheses*"[90m in . · 0 matches[0m
+[0m→ [0mRead leads
+[0m→ [0mRead knowledge
+[0m→ [0mRead triage
+[0m→ [0mRead state_bigpickle.json
+[0m→ [0mRead triage/run-2026-09-10-23-54.md
+[0m→ [0mRead analyst-prompt.txt
+[0m→ [0mRead scope.yml
+[0m→ [0mRead analyst-out.txt
+[0m→ [0mRead leads/lead-bigpickle.md
+[0m→ [0mRead leads/lead-nemotron3.md
+[0m→ [0mRead knowledge/index.md
+[0m→ [0mRead probe-results.md[90m [offset=1, limit=120][0m
+[0m→ [0mRead probe-results.md[90m [offset=180][0m
+[0m→ [0mRead reports
+[0m
+[0m$ [0mtail -40 /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/reports/hypotheses-bigpickle.txt; echo "=====NEMOTRON====="; tail -40 /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/reports/hypotheses-nemotron3.txt; echo "=====VALID-BUGS====="; cat /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/reports/valid-bugs.md
+## 2026-09-10 23:25:02 UTC [target] (model bigpickle)
+[HYP] Roobet Prod API Trusts Entire *.777.dev Staging Namespace in CORS (incl. game-SPA staging origins)
+class: MISCONFIG
+asset: roobet.com/_api
+confidence: 68
+reasoning: OPTIONS+GET on /_api reflect ACAO (cred=true) for any syntactic `*.777.dev` origin incl. `tiki-21.games.777.dev` (204 verified this cycle). Certspotter enumerates 10+ staging labels all live on the same CF zone (NS norm/rita = Roobet-adjacent infra); `tiki-21.games.777.dev` cert mirrors the in-scope game SPA subdomain. DNS record letter-labels also honored (foo.777.dev reflected, non-resolving → rule is hostname-suffix match, not resolution check). CORS rule documented, staging namespace ownership linkage now triply corroborated.
+evidence_needed: any attacker-influenceable content inside *.777.dev (none found — all labels 403 CF-gated, no dangling CNAMEs), OR a non-gated staging label leaking weaker auth.
+verify_steps: DONE passively. Optional remaining: complete certspotter pagination to exhaust the 777.dev label stream; re-GET HTTP status of any new label surfaced.
+impact: confirmed credentialed cross-origin read (currentRoundHash) + socket.io transport for any victim with an active session browsing attacker-controlled content in a trusted staging namespace. Bounded by needing staged content/JWT. LOW-MED, chain-only.
+testability: PASSIVE (mapping verified) / HUMAN_ONLY (exploit)
+[HYP] BetPanda Casino /rest/user/details Authenticated PII/State Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 62
+reasoning: unchanged — 200 (301B) anonymous baseline returns full user-state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin); /rest/user/settings 401 "No http-session" is the auth contrast; Spring Boot signature.
+evidence_needed: authenticated session producing non-default body with real PII/balances.
+verify_steps: GET /rest/user/details once with authenticated browser session, diff vs anonymous baseline.
+impact: authenticated user PII/state disclosure + session-boundary progression. MEDIUM.
+testability: AUTH_HELPED
+[HYP] Atlassian Edge JSM Portal Tenant-ID Enumeration (96+ Portals)
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 85
+reasoning: portals 4–100 all 200 (~209KB), identical tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId ead67a75-…, workspace-ari, Statsig prod-euwest/jira-prod-eu-3; stable 10+ cycles.
+evidence_needed: none.
+verify_steps: none required — complete.
+impact: tenant/org metadata disclosure aiding Atlassian-targeted attacks; LOW-MED.
+testability: PASSIVE
+[NEXT] PROBE: paginate certspotter issuances for 777.dev past last ID 15472055464 to exhaust the label stream (read-only), then GET HTTP status of any newly surfaced label to check for a non-gated staging surface.
+[RISK] avatarux-studios: 80 — anonymous ceiling holds across all clusters. Only movement this cycle is documentation-level (777.dev staging namespace mapped + CORS trust re-verified cross-env); it is chain-only and does not bypass any auth boundary. High-value leads (Affiliate IDOR 78-adjacent, Casino details 62) remain AUTH_HELPED for 8+ cycles; no anonymous escalation possible without program-supplied credentialed sessions or a non-gated surface inside *.777.dev.
+=====NEMOTRON=====
+asset: affiliates.betpanda.io/rest/player/uid/{id}  
+confidence: 78  
+reasoning: API backend confirmed same-origin at /rest with 20+ endpoints mapped; /rest/public/config leaks operatorId=1, Strapi config, support email; /rest/player/uid/{id} returns 401 unauthenticated; Vite SPA bundle shows apiBaseUrl=/rest; IDOR pattern confirmed on path parameter but requires second credentialed affiliate session (different operatorId/tenant) to prove cross-tenant access  
+evidence_needed: Two valid affiliate sessions with different operatorId/tenant to test cross-access on /rest/player/uid/{victim_id}  
+verify_steps: GET https://affiliates.betpanda.io/rest/player/uid/1 (401 confirmed); OPTIONS https://affiliates.betpanda.io/rest/player/uid/1 — capture allow-methods; with session A (operatorId=1) GET /rest/player/uid/{victim_id_from_operator_2} → observe 200/403/404  
+impact: Cross-tenant player PII access, affiliate commission data leak, financial records exposure — HIGH  
+testability: AUTH_HELPED  
+[HYP] AvatarUX Help Desk Tenant Enumeration via Accessible JSM Customer Portals  
+class: MISCONFIG  
+asset: help.desk.avatarux.com/servicedesk/customer/portal/{4..100}  
+confidence: 75  
+reasoning: Portals 4-100 return HTTP 200 (not 303) exposing full JSM customer portal UI; page source leaks tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId (ead67a75-73c2-4b0f-9870-0b87a41ca34b), feature flags, experiment configs, Statsig environment (prod-euwest, shard jira-prod-eu-3); body sizes normalized ~209007B across all portals; Atlassian Edge fronting but internal config exposed in HTML; REST endpoints return 401/404/303 but portal UI accessible  
+evidence_needed: Enumerate all portals 1-100+ to map tenant surface; extract tenant-id/orgId from each; test /rest/servicedeskapi/servicedesk with tenant-id header  
+verify_steps: GET https://help.desk.avatarux.com/servicedesk/customer/portal/{1..100} — capture status and tenant-id meta tags; GET https://help.desk.avatarux.com/wiki/ — check Confluence exposure; GET https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk with Header X-Tenant-Id: df607198-7bdc-43c6-8353-9b8a822febc5  
+impact: Internal infrastructure mapping, tenant enumeration for targeted phishing/social engineering, Atlassian config disclosure, Statsig feature flag exposure — MEDIUM  
+testability: PASSIVE  
+[PARKED] BetPanda Casino Multi-Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints: confidence 55 but testability AUTH_HELPED — requires valid casino session with x-site-name-id header manipulation; no passive verification path; blocked on program test credentials.
+[PARKED] Roobet Socket.IO Realtime Channel Subscription for Game State Observation: confidence 55 but testability HUMAN_ONLY — requires WebSocket client not available in this environment; no progress possible via HTTP-only probes.
+[PARKED] Roobet Game Mutation Endpoint Auth Boundary Consistency via OPTIONS Preflight: confidence 55, verify_steps are passive OPTIONS preflight; survives critique.
+[PARKED] cpanel.avatarux.com Subdomain Takeover: confidence downgraded to 25 (was 75) — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists but standard zone claim impossible without program cooperation. REJECTED per knowledge base.
+[PARKED] BetPanda Casino SSRF via Game Provider Callback/Webhook Endpoints: all 5 endpoints 404 — no surface to exploit, hypothesis falsified.
+[PARKED] AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com: confidence 65 but impact LOW-MEDIUM — stale config pointing to web host (mail.avatarux.com 301→WordPress), actual MX records show Google Workspace/Zoho/Mandrill/ProtonMail; no active mail server on exposed ports.
+[FINAL] 1. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (85) — MEDIUM impact, PASSIVE, NEW endpoint confirmed  
+[FINAL] 2. BetPanda Affiliate Cross-Tenant Player Data Access via IDOR on /rest/player/uid/{id} (78) — HIGH impact, AUTH_HELPED, concrete endpoint map  
+[FINAL] 3. AvatarUX Help Desk Tenant Enumeration via Accessible JSM Customer Portals (75) — MEDIUM impact, PASSIVE confirmed, 96+ portals exposed  
+[NEXT] PROBE: GET https://betpandacasino.io/rest/user/details — capture full response body and headers; GET https://betpandacasino.io/rest/user/details with Accept: application/json and Accept: text/html; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus) — data model disclosure, not PII leak without auth. Backend = Spring Boot confirmed by JSON error format.
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config. Passive, stable, unchanged.
+[LEARN] ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types (tiki21 was previously known). Uniform response size (12B) suggests same auth middleware.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io /rest/user/{me,profile,info}: all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is the only unauthenticated user endpoint.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain; prior 403 was UA/Origin-gated for bare curl.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — known accepted leak, unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OPTIONS+GET); topkek.com not whitelisted.
+[LEARN] ACCEPTED AUTH @ roobet.com/_api/game/tiki21/endRound: POST 401 (12B) identical to currentRoundHash — mutation auth boundary consistent, no bypass.
+[LEARN] ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface per game = currentRoundHash + endRound only.
+[RISK] avatarux-studios: 82 — Top 3 exploitable paths: Casino unauthenticated user state disclosure (85, PASSIVE), Affiliate IDOR (78, AUTH_HELPED), Help Desk tenant enumeration (75, PASSIVE). Fresh credentialed targets identified for BetPanda affiliate/casino APIs; Roobet Socket.IO accessible from game Origin. Passive surface: help.desk 96+ portals exposed, casino SSRF falsified, mail config stale, cPanel takeover unclaimable. Risk = HIGH — multiple AUTH_HELPED paths blocked only on test credentials; one new PASSIVE misconfig confirmed on casino user state endpoint.
+=====VALID-BUGS=====
+# Validated findings (running count 0)
+
+- 20 lead(s) marked VALID at 2026-09-05 23:43:00 UTC
+  - | Q1 Scope | **VALID** | `betpandacasino.io` = BetPanda brand, explicitly in scope |
+  - | Q2 Reachable | **VALID** | Public JS bundle, no auth needed |
+  - | Q4 Provable | **VALID** | `curl -s https://betpandacasino.io/ | grep -o 'GLOBAL_CLOUDWATCH_IDENTITY_POOL_ID[^"]*"[^"]*"'` — read-only GET |
+  - | Q1 Scope | **VALID** | BetPanda asset, in scope |
+  - | Q2 Reachable | **VALID** | Public JS bundle |
+  - | Q4 Provable | **VALID** | `curl -s https://betpandacasino.io/ | grep -oP 'nano-public[^"]*\|d3ec3n7kizfkuy[^"]*'` |
+  - | Q1 Scope | **VALID** | `avatarux.com` infrastructure, explicitly in scope |
+  - | Q2 Reachable | **VALID** | Public DNS, Cloudflare error 1001 returned to unauthenticated requests |
+  - | Q3 Impact | **VALID** | Dangling DNS to prohibited Cloudflare IP could enable subdomain takeover → phishing, cookie theft, service impersonation under avatarux.com |
+  - | Q4 Provable | **VALID** | `dig cpanel.avatarux.com` + `curl -sI https://cpanel.avatarux.com/` — read-only, non-invasive. Cloudflare 1001 persists 48h+ across 20+ probe cycles |
+  - | Q5 Novel | **VALID** | Persistent dangling DNS with Cloudflare 1001 is a specific, unreported misconfiguration |
+  - | Q6 Not rejected | **VALID** | Not on always-rejected list (not DoS, not banner grabbing, not error messages) |
+  - | Q7 Reasonable triager | **VALID** | Subdomain takeover via dangling DNS is a well-understood, accepted vulnerability class |
+  - **Verdict: VALID**
+  - | Q1 Scope | **VALID** | AvatarUX infrastructure |
+  - | Q2 Reachable | **VALID** | Publicly accessible, returns HTTP 200/303 |
+  - | Q4 Provable | **VALID** | `curl -sI https://help.desk.avatarux.com/servicedesk/customer/portal/2` |
+  - | Q1 Scope | **VALID** | BetPanda asset, in scope |
+  - | Q2 Reachable | **VALID** | Public REST API endpoints respond to unauthenticated requests |
+  - | cpanel.avatarux.com Dangling DNS | **VALID** | 6.1 (Medium) |
+
+- 4 lead(s) marked VALID at 2026-09-07 12:09:22 UTC
+  - | Q7 Reasonable triager | YES | Stable dangling DNS with clear escalation path is a valid finding |
+  - | Q4 Provable | PARTIAL | Endpoint map confirmed from JS bundle (`/rest/player/uid/{id}?currency={curr}`); but IDOR requires authenticated session to prove — cannot demonstrate without valid affiliate
+  - **Verdict: HOLD** — Blocked on auth. Need a valid affiliate session to test `GET /rest/player/uid/1?currency=EUR` vs `uid/2` for response differentiation. Without credentials, this remains a hypothesi
+  - | Q4 Provable | NO | All endpoints return 405 on GET; OPTIONS leaks header schema but no data; POST requires valid auth |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:46:20 UTC
+  - | Q3 Impact | **YES** | Timing differential could enumerate valid accounts |
+[0m
+[0m→ [0mRead README.md
+[0m
+[0m$ [0mls /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/scripts/ /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/.github/ 2>/dev/null; tail -20 /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/reports/hypotheses.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/.github/:
+workflows
+
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/scripts/:
+sync-issues.py
+- NEXT(hypotheses-bigpickle.txt): PROBE: `curl -s -m 15 "https://crt.sh/?q=%25.777.dev&output=json"` → extract unique names; then passive `dig`/`dns -t CNAME` on each label of the *trusted CORS 
+
+## RANKED HYPOTHESES 2026-09-10 23:25:55 UTC
+- [85] betpandacasino.io/rest/user/details: BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (from art/lead_nemotron3.txt)
+- [68] roobet.com/_api: Roobet Prod API Trusts Entire *.777.dev Staging Namespace in CORS (incl. game-SPA staging origins) (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: paginate certspotter issuances for 777.dev past last ID 15472055464 to exhaust the label stream (read-only), then GET HTTP status of any newly surfaced l
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://betpandacasino.io/rest/user/details — capture full response body and headers; GET https://betpandacasino.io/rest/user/details with Accept: ap
+- LEARN: ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config
+- LEARN: ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types (tiki21 was previously kno
+- LEARN: ACCEPTED OTHER @ betpandacasino.io /rest/user/{me,profile,info}: all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is the only unau
+- LEARN: ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapi
+- LEARN: ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+- LEARN: ACCEPTED OTHER @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OP
+- LEARN: ACCEPTED AUTH @ roobet.com/_api/game/tiki21/endRound: POST 401 (12B) identical to currentRoundHash — mutation auth boundary consistent, no bypass.
+- LEARN: ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface per game = currentRound
+[0m
+I have full context now. Let me execute the queued [NEXT] probe (read-only certspotter pagination for the trusted CORS namespace `*.777.dev`) to generate fresh data for this cycle.
+[0m$ [0mcurl -s -m 20 "https://api.certspotter.com/v1/issuances?domain=777.dev&include_subdomains=true&expand=dns_names&after=15472055464&limit=100" -o /tmp/opencode/cs-777-after.json; wc -c /tmp/opencode/cs-777-after.json; echo "---"; curl -s -m 20 "https://api.certspotter.com/v1/issuances?domain=777.dev&include_subdomains=true&expand=dns_names&limit=100" -o /tmp/opencode/cs-777-full.json; wc -c /tmp/opencode/cs-777-full.json
+33029 /tmp/opencode/cs-777-after.json
+---
+41291 /tmp/opencode/cs-777-full.json
+[0m
+[0m$ [0mcd /tmp/opencode && python3 -c "
+import json
+for f,label in [('cs-777-after.json','AFTER-15472055464'),('cs-777-full.json','FULL')]:
+    try:
+        data=json.load(open(f))
+    except Exception as e:
+        print(label,'PARSE_ERR',e); continue
+    names=set()
+    for e in data:
+        for n in e.get('dns_names',[]):
+            names.add(n.lower())
+    print('== %s == count=%d' % (label,len(names)))
+    for n in sorted(names): print(' ',n)
+"
+== AFTER-15472055464 == count=13
+  *.777.dev
+  777.dev
+  api-lbc.777.dev
+  api-test.777.dev
+  api.777.dev
+  gamebook.777.dev
+  promotions.777.dev
+  storybook.777.dev
+  testsite.777.dev
+  tiki-21.games.777.dev
+  x.777.dev
+  xtest.777.dev
+  yeti-towers.games.777.dev
+== FULL == count=13
+  *.777.dev
+  777.dev
+  api-lbc.777.dev
+  api-test.777.dev
+  api.777.dev
+  gamebook.777.dev
+  promotions.777.dev
+  storybook.777.dev
+  testsite.777.dev
+  tiki-21.games.777.dev
+  x.777.dev
+  xtest.777.dev
+  yeti-towers.games.777.dev
+[0m
+[0m$ [0mfor h in api api-lbc api-test gamebook promotions storybook testsite xtest x tiki-21.games yeti-towers.games; do
+  printf '%-18s ' "$h.777.dev";
+  ip=$(dig +short "$h.777.dev" A 2>/dev/null | tr '\n' ' ');
+  cname=$(dig +short "$h.777.dev" CNAME 2>/dev/null | tr '\n' ' ');
+  if [ -z "$ip" ] && [ -z "$cname" ]; then echo "NXDOMAIN/NODATA"; else echo "A=[$ip] CNAME=[$cname]"; fi
+  sleep 1;
+done
+api.777.dev        A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+api-lbc.777.dev    A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+api-test.777.dev   A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+gamebook.777.dev   A=[172.64.144.231 104.18.43.25 ] CNAME=[]
+promotions.777.dev A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+storybook.777.dev  A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+testsite.777.dev   A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+xtest.777.dev      A=[172.64.144.231 104.18.43.25 ] CNAME=[]
+x.777.dev          A=[104.18.43.25 172.64.144.231 ] CNAME=[]
+tiki-21.games.777.dev A=[172.64.144.231 104.18.43.25 ] CNAME=[]
+yeti-towers.games.777.dev A=[172.64.144.231 104.18.43.25 ] CNAME=[]
+[0m
+All 11 labels resolve on the same CF edge (104.18.43.25/172.64.144.231) — no CNAME diversions, no dangling records. Now HTTP-statusing the most promising non-gated staging candidates.
+[0m$ [0mfor h in api-test api-lbc testsite xtest gamebook promotions storybook; do
+  code=$(curl -sk -m 12 -o /dev/null -w "%{http_code}" "https://$h.777.dev/" 2>/dev/null);
+  echo "$h.777.dev -> $code";
+  sleep 1;
+done
+api-test.777.dev -> 403
+api-lbc.777.dev -> 403
+testsite.777.dev -> 403
+xtest.777.dev -> 403
+gamebook.777.dev -> 403
+promotions.777.dev -> 403
+storybook.777.dev -> 403
+[0m
+All staging labels 403-gated — CORS chain-elevation paths closed. Re-verifying the two live AUTH_HELPED baselines (read-only).
+[0m$ [0mcurl -s -m 15 -o /tmp/opencode/details.txt -w "betpandacasino.io/rest/user/details -> %{http_code} (%{size_download}B)\n" "https://betpandacasino.io/rest/user/details"; sleep 1
+curl -s -m 15 -o /tmp/opencode/cfg.txt -w "affiliates.betpanda.io/rest/public/config -> %{http_code} (%{size_download}B)\n" "https://affiliates.betpanda.io/rest/public/config"; sleep 1
+curl -s -m 15 -o /tmp/opencode/portal4.txt -w "help.desk.avatarux.com portal/4 -> %{http_code} (%{size_download}B)\n" "https://help.desk.avatarux.com/servicedesk/customer/portal/4"
+betpandacasino.io/rest/user/details -> 200 (301B)
+affiliates.betpanda.io/rest/public/config -> 200 (398B)
+help.desk.avatarux.com portal/4 -> 200 (207882B)
+[0m
+[0m$ [0mecho "=== /rest/user/details (301B) ==="; cat /tmp/opencode/details.txt; echo; echo "=== /rest/public/config (398B) → PII string check ==="; grep -o '"operatorId":[^,]*\|"supportEmail":"[^"]*"\|"strapiApiUrl":"[^"]*"' /tmp/opencode/cfg.txt
+=== /rest/user/details (301B) ===
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVerified":false,"country":"US","currencies":[],"phoneNumberVerified":false,"principalVerified":false,"oneTimeTokenLogin":false,"currentLevel":0}
+=== /rest/public/config (398B) → PII string check ===
+"operatorId":1
+"supportEmail":"deals@bamboopartners.io"
+"strapiApiUrl":"/cms"
+[0m
+All baselines byte-identical/stable. Cycle analysis complete.
+
+STEP 1 — DELTA
+- [CHANGED] `*.777.dev` certificate stream **formally exhausted** — certspotter `after=15472055464` returns the same 13 unique names as the full stream (incl. `*.777.dev` wildcards); the trusted-CORS namespace is finite, 11 concrete labels
+- [CHANGED] All 7 uncategorized `*.777.dev` labels (`api-test`, `api-lbc`, `testsite`, `xtest`, `gamebook`, `promotions`, `storybook`) reconfirmed HTTP 403 CF-gated, all resolve on CF edge 104.18.43.25/172.64.144.231 with **zero CNAME diversions** — no dangling-label takeover vector, no non-gated staging surface
+- [NO_CHANGE] `betpandacasino.io/rest/user/details` 200 (301B) byte-identical default-state baseline; `affiliates.betpanda.io/rest/public/config` 200 (398B, operatorId=1, deals@bamboopartners.io, /cms); `help.desk.avatarux.com` portal/4 200 (207882B template)
+- [NO_CHANGE] cpanel (1001/SSL), autoconfig, cable, Roobet `/_api` method/auth boundary — all passive-stable
+
+STEP 2 — PRIORITIZE
+- [PRIO] roobet.com/_api,7.05,attack_surface=8|business_value=9|tech_exposure=8(CORS/socket.io/JWT)|gate_ease=2|cloud_surface=7|freshness=6
+- [PRIO] help.desk.avatarux.com,6.70,attack_surface=7|business_value=6|tech_exposure=7(Atlassian)|gate_ease=10|cloud_surface=5|freshness=4
+- [PRIO] affiliates.betpanda.io,6.50,attack_surface=7|business_value=9|tech_exposure=6|gate_ease=4(401)|cloud_surface=6|freshness=4
+- [PRIO] betpandacasino.io/rest/user/details,6.45,attack_surface=5|business_value=8|tech_exposure=6(SpringBoot)|gate_ease=10|cloud_surface=6|freshness=2
+
+STEP 3 — HYPOTHESES
+[HYP] Roobet Prod API Trusts *.777.dev Staging Namespace in CORS — namespace fully enumerated, chain-lift vectors closed
+class: MISCONFIG
+asset: roobet.com/_api (CORS origin policy)
+confidence: 62
+reasoning: OPTIONS+GET reflect ACAO (cred=true) for any syntactic `^.(\w+\.)*777\.dev$` origin incl. game-SPA staging (tiki-21.games.777.dev). This cycle: certspotter stream exhausted (13/13 names == full stream), all 11 labels resolve solely on CF edge 104.18.43.25/172.64.144.231, api-test/api-lbc/testsite/xtest/gamebook/promotions/storybook all HTTP 403 — no dangling CNAME target, no attacker-influenceable content reachable inside the namespace.
+evidence_needed: only remaining lift = attacker-influenceable content already resident inside *.777.dev (none fetchable — all 403-gated) or program-authorized staging session.
+verify_steps: DONE passively — enumeration complete, no new labels to status.
+impact: credentialed cross-origin read of game round hashes + socket.io transport for victims browsing trusted staging content; LOW-MED, strictly chain-only.
+testability: PASSIVE (mapping verified, complete) / HUMAN_ONLY (exploit)
+[HYP] BetPanda Casino /rest/user/details Authenticated PII/State Disclosure
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 60
+reasoning: 200 (301B) anonymous baseline is default-state only (loggedIn:false, empty arrays/attributes, country:"US", currentLevel:0) — no user or tenant data leaked anonymously; /rest/user/settings 401 "No http-session" is the auth contrast; Spring Boot signature. Anonymous component alone is informational, NOT reportable.
+evidence_needed: authenticated session producing non-default body with real state/PII/balances.
+verify_steps: GET /rest/user/details once with authenticated browser session, diff vs baseline.
+impact: authenticated user-state/PII disclosure + session-boundary progression; MEDIUM.
+testability: AUTH_HELPED
+[HYP] Atlassian Edge JSM Portal Tenant-ID Enumeration (96+ Portals)
+class: MISCONFIG
+asset: help.desk.avatarux.com
+confidence: 85
+reasoning: portals 4–100 all 200, same ~209KB template leaking tenant-id df607198-7bdc-43c6-8353-9b8a822febc5, atlassianOrgId ead67a75-…, workspace-ari, Statsig prod-euwest/jira-prod-eu-3; portal/4 re-verified 200 (207882B) this cycle.
+evidence_needed: none.
+verify_steps: none required — complete.
+impact: tenant/org metadata disclosure aiding Atlassian-targeted attacks; LOW-MED.
+testability: PASSIVE
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] BetPanda Casino Unauthenticated User State Disclosure @ /rest/user/details: anonymous baseline is default-state JSON, no data exposed — ranked [85] by co-model overstates a LOW/informational; downgraded to 60 AUTH_HELPED (authenticated diff only).
+- [PARKED] Roobet CORS chain-lift via label takeover / non-gated staging: certificate stream + DNS + HTTP status all exhausted this cycle (13/13, all 403, no dangling CNAME) — every anonymous lift vector closed; human-scored residual path only.
+- [FINAL] 1. help.desk tenant-ID enumeration (85, PASSIVE-complete) 2. BetPanda affiliate IDOR /rest/player/uid/{id} (78, AUTH_HELPED) 3. Roobet *.777.dev CORS trust (62, chain-only/HUMAN_ONLY) 4. casino /rest/user/details (60, AUTH_HELPED)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: passive CT breadth sweep for brand-tier parity — `curl -s -m 20 "https://api.certspotter.com/v1/issuances?domain=<brand>&include_subdomains=true&expand=dns_names&limit=100"` for `stake.com`, `gamdom.com`, `rainbet.com`, `betpanda.io`, `betpandacasino.io`; extract unique `*.games.*`/`crash-*`/`dice`/`api*` labels and `dig` CNAME/A on each (1 rps, read-only) to fingerprint whether the Roobet game-tier stack (standalone SPAs + `/_api` + socket.io) is mirrored on the other in-scope brands — a parallel surface would re-open anonymous breadth denied by the now-exhausted 777.dev namespace.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED OTHER @ *.777.dev CT stream: certspotter exhausted (after=15472055464 == full, 13 unique names incl. wildcards); all 11 concrete labels on CF 104.18.43.25/172.64.144.231, no dangling CNAME — namespace mapping complete, label-takeover vector closed.
+- [LEARN] REJECTED MISCONFIG @ *.777.dev non-gated staging surface: api-test/api-lbc/testsite/xtest/gamebook/promotions/storybook all 403 CF-gated — no anonymous surface inside the trusted CORS namespace; CORS trust stays strictly chain-only.
+- [LEARN] ACCEPTED OTHER @ betpandacasino.io/rest/user/details: 200 301B byte-identical default-state baseline (loggedIn:false, no PII) — anonymous component informational; only authenticated diff is reportable.
+- [LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: 200 398B byte-identical — operatorId=1, deals@bamboopartners.io, strapiApiUrl=/cms stable, unchanged.
+- [LEARN] ACCEPTED OTHER @ help.desk.avatarux.com portal/4: 200 207882B template stable — 96+ portal tenant-ID surface unchanged.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 82 — anonymous ceiling holds across all four clusters. This cycle was negative documentation: the last anonymous chain-lift vector (a claimable/open label inside *.777.dev) is now formally closed (exhausted CT stream, 0 dangling CNAMEs, 7/7 403-gated). High-value leads (Affiliate IDOR 78, casino details 60) remain AUTH_HELPED for 9+ cycles, blocked solely on program-supplied credentialed sessions. No anonymous escalation possible without credentials or a parallel brand-tier surface (next probe targets Stake/Gamdom/RainBet/BetPanda CT parity).
