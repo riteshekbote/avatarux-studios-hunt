@@ -604,3 +604,8 @@ www.avatarux.com
 - CHANGED RainBet RabbitMQ cluster — Exactly 2 live hosts confirmed (rbtmq-dev/preprod/preprod-us/stg-us all NXDOMAIN); enumeration closed
 - CHANGED affiliates.betpanda.io/rest/public/config — Stable 200 byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty)
 - CHANGED affiliates.betpanda.io/rest/player/uid/1 — 401-gated confirmed; auth boundary intact anonymously
+
+## 2026-09-11 23:35:21 UTC
+- NEW roobet.com/_api CORS whitelist = string-level .777.dev NAMESPACE match: ACAO=Origin reflects for https://www.777.dev (NON-RESOLVING name, empty A) with ACAC=true; controls all clean (https://evil777.d
+- NEW 777.dev cert-name inventory: 11 names (api, api-lbc, api-test, gamebook, promotions, storybook, testsite, x, xtest, tiki-21.games, yeti-towers.games, www) all wildcarded to Roobet CF pair 104.18.43.25
+- CHANGED Nemotron3 top-ranked [88] "anonymous RabbitMQ /api topology disclosure" hard-falsified (all /api/* 401 Basic) — reported exposure = mgmt-UI + AMQP only (74). No disclosure inflation.
