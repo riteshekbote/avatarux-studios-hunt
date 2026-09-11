@@ -326,3 +326,5 @@
 - 2026-09-11 ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no CF/ACL; /api/overview 401 Basic gated. In-scope RainBet messaging infrastructure.
 - 2026-09-11 ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DigitalOcean App Platform origin UUID) leaks through Cloudflare on 200-empty.
 - 2026-09-11 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
+- 2026-09-11 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only
+- 2026-09-11 ACCEPTED MISCONFIG @ RainBet RabbitMQ cluster (complete): 2/6 CT broker labels live; both on raw DigitalOcean origins with mgmt UI + AMQP exposed (see prior cycle). rbtmq-dev/preprod/preprod-us/stg-us are dead DNS. Enumeration closed.
