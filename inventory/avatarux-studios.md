@@ -539,3 +539,12 @@ www.avatarux.com
 ## 2026-09-10 23:25:55 UTC
 
 ## 2026-09-11 01:46:58 UTC
+
+## 2026-09-11 06:45:21 UTC
+- NEW Rainbow CT parity sweep executed — RainBet exposes the full backend-dev tier in-scope: 45 cert names incl 6x Live RabbitMQ brokers, staging-api/services/socket/slot-integrations/aiostaging/monorepo, *
+- NEW rainbet-com-rabbitmq.rainbet.com A=159.203.34.207 (DigitalOcean raw origin, no CF): :15671 RabbitMQ Management UI HTTP 200 (Cowboy), :5671 AMQP-TLS OPEN, /api/overview 401 Basic gated.
+- NEW rainbet-us-staging-rabbitmq.rainbet.com A=165.227.255.111 (DigitalOcean raw origin): :15671 + :15672 management UI 200 (plaintext mgmt), :5671 + :5672 AMQP (TLS+PLAINTEXT) OPEN publicly; AMQP protocol
+- NEW staging-api.rainbet.com leaks DigitalOcean App Platform origin UUID via x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 through CF; __cf_bm cookie scoped Domain=rainbet.com.
+- NEW Roobet stand-alone game-tier (tiki-21/yeti-towers etc + /_api + socket.io) NOT mirrored on Stake/Gamdom/RainBet (no *.games/crash-*/dice labels) — Roobet stack stays unique.
+- CHANGED all four brand clusters now confirmed in-scope resident; RainBet adds the only genuinely new anonymous hard-surface (broker cluster) since 2026-09-10 /rest/user/details.
+- CHANGED Final cluster sweep: rbtmq-dev/rbtmq-preprod/rbtmq-preprod-us/rbtmq-stg-us all NXDOMAIN (no A) — the exposed broker cluster is exactly TWO live hosts (rainbet-com-rabbitmq A=159.203.34.207, rainbet-us

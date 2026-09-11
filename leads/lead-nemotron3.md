@@ -3425,3 +3425,55 @@ testability: PASSIVE
 [LEARN] ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface per game = currentRoundHash + endRound only.
 [RISK] avatarux-studios: 82 — Top 3 exploitable paths: Casino unauthenticated user state disclosure (85, PASSIVE), Affiliate IDOR (78, AUTH_HELPED), Help Desk tenant enumeration (75, PASSIVE). Fresh credentialed targets identified for BetPanda affiliate/casino APIs; Roobet Socket.IO accessible from game Origin. Passive surface: help.desk 96+ portals exposed, casino SSRF falsified, mail config stale, cPanel takeover unclaimable. Risk = HIGH — multiple AUTH_HELPED paths blocked only on test credentials; one new PASSIVE misconfig confirmed on casino user state endpoint.
 ## 2026-09-11 01:46:47 UTC [target] (model nemotron3)
+## 2026-09-11 06:41:00 UTC [target] (model nemotron3)
+[HYP] BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 88
+reasoning: NEW endpoint returns HTTP 200 with full user state object (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, currencies, blockedStatus, phoneNumberVerified, principalVerified, oneTimeTokenLogin) without authentication. Other user endpoints (/me, /profile, /info) return 404, /settings returns 401. Spring Boot backend confirmed by JSON error format. Data model disclosure reveals auth/authorization structure, KYC fields, level progression, currency handling.
+evidence_needed: Confirm if endpoint returns different data with valid session vs anonymous; test if it leaks PII when authenticated
+verify_steps: GET https://betpandacasino.io/rest/user/details — capture full response body/headers; GET https://betpandacasino.io/rest/user/details with Accept: application/json vs text/html; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers; with valid casino session GET /rest/user/details — compare response
+impact: User state model disclosure enables reconnaissance for targeted attacks, potential logic flaws in state transitions, KYC bypass enumeration — MEDIUM
+testability: PASSIVE
+[HYP] Roobet Production API Trusts Entire *.777.dev Staging Namespace in CORS
+class: MISCONFIG
+asset: roobet.com/_api
+confidence: 75
+reasoning: CORS preflight (OPTIONS) and GET on /_api/game/tiki21/currentRoundHash reflect ACAO: https://777.dev and https://api.777.dev with ACAC: true on production game data endpoints. 777.dev is a Roobet/Cozy staging environment (live behind Cloudflare, 403 root, HSTS-preload). Topkek.com (Cozy prod) is NOT whitelisted. Staging origin trusted on production API with credentials enables potential credentialed cross-origin requests from compromised staging.
+evidence_needed: Verify ACAO reflection on additional production endpoints (/currency/balances, /game/*/currentRoundHash, /socket.io); confirm 777.dev subdomain takeover risk or XSS on staging
+verify_steps: OPTIONS https://roobet.com/_api/game/tiki21/currentRoundHash -H "Origin: https://777.dev" -H "Access-Control-Request-Method: GET" — capture ACAO/ACAC; GET https://roobet.com/_api/currency/balances -H "Origin: https://777.dev" — capture ACAO; OPTIONS https://roobet.com/_api/socket.io -H "Origin: https://777.dev" — capture ACAO/ACAC; enumerate 777.dev subdomains via crt.sh/certspotter for takeover surface
+impact: Staging-to-production trust chain bypass; if 777.dev compromised (XSS/takeover), attacker can make credentialed requests to production game APIs — HIGH
+testability: PASSIVE
+[HYP] AvatarUX Help Desk Tenant Enumeration via Accessible JSM Customer Portals
+class: MISCONFIG
+asset: help.desk.avatarux.com/servicedesk/customer/portal/{4..100}
+confidence: 80
+reasoning: Portals 4-100+ return HTTP 200 (not 303) exposing full JSM customer portal UI; page source leaks tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId (ead67a75-73c2-4b0f-9870-0b87a41ca34b), feature flags, experiment configs, Statsig environment (prod-euwest, shard jira-prod-eu-3), workspace ID (d4da630a-...); body sizes normalized ~209007B across all portals; Atlassian Edge fronting but internal config exposed in HTML; REST endpoints return 401/404/303 but portal UI accessible
+evidence_needed: Enumerate all portals 1-200+ to map full tenant surface; extract tenant-id/orgId from each; test /rest/servicedeskapi/servicedesk with tenant-id header
+verify_steps: GET https://help.desk.avatarux.com/servicedesk/customer/portal/{1..200} — capture status and tenant-id meta tags; GET https://help.desk.avatarux.com/wiki/ — check Confluence exposure; GET https://help.desk.avatarux.com/rest/servicedeskapi/servicedesk with Header X-Tenant-Id: df607198-7bdc-43c6-8353-9b8a822febc5
+impact: Internal infrastructure mapping, tenant enumeration for targeted phishing/social engineering, Atlassian config disclosure, Statsig feature flag exposure — MEDIUM
+testability: PASSIVE
+[PARKED] BetPanda Affiliate Cross-Tenant Player Data Access via IDOR on /rest/player/uid/{id}: confidence 78 but testability AUTH_HELPED — requires two valid affiliate sessions with different operatorId/tenant; no passive verification path; blocked on program test credentials.
+[PARKED] BetPanda Casino Multi-Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints: confidence 55 but testability AUTH_HELPED — requires valid casino session with x-site-name-id header manipulation; no passive verification path; blocked on program test credentials.
+[PARKED] Roobet Socket.IO Realtime Channel Subscription for Game State Observation: confidence 55 but testability HUMAN_ONLY — requires WebSocket client not available in this environment; no progress possible via HTTP-only probes.
+[PARKED] cpanel.avatarux.com Subdomain Takeover: confidence downgraded to 25 — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists but standard zone claim impossible without program cooperation. REJECTED per knowledge base.
+[PARKED] BetPanda Casino SSRF via Game Provider Callback/Webhook Endpoints: all 5 endpoints 404 — no surface to exploit, hypothesis falsified.
+[PARKED] AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com: confidence 65 but impact LOW-MEDIUM — stale config pointing to web host (mail.avatarux.com 301→WordPress), actual MX records show Google Workspace/Zoho/Mandrill/ProtonMail; no active mail server on exposed ports.
+[FINAL] 1. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (88) — MEDIUM impact, PASSIVE, NEW endpoint confirmed
+[FINAL] 2. Roobet Production API Trusts Entire *.777.dev Staging Namespace in CORS (75) — HIGH impact, PASSIVE, staging-to-prod trust chain
+[FINAL] 3. AvatarUX Help Desk Tenant Enumeration via Accessible JSM Customer Portals (80) — MEDIUM impact, PASSIVE confirmed, 96+ portals exposed
+[NEXT] PROBE: GET https://betpandacasino.io/rest/user/details — capture full response body and headers; GET https://betpandacasino.io/rest/user/details with Accept: application/json and Accept: text/html; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus) — data model disclosure, not PII leak without auth. Backend = Spring Boot confirmed by JSON error format.
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config. Passive, stable, unchanged.
+[LEARN] ACCEPTED MISCONFIG @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection on OPTIONS+GET); topkek.com not whitelisted.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain; prior 403 was UA/Origin-gated for bare curl.
+[LEARN] ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types (tiki21 was previously known). Uniform response size (12B) suggests same auth middleware.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io /rest/user/{me,profile,info}: all 404; /rest/user/settings returns 401 "No http-session"; /rest/user/details is the only unauthenticated user endpoint.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/public/config: re-verified 200 with byte-identical body (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — known accepted leak, unchanged
+[LEARN] ACCEPTED OTHER @ affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supporting AUTH_HELPED classification
+[LEARN] ACCEPTED AUTH @ roobet.com/_api/game/tiki21/endRound: POST 401 (12B) identical to currentRoundHash — mutation auth boundary consistent, no bypass.
+[LEARN] ACCEPTED OTHER @ tiki-21.games.roobet.com bundle: game mutations run over socket.io (hit/stand/double/wager) with JWT; REST-only surface per game = currentRoundHash + endRound only.
+[RISK] avatarux-studios: 82 — Top 3 exploitable paths: Casino unauthenticated user state disclosure (88, PASSIVE), Roobet staging-to-prod CORS trust (75, PASSIVE), Help Desk tenant enumeration (80, PASSIVE). Fresh credentialed targets identified for BetPanda affiliate/casino APIs; Roobet Socket.IO accessible from game Origin. Passive surface: help.desk 96+ portals exposed, casino SSRF falsified, mail config stale, cPanel takeover unclaimable. Risk = HIGH — multiple AUTH_HELPED paths blocked only on test credentials; one new PASSIVE misconfig confirmed on casino user state endpoint; staging CORS trust on production gaming API is critical architecture flaw.
