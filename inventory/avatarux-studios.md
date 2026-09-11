@@ -590,3 +590,17 @@ www.avatarux.com
 - CHANGED betpandacasino.io/rest/public/config — Spring JSON 404 confirmed; casino does NOT mirror affiliates leak; passive corroboration gap CLOSED
 - CHANGED betpandacasino.io callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified
 - CHANGED RainBet RabbitMQ cluster enumeration closed — exactly 2 live hosts (rbtmq-dev/preprod/preprod-us/stg-us all NXDOMAIN)
+
+## 2026-09-11 21:44:49 UTC
+- NEW rainbet-com-rabbitmq.rainbet.com:15671/15672 + rainbet-us-staging-rabbitmq.rainbet.com:15671/15672 — RabbitMQ Management UI (Cowboy) + AMQP 5671/5672 exposed on raw DigitalOcean origins (159.203.34.20
+- NEW betpandacasino.io/rest/user/details — HTTP 200 returns full unauthenticated user state model (loggedIn, blocked, emailVerified, kycVerified, country:"US", currentLevel, currencies, blockedStatus, phon
+- NEW roobet.com/_api CORS — Production reflects ACAO: https://777.dev + https://api.777.dev with ACAC:true on game data endpoints (/game/*/currentRoundHash, /currency/balances, /socket.io); 777.dev is stag
+- NEW help.desk.avatarux.com portals 4–100+ — All HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId (ead67a75-...), Statsig config (prod-euwest, shard jir
+- NEW roobet.com/_api/socket.io — Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com; prior 403 was UA/Origin-gated for bare curl
+- NEW autoconfig.avatarux.com/autoconfig/v1.1/ — XML exposes mail.avatarux.com:993/465 (password-cleartext) but mail host 301→avatarux.com (WordPress/Bluehost) — legacy/stale config, not active mail server
+- CHANGED cpanel.avatarux.com — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists but takeover mechanism unproven, 
+- CHANGED betpandacasino.io/rest/public/config — Spring JSON 404 confirmed; casino does NOT mirror affiliates leak; passive corroboration gap CLOSED
+- CHANGED betpandacasino.io callback/webhook surface — All 5 endpoints (/rest/callback, /rest/webhook, /rest/notify, /rest/game/callback, /rest/api/game/callback) return 404; SSRF hypothesis falsified
+- CHANGED RainBet RabbitMQ cluster — Exactly 2 live hosts confirmed (rbtmq-dev/preprod/preprod-us/stg-us all NXDOMAIN); enumeration closed
+- CHANGED affiliates.betpanda.io/rest/public/config — Stable 200 byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty)
+- CHANGED affiliates.betpanda.io/rest/player/uid/1 — 401-gated confirmed; auth boundary intact anonymously

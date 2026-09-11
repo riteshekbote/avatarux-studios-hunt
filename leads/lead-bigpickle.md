@@ -2831,3 +2831,44 @@ impact: Event backbone reachable from internet; mgmt login brute-force/fuzzing +
 testability: PASSIVE (confirmed)
 [NEXT] HUMAN: submit the three PASSIVE findings (betpandacasino.io /rest/user/details 301B user-state model; help.desk.avatarux.com JSM portals 4–100 tenant-id/atlassianOrgId enum; rainbet-com-rabbitmq.rainbet.com mgmt-UI + AMQP 5671/5672 on raw DigitalOcean origin) at bugs.olivermaicher.eu, and request credentialed sessions for affiliates.betpanda.io (BOLA /rest/player/uid/{uid}) + betpandacasino.io (post-auth /rest/user/account-balances-and-bonuses + /rest/user/refresh JWT). Passive lambda closed: all anonymous /api/* surfaces on the broker now independently falsified.
 [RISK] avatarux-studios: 83 — Three PASSIVE reportable findings ready (casino user-state model 85, JSM tenant enum 75, RainBet main-broker exposure 74). nemotron3's 85 cell corrected downward to 74 on hard falsification — no disclosure inflation. IDOR path (78) waits on credentials; all new RainBet staging/broker surfaces either gated or fluxing. No REJECTED-class rerank.
+## 2026-09-11 21:41:15 UTC [target] (model bigpickle)
+[PRIO] roobet.com/_api + api.777.dev CORS trust chain: 7.6 (a=7,b=8,t=8,g=2,c=4,f=9)
+[PRIO] rainbet-com-rabbitmq.rainbet.com broker exposure: 6.9 (a=6,b=9,t=6,g=8,c=6,f=5)
+[PRIO] slot-integrations.rainbet.com: 5.6 (a=5,b=7,t=6,g=1,c=5,f=10)
+[HYP] Roobet Production CORS Trusts Live Staging API (777.dev + api.777.dev) for Credentialed Origin
+class: MISCONFIG
+asset: roobet.com/_api + api.777.dev
+confidence: 82
+reasoning: prod /_api reflects ACAO+ACAC:true for 777.dev and api.777.dev (verified OPTIONS+GET prior cycles). api.777.dev now confirmed LIVE Express backend (root 404 "Cannot GET /", connect.sid session cookie plumbing, helmet header set, ACAC:true preset, CF 104.18.43.25) — the whitelist entry is not a dead/test-only name. Same Express-session stack family as roobet.com/_api (connect.sid), route tree not mirrored (/ _api/* 404).
+evidence_needed: shared/co-resident session or auth tokens between staging and prod origins (human/active only).
+verify_steps: done — GET roobet.com/_api OPTIONS+GET w/ Origin https://api.777.dev → ACAO/ACAC=true; GET https://api.777.dev/ → 404 Express live; /_api/currency/balances → 404 (route tree differs).
+impact: any control gained over a 777.dev-hosted component permits credentialed cross-origin requests to prod game API (balances, round state, session ops) under a trusted CF-origin entry — staging-to-prod trust break. HIGH.
+testability: PASSIVE (pair verified; chain needs credentials)
+[HYP] RainBet Production RabbitMQ Broker Publicly Exposed (mgmt UI + AMQP on raw origin)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671 + :5671/:5672
+confidence: 74
+reasoning: HTTPS mgmt UI (Cowboy, digitalocean 159.203.34.207) 200, /api/* 401 Basic; AMQP 5671/5672 open; second broker 15672 plaintext mgmt fluxing (timeout this cycle). Broker is the betting/payment event backbone.
+evidence_needed: none for exposure; weak-cred/AMQP abuse requires authorized active testing.
+verify_steps: done — GET https://...:15671/ → 200; /api/overview|vhosts|queues|connections|exchanges → 401.
+impact: event backbone reachable from internet; mgmt login brute-force + AMQP census if creds acquired — financial/data-integrity risk. MEDIUM-HIGH.
+testability: PASSIVE (confirmed)
+[HYP] Slot-Integrations Provider Callback SSRF/Chain Surface
+class: SSRF
+asset: slot-integrations.rainbet.com
+confidence: 45
+reasoning: live CT label for a slot-provider integration service; aggregator callbacks are a classic SSRF/chaining target. Currently CF-challenge gated (403), no anonymous path.
+evidence_needed: reach origin past CF challenge.
+verify_steps: none anonymous — 403 persists.
+impact: provider-payout/payment flow manipulation if reachable. HIGH.
+testability: HUMAN_ONLY
+[PARKED] Slot-integrations SSRF: confidence 45 with NO anonymous verify path (CF challenge) — speculative, parked pending credentialed/challenge-passing access.
+[PARKED] rainbet-us-staging-rabbitmq:15672 flux: plaintext mgmt port timeouting, no sustained exposure beyond already-reported HTTPS :15671 + AMQP surface — not separately reportable.
+[FINAL] 1. Roobet Production API Trusts Live Staging Namespace (82) — api.777.dev live corroboration raises prior 78; report-ready with live-origin proof.
+[FINAL] 2. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (86).
+[FINAL] 3. RainBet RabbitMQ Management UI + AMQP Public on Raw Origin (74).
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS report updated with live-origin proof (GET https://api.777.dev → Express 404 + ACAO/ACAC=true reflection on roobet.com/_api for that Origin); (b) casino /rest/user/details user-state model leak; (c) RainBet broker mgmt-UI+AMQP exposure (159.203.34.207 / 165.227.255.111) — and request credentialed sessions for affiliates.betpanda.io BOLA + betpandacasino.io post-auth JWT/financial endpoints. Passive lambda closed.
+[LEARN] ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api (all /_api/* 404) — sibling staging app, not endpoint map mirror.
+[LEARN] ACCEPTED OTHER @ slot-integrations.rainbet.com: live behind CF challenge (403, __cf_bm Domain=rainbet.com) — CT label is a real host; no anonymous surface.
+[LEARN] REJECTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15672: timeout this cycle vs 200 prior — plaintext mgmt port fluxing; exposure claim stands on HTTPS :15671 + AMQP only.
+[RISK] avatarux-studios: 84 — Roobet CORS trust (78→82) corroborated by live api.777.dev Express backend; three PASSIVE reportable findings ready (CORS 82, casino user-state 86, RabBet broker 74). No new exploitable surface this cycle; RainBet staging tier stays challenge-gated; second-broker plaintext mgmt fluxing downgraded off report. Passive lambda effectively closed until credentialed sessions land.

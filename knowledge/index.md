@@ -328,3 +328,6 @@
 - 2026-09-11 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
 - 2026-09-11 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only
 - 2026-09-11 ACCEPTED MISCONFIG @ RainBet RabbitMQ cluster (complete): 2/6 CT broker labels live; both on raw DigitalOcean origins with mgmt UI + AMQP exposed (see prior cycle). rbtmq-dev/preprod/preprod-us/stg-us are dead DNS. Enumeration closed.
+- 2026-09-11 ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api (all /_api/* 404) — sibling staging app, not endpoint map mirror.
+- 2026-09-11 ACCEPTED OTHER @ slot-integrations.rainbet.com: live behind CF challenge (403, __cf_bm Domain=rainbet.com) — CT label is a real host; no anonymous surface.
+- 2026-09-11 REJECTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15672: timeout this cycle vs 200 prior — plaintext mgmt port fluxing; exposure claim stands on HTTPS :15671 + AMQP only.

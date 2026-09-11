@@ -16121,3 +16121,161 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 83 — Three PASSIVE reportable findings ready (casino user-state model 85, JSM tenant enum 75, RainBet main-broker exposure 74). nemotron3's 85 cell corrected downward to 74 on hard falsification — no disclosure inflation. IDOR path (78) waits on credentials; all new RainBet staging/broker surfaces either gated or fluxing. No REJECTED-class rerank.
+===== ANALYST bigpickle 2026-09-11 21:44:49 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -m 15 -o /tmp/opencode/api777.txt -w "api.777.dev -> %{http_code} size=%{size_download} ct=%{content_type}\n" https://api.777.dev/; head -c 400 /tmp/opencode/api777.txt; echo; echo "---"
+api.777.dev -> 404 size=1077 ct=text/html; charset=utf-8
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /</pre>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a399d301aeb5cd87',t:'MTc4OTE2Mjc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/cha
+---
+[0m
+[0m$ [0mcurl -s -m 15 -o /tmp/opencode/777root.txt -w "777.dev -> %{http_code} size=%{size_download} ct=%{content_type}\n" https://777.dev/; head -c 300 /tmp/opencode/777root.txt; echo; echo "---"
+777.dev -> 403 size=5482 ct=text/html; charset=UTF-8
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!
+---
+[0m
+[0m$ [0mcurl -s -m 15 -o /tmp/opencode/slotint.txt -w "slot-integrations.rainbet.com -> %{http_code} size=%{size_download} ct=%{content_type}\n" https://slot-integrations.rainbet.com/; head -c 300 /tmp/opencode/slotint.txt; echo; echo "---"
+slot-integrations.rainbet.com -> 403 size=5486 ct=text/html; charset=UTF-8
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!
+---
+[0m
+[0m$ [0mcurl -s -m 15 -o /tmp/opencode/usbroker.txt -w "rainbet-us-staging-rabbitmq:15672 /api/overview -> %{http_code} size=%{size_download}\n" http://rainbet-us-staging-rabbitmq.rainbet.com:15672/api/overview; head -c 200 /tmp/opencode/usbroker.txt; echo
+rainbet-us-staging-rabbitmq:15672 /api/overview -> 000 size=0
+head: cannot open '/tmp/opencode/usbroker.txt' for reading: No such file or directory
+[0m
+[0m$ [0mcurl -s -m 15 -D - -o /dev/null https://api.777.dev/ 2>&1 | head -20
+HTTP/2 404 
+date: Fri, 11 Sep 2026 21:39:43 GMT
+content-type: text/html; charset=utf-8
+access-control-allow-credentials: true
+content-security-policy: default-src 'none'
+expect-ct: max-age=0
+referrer-policy: no-referrer
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=None
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Origin, Accept-Encoding
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-xss-protection: 0
+cf-cache-status: DYNAMIC
+server: cloudflare
+cf-ray: a399d3a589861aeb-ORD
+[0m
+[0m$ [0msleep 1; curl -s -m 15 -D - -o /dev/null https://slot-integrations.rainbet.com/ 2>&1 | head -15
+HTTP/2 403 
+date: Fri, 11 Sep 2026 21:39:45 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+set-cookie: __cf_bm=7CgPOtghUuapvgOxdvYCZTfIhvWIFU_mH0H_tBFjnmY-1789162785.1594005-1.0.1.1-6kpchmMx6vMajB4ts4reo87Yj7Au5yE8dhb7jydzH0Kc4QWKRLdeuF_OQFn__I4QBOabn1jG_8K1jsGOymNYmzKKi9ib.TgF3Zu_rCBrChtWAfno8BqRqyTvky7U.NXs; HttpOnly; SameSite=None; Secure; Path=/; Domain=rainbet.com; Expires=Fri, 11 Sep 2026 22:09:45 GMT
+server: cloudflare
+cf-ray: a399d3af3d59f833-ORD
+alt-svc: h3=":443"; ma=86400
+[0m
+[0m$ [0mcurl -s -m 12 -v -o /dev/null http://rainbet-us-staging-rabbitmq.rainbet.com:15672/api/overview 2>&1 | grep -E "Connected|HTTP/|refused|timed|reset" | head -5
+* Connection timed out after 12001 milliseconds
+[0m
+[0m$ [0mcurl -s -m 15 -o /tmp/opencode/apibals.txt -w "api.777.dev/_api/currency/balances -> %{http_code} size=%{size_download} ct=%{content_type}\n" https://api.777.dev/_api/currency/balances; head -c 300 /tmp/opencode/apibals.txt; echo; echo "---"
+api.777.dev/_api/currency/balances -> 404 size=1099 ct=text/html; charset=utf-8
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /_api/currency/balances</pre>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="wi
+---
+[0m
+[0m$ [0msleep 1; curl -s -m 15 -o /tmp/opencode/apiapi.txt -w "api.777.dev/_api -> %{http_code} size=%{size_download}\n" https://api.777.dev/_api; head -c 300 /tmp/opencode/apiapi.txt; echo
+api.777.dev/_api -> 404 size=1081
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /_api</pre>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$param
+[0m
+STEP 1 — DELTA
+- NEW api.777.dev: LIVE Express/session API backend — root 404 "Cannot GET /", `connect.sid` session stack, helmet headers, `access-control-allow-credentials: true` preset on default 404, CF-fronted 104.18.43.25. Prod CORS whitelist maps to a running service.
+- NEW slot-integrations.rainbet.com: live behind CF challenge (403, `__cf_bm` Domain=rainbet.com) — CT label is a real host, no anonymous surface.
+- CHANGED rainbet-us-staging-rabbitmq.rainbet.com:15672: connection timeout this cycle (prior 200) — plaintext mgmt port fluxing; HTTPS :15671 + AMQP 5671/5672 surface unchanged.
+- CHANGED api.777.dev route tree: `/_api/*` → 404 — sibling Express app, NOT the roobet.com/_api endpoint map; staging mirror not same route tree.
+
+STEP 2 — PRIORITIZE
+[PRIO] roobet.com/_api + api.777.dev CORS trust chain: 7.6 (a=7,b=8,t=8,g=2,c=4,f=9)
+[PRIO] rainbet-com-rabbitmq.rainbet.com broker exposure: 6.9 (a=6,b=9,t=6,g=8,c=6,f=5)
+[PRIO] slot-integrations.rainbet.com: 5.6 (a=5,b=7,t=6,g=1,c=5,f=10)
+
+STEP 3 — HYPOTHESES
+[HYP] Roobet Production CORS Trusts Live Staging API (777.dev + api.777.dev) for Credentialed Origin
+class: MISCONFIG
+asset: roobet.com/_api + api.777.dev
+confidence: 82
+reasoning: prod /_api reflects ACAO+ACAC:true for 777.dev and api.777.dev (verified OPTIONS+GET prior cycles). api.777.dev now confirmed LIVE Express backend (root 404 "Cannot GET /", connect.sid session cookie plumbing, helmet header set, ACAC:true preset, CF 104.18.43.25) — the whitelist entry is not a dead/test-only name. Same Express-session stack family as roobet.com/_api (connect.sid), route tree not mirrored (/ _api/* 404).
+evidence_needed: shared/co-resident session or auth tokens between staging and prod origins (human/active only).
+verify_steps: done — GET roobet.com/_api OPTIONS+GET w/ Origin https://api.777.dev → ACAO/ACAC=true; GET https://api.777.dev/ → 404 Express live; /_api/currency/balances → 404 (route tree differs).
+impact: any control gained over a 777.dev-hosted component permits credentialed cross-origin requests to prod game API (balances, round state, session ops) under a trusted CF-origin entry — staging-to-prod trust break. HIGH.
+testability: PASSIVE (pair verified; chain needs credentials)
+[HYP] RainBet Production RabbitMQ Broker Publicly Exposed (mgmt UI + AMQP on raw origin)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671 + :5671/:5672
+confidence: 74
+reasoning: HTTPS mgmt UI (Cowboy, digitalocean 159.203.34.207) 200, /api/* 401 Basic; AMQP 5671/5672 open; second broker 15672 plaintext mgmt fluxing (timeout this cycle). Broker is the betting/payment event backbone.
+evidence_needed: none for exposure; weak-cred/AMQP abuse requires authorized active testing.
+verify_steps: done — GET https://...:15671/ → 200; /api/overview|vhosts|queues|connections|exchanges → 401.
+impact: event backbone reachable from internet; mgmt login brute-force + AMQP census if creds acquired — financial/data-integrity risk. MEDIUM-HIGH.
+testability: PASSIVE (confirmed)
+[HYP] Slot-Integrations Provider Callback SSRF/Chain Surface
+class: SSRF
+asset: slot-integrations.rainbet.com
+confidence: 45
+reasoning: live CT label for a slot-provider integration service; aggregator callbacks are a classic SSRF/chaining target. Currently CF-challenge gated (403), no anonymous path.
+evidence_needed: reach origin past CF challenge.
+verify_steps: none anonymous — 403 persists.
+impact: provider-payout/payment flow manipulation if reachable. HIGH.
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] Slot-integrations SSRF: confidence 45 with NO anonymous verify path (CF challenge) — speculative, parked pending credentialed/challenge-passing access.
+[PARKED] rainbet-us-staging-rabbitmq:15672 flux: plaintext mgmt port timeouting, no sustained exposure beyond already-reported HTTPS :15671 + AMQP surface — not separately reportable.
+[FINAL] 1. Roobet Production API Trusts Live Staging Namespace (82) — api.777.dev live corroboration raises prior 78; report-ready with live-origin proof.
+[FINAL] 2. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (86).
+[FINAL] 3. RainBet RabbitMQ Management UI + AMQP Public on Raw Origin (74).
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS report updated with live-origin proof (GET https://api.777.dev → Express 404 + ACAO/ACAC=true reflection on roobet.com/_api for that Origin); (b) casino /rest/user/details user-state model leak; (c) RainBet broker mgmt-UI+AMQP exposure (159.203.34.207 / 165.227.255.111) — and request credentialed sessions for affiliates.betpanda.io BOLA + betpandacasino.io post-auth JWT/financial endpoints. Passive lambda closed.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api (all /_api/* 404) — sibling staging app, not endpoint map mirror.
+[LEARN] ACCEPTED OTHER @ slot-integrations.rainbet.com: live behind CF challenge (403, __cf_bm Domain=rainbet.com) — CT label is a real host; no anonymous surface.
+[LEARN] REJECTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15672: timeout this cycle vs 200 prior — plaintext mgmt port fluxing; exposure claim stands on HTTPS :15671 + AMQP only.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 84 — Roobet CORS trust (78→82) corroborated by live api.777.dev Express backend; three PASSIVE reportable findings ready (CORS 82, casino user-state 86, RabBet broker 74). No new exploitable surface this cycle; RainBet staging tier stays challenge-gated; second-broker plaintext mgmt fluxing downgraded off report. Passive lambda effectively closed until credentialed sessions land.
