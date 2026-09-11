@@ -185,3 +185,12 @@ TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
 ## REPOSCAN 2026-09-11 01:09:06 UTC
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
+## REPOSCAN 2026-09-11 06:03:57 UTC
+[HYP] No Public GitHub Repositories to Audit
+class: OTHER
+asset: github.com (avatarux-games-clients, avatarux-com, avatarux)
+confidence: 100
+reasoning: |
+impact: INFO — org keeps repos private; no source-code attack surface exposed on GitHub
+verify_steps: |
+TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
