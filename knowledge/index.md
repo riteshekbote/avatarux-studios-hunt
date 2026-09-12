@@ -354,3 +354,7 @@
 - 2026-09-12 ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-empty.
 - 2026-09-12 ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api — sibling staging app, not endpoint map mirror.
 - 2026-09-12 REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+- 2026-09-12 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- 2026-09-12 REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted.
+- 2026-09-12 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only.
+- 2026-09-12 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.

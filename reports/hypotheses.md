@@ -1503,3 +1503,23 @@
 - LEARN: ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-em
 - LEARN: ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real runnin
 - LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+
+## RANKED HYPOTHESES 2026-09-12 06:33:36 UTC
+- [92] betpandacasino.io/rest/user/details: BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details (from art/lead_nemotron3.txt)
+- [87] roobet.com/_api: Roobet Prod API CORS-Trusts Entire .777.dev Namespace (Credentials, incl. Dead-DNS Members) (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-WIDE trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev, 12-name cert 
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://betpandacasino.io/rest/user/details -H "Accept: application/json" — capture full response body/headers; OPTIONS https://betpandacasino.io/res
+- LEARN: ACCEPTED MISCONFIG @ betpandacasino.io /rest/user/details: NEW endpoint returning unauthenticated user state model (loggedIn, country, kycVerified, currentLevel
+- LEARN: ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 portals to 96+, all leaking identical tenant-id/atlassianOrgId/Statsig config
+- LEARN: ACCEPTED MISCONFIG @ roobet.com/_api CORS: origin whitelist includes staging test domain 777.dev + api.777.dev with credentials=true (verified ACAO reflection o
+- LEARN: ACCEPTED OTHER @ roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com 
+- LEARN: ACCEPTED AUTH @ roobet.com /_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: 401 confirms auth boundary across 4 game types.
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposu
+- LEARN: ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
+- LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+- LEARN: ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-em
+- LEARN: ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real runnin
+- LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
