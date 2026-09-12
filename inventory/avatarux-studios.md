@@ -669,3 +669,26 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only (downgraded)
 - CHANGED betpandacasino.io/rest/public/config + callback/webhook surface: all 404 — passive gaps CLOSED
 - CHANGED avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel monitoring-only; no new anonymous exposure
+
+## 2026-09-12 23:22:13 UTC
+- CHANGED avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel monitoring-only; no new anonymous exposure
+- NEW api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin confirmed real running service, route tree ≠ roobet.com/_api
+- NEW 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete
+- CHANGED rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic — anonymous API topology claim falsified; exposure = mgmt-UI+AMQP only
+- CHANGED betpandacasino.io/rest/user/details x-site-name-id stake_com test: body/ACAO/echo unchanged — passive tenant switch hypothesis falsified
+- CHANGED roobet.com/_api CORS: live re-verify stable (ACAO https://www.777.dev + ACAC:true), controls clean — no drift
+- CHANGED betpandacasino.io/rest/user/details: live probe reconfirmed 200 JSON user-state model, no drift
+- CHANGED help.desk.avatarux.com portals 4–100: surface expanded to 96+ portals, all leaking identical tenant-id/atlassianOrgId/Statsig config, stable
+- CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only (downgraded)
+- CHANGED betpandacasino.io/rest/public/config + callback/webhook surface: all 404 — passive gaps CLOSED
+- CHANGED avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel monitoring-only; no new anonymous exposure
+- NEW api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin confirmed real running service, route tree ≠ roobet.com/_api
+- NEW 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete
+- CHANGED rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic — anonymous API topology claim falsified; exposure = mgmt-UI+AMQP only
+- CHANGED betpandacasino.io/rest/user/details x-site-name-id stake_com test: body/ACAO/echo unchanged — passive tenant switch hypothesis falsified
+- CHANGED roobet.com/_api CORS: live re-verify stable (ACAO https://www.777.dev + ACAC:true), controls clean — no drift
+- CHANGED betpandacasino.io/rest/user/details: live probe reconfirmed 200 JSON user-state model, no drift
+- CHANGED help.desk.avatarux.com portals 4–100: surface expanded to 96+ portals, all leaking identical tenant-id/atlassianOrgId/Statsig config, stable
+- CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only (downgraded)
+- CHANGED betpandacasino.io/rest/public/config + callback/webhook surface: all 404 — passive gaps CLOSED
+- CHANGED avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel monitoring-only; no new anonymous exposure
