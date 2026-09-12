@@ -3097,3 +3097,24 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details: live probe this cycle — 200 JSON user-state model (loggedIn=false, blockedStatus=NONE, country=US, kycVerified=false, currentLevel=0), x-site-name-id=betpandacasino_io, ACAO pinned https://betpandacasino.io. No drift.
 [LEARN] ACCEPTED OTHER @ avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel takeover monitoring-only; passives closed, no new anonymous exposure.
 [RISK] avatarux-studios: 90 — top CORS finding re-verified live with clean controls (no drift), casino user-state byte-stable, no new anonymous surface, no disclosure inflation, no active testing against live customer data; three report-ready findings (90/86/74) stable pending HUMAN submission and credentialed sessions.
+## 2026-09-12 21:41:33 UTC [target] (model bigpickle)
+[HYP] Staging api-graphql introspection + workload fingerprint (schema disclosure)
+class: MISCONFIG
+asset: api.777.dev/graphql
+confidence: 72
+reasoning: introspection ON (confirmed live this cycle); schema maps real-money trading/bonus/fair-seed/limits models; data auth-gated (currentUser/exchangeRates NOT_AUTHENTICATED, slotPotatoActive anon-null); CORS origin-checked (roobet.com→ACAO+ACAC true, evil→no ACAO); Apollo CSRF-prevention enabled but GET+x-apollo-operation-name executes (browser-safe: header not CORS-safelisted, preflight lacks ACAO for evil origins → control clean).
+evidence_needed: credentialed staging session to confirm whether non-auth gaps exist in mutations (e.g. limit-update/instantRaffleCreate deserialization); whether session store is shared with prod.
+verify_steps: DONE passive — root 404→/graphql 400→GET schema via x-apollo-operation-name; anon probes of 5 fields all gated/null.
+impact: full schema + workload topology disclosure (MEDIUM on staging); compounds prod CORS namespace trust if a 777.dev member is the attack locus. MEDIUM.
+testability: AUTH_HELPED
+[HYP] RainBet broker default/weak AMQP credential (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671/15671
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207); /api/overview 401 Basic re-verified this cycle; default guest/guest untested.
+evidence_needed: single authorized AMQP client connect reading server properties.
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow insight. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+[NEXT] HUMAN: at bugs.olivermaicher.eu extend pending submission with the new api.777.dev/graphql finding (introspection-enabled Apollo `api-graphql` staging workload, full query/mutation schema incl. Polymarket trading, fair-seed rotate, limit updates; data auth-gated; CORS origin-checked; CF UA/TLS fingerprinting observed) as supporting evidence for the Roobet 777.dev namespace-trust finding; request a staging credential for api.777.dev to enumerate auth-gated mutation/query data gaps, alongside the already-requested affiliates + casino sessions.
+[RISK] avatarux-studios: 90 — top CORS finding live-reverified with controls clean, new api.777.dev/graphql surface **mapped not exploited** (introspection + schema disclosure only; auth boundary holds; CORS/CSRF controls clean), re-verified casino + broker finals stable, no disclosure inflation, no active testing against live data; all new work low-rate read-only GET/OPTIONS within policy.
