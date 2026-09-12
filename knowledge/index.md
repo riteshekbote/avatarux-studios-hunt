@@ -360,3 +360,6 @@
 - 2026-09-12 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
 - 2026-09-12 ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api — sibling staging app.
 - 2026-09-12 REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposure is mgmt-UI+AMQP only.
+- 2026-09-12 ACCEPTED OTHER @ roobet.com/_api CORS: live probe this cycle — GET /_api/currency/balances, Origin https://www.777.dev → 200 + ACAO reflected + ACAC:true; Origin https://evil777.dev → 200, NO ACAO. Top finding stable, controls clean, no drift.
+- 2026-09-12 ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details: live probe this cycle — 200 JSON user-state model (loggedIn=false, blockedStatus=NONE, country=US, kycVerified=false, currentLevel=0), x-site-name-id=betpandacasino_io, ACAO pinned https://betpandacasino.io. No drift.
+- 2026-09-12 ACCEPTED OTHER @ avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel takeover monitoring-only; passives closed, no new anonymous exposure.

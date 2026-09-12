@@ -3055,3 +3055,45 @@ testability: HUMAN_ONLY
 [NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-WIDE trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev, 12-name cert census (all → Roobet CF pair, api.777.dev live Express), clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands); (b) betpandacasino.io /rest/user/details 301B anon user-state leak; (c) RainBet broker mgmt-UI+AMQP on raw DO origins (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and casino post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
 [RISK] avatarux-studios: 87 — three report-ready passive findings re-verified stable (87/86/74), CORS controls clean, no new anonymous surface, no disclosure inflation, no active-testing leakage against live customer data; passive lambda closed pending reported credentialed sessions.
 ## 2026-09-12 17:16:14 UTC [target] (model bigpickle)
+## 2026-09-12 19:27:48 UTC [target] (model bigpickle)
+[PRIO] roobet.com/_api,6.1,business_value+gate_ease+cloud_surface — live-reverified this cycle (ACAO+ACAC:true), controls clean
+[PRIO] betpandacasino.io/rest/user/details,5.65,gate_ease+freshness — live-reverified this cycle, byte-stable user-state model
+[PRIO] rainbet-com-rabbitmq.rainbet.com:15671/5671,5.2,cloud_surface(raw DO origin)+freshness — exposure final, cred-only residual
+[HYP] api.777.dev / released 777.dev member as credentialed trust root (residual chain)
+class: MISCONFIG
+asset: api.777.dev + *.777.dev → roobet.com/_api
+confidence: 42
+reasoning: prod /_api reflects ACAO https://www.777.dev (non-resolving name) with ACAC:true, verified live this cycle; api.777.dev is a live Express/session backend (connect.sid, helmet, CF 104.18.43.25); any whitelisted member that reflects untrusted input becomes a credentialed-read origin for prod game data incl. socket JWT flow.
+evidence_needed: confirmed reflection/XSS on a whitelisted member — requires authorized active testing in staging.
+verify_steps: DONE for trust side (GET /_api/currency/balances, Origin https://www.777.dev → ACAO+ACAC:true on 200; control https://evil777.dev → no ACAO). Boundary break proven; exploitation requires HUMAN.
+impact: staging-to-prod ATO chain via CORS-trusted origin for credentialed reads (balances/round state/session). HIGH.
+testability: HUMAN_ONLY
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend confirmed, /config/config.json + /rest/public/config leak operatorId=1 + full endpoint map; /rest/player/uid/1 returns 401 "You need to be logged in" anonymously (auth boundary initially intact) — BOLA class when authorization binds to session, not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET of /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with provided credentialed sessions; passive side done (401 anon).
+impact: cross-affiliate player record/PII exposure. HIGH.
+testability: AUTH_HELPED
+[HYP] RainBet Broker Default/Weak-Credential AMQP (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671/15671
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207), no CF/ACL; /api/overview 401 Basic re-verified prior cycle; default guest/guest or weak broker creds untested.
+evidence_needed: single authorized anonymous AMQP client connect reading server properties (no brute-force).
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow manipulation if valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+[PARKED] api.777.dev trust-root chain (42): no passive confirmation path, requires authorized staging XSS testing.
+[PARKED] RainBet broker default/weak AMQP (45): no anonymous path, requires authorized AMQP client; base exposure (74) already report-ready.
+[PARKED] Affiliate BOLA (68): AUTH_HELPED, blocked on credentialed sessions — not a FINAL until proven cross-uid.
+[FINAL] 1. Roobet CORS namespace-wide trust (90) — re-verified live this cycle: ACAO https://www.777.dev + ACAC:true on 200, evil777.dev control no-ACAO, clean. No drift.
+[FINAL] 2. Casino /rest/user/details unauth user-state model (86) — re-verified live this cycle: 200, full model (country/US, kyc/principal flags, currentLevel), x-site-name-id echo, ACAO pinned betpandacasino.io. No drift.
+[FINAL] 3. RainBet broker mgmt-UI+AMQP public on raw DO origins (74) — unchanged.
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-wide trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev (live-reverified), 11/11 member census → Roobet CF pair, api.777.dev live Express, clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands); (b) betpandacasino.io /rest/user/details 301B anon user-state leak (live-reverified); (c) RainBet broker mgmt-UI+AMQP on raw DO origins (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates BOLA (`/rest/player/uid/{uid}`) + casino post-auth `/rest/user/{account-balances-and-bonuses,refresh,details}`.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: live probe this cycle — GET /_api/currency/balances, Origin https://www.777.dev → 200 + ACAO reflected + ACAC:true; Origin https://evil777.dev → 200, NO ACAO. Top finding stable, controls clean, no drift.
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details: live probe this cycle — 200 JSON user-state model (loggedIn=false, blockedStatus=NONE, country=US, kycVerified=false, currentLevel=0), x-site-name-id=betpandacasino_io, ACAO pinned https://betpandacasino.io. No drift.
+[LEARN] ACCEPTED OTHER @ avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel takeover monitoring-only; passives closed, no new anonymous exposure.
+[RISK] avatarux-studios: 90 — top CORS finding re-verified live with clean controls (no drift), casino user-state byte-stable, no new anonymous surface, no disclosure inflation, no active testing against live customer data; three report-ready findings (90/86/74) stable pending HUMAN submission and credentialed sessions.

@@ -17884,3 +17884,118 @@ echo "=== F N2 affiliates /rest/graphql GET ==="
 curl -s -o /tmp/f_body --dump-header /tmp/f_hdr -w "HTTP %{http_code} size=%{size_download}\n" --max-time 12 -H "Accept: application/json" -H "User-Agent: $u" "https://affiliates.betpanda.io/rest/graphql?query=%7B__typename%7D"
 head -c 300 /tmp/f_body; echo failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-12 19:37:44 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS -m 20 -D - -o /dev/null -H "Origin: https://www.777.dev" -H "User-Agent: Mozilla/5.0" https://roobet.com/_api/currency/balances 2>&1 | head -40
+HTTP/2 200 
+date: Sat, 12 Sep 2026 19:26:37 GMT
+content-type: application/json; charset=utf-8
+content-length: 946
+cf-ray: a3a14e0b8ecef7b5-LAX
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://www.777.dev
+etag: W/"3b2-pyA7ams3/0tEcnER3dm0IB6A+o4"
+server: cloudflare
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Origin, Accept-Encoding
+access-control-allow-credentials: true
+expect-ct: max-age=0
+referrer-policy: no-referrer
+speculation-rules: "/cdn-cgi/speculation"
+x-content-type-options: nosniff
+x-dns-prefetch-control: off
+x-download-options: noopen
+x-frame-options: SAMEORIGIN
+x-permitted-cross-domain-policies: none
+x-xss-protection: 0
+alt-svc: h3=":443"; ma=86400
+[0m
+[0m$ [0msleep 1; curl -sS -m 20 -D - -o /dev/null -H "Origin: https://evil777.dev" -H "User-Agent: Mozilla/5.0" https://roobet.com/_api/currency/balances 2>&1 | grep -iE "^(HTTP|access-control|content-type|content-length)"
+HTTP/2 200 
+content-type: application/json; charset=utf-8
+content-length: 946
+access-control-allow-credentials: true
+[0m
+[0m$ [0msleep 1; curl -sS -m 20 -D - -H "User-Agent: Mozilla/5.0" https://betpandacasino.io/rest/user/details 2>&1 | head -30
+HTTP/2 200 
+date: Sat, 12 Sep 2026 19:26:47 GMT
+content-type: application/json
+cf-ray: a3a14e45aa9c3dc4-LAX
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpuP7j22GXttxqWthFj1jcRpLvY; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 13 Sep 2026 18:26:47 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVerified":false,"country":"US","currencies":[],"phoneNumberVerified":false,"principalVerified":false,"oneTimeTokenLogin":false,"currentLevel":0}
+[0m
+STEP 1 — DELTA
+- NO_DELTA: knowledge base + inventory + leads unchanged since last cycle (2026-09-12 17:17:10). Live re-verification this cycle executed: top finding + controls + casino endpoint — all stable, no drift, no new surface. Remaining hypotheses all HUMAN/AUTH_HELPED-gated.
+
+STEP 2 — PRIORITIZE
+[PRIO] roobet.com/_api,6.1,business_value+gate_ease+cloud_surface — live-reverified this cycle (ACAO+ACAC:true), controls clean
+[PRIO] betpandacasino.io/rest/user/details,5.65,gate_ease+freshness — live-reverified this cycle, byte-stable user-state model
+[PRIO] rainbet-com-rabbitmq.rainbet.com:15671/5671,5.2,cloud_surface(raw DO origin)+freshness — exposure final, cred-only residual
+
+STEP 3 — HYPOTHESES
+[HYP] api.777.dev / released 777.dev member as credentialed trust root (residual chain)
+class: MISCONFIG
+asset: api.777.dev + *.777.dev → roobet.com/_api
+confidence: 42
+reasoning: prod /_api reflects ACAO https://www.777.dev (non-resolving name) with ACAC:true, verified live this cycle; api.777.dev is a live Express/session backend (connect.sid, helmet, CF 104.18.43.25); any whitelisted member that reflects untrusted input becomes a credentialed-read origin for prod game data incl. socket JWT flow.
+evidence_needed: confirmed reflection/XSS on a whitelisted member — requires authorized active testing in staging.
+verify_steps: DONE for trust side (GET /_api/currency/balances, Origin https://www.777.dev → ACAO+ACAC:true on 200; control https://evil777.dev → no ACAO). Boundary break proven; exploitation requires HUMAN.
+impact: staging-to-prod ATO chain via CORS-trusted origin for credentialed reads (balances/round state/session). HIGH.
+testability: HUMAN_ONLY
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend confirmed, /config/config.json + /rest/public/config leak operatorId=1 + full endpoint map; /rest/player/uid/1 returns 401 "You need to be logged in" anonymously (auth boundary initially intact) — BOLA class when authorization binds to session, not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET of /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with provided credentialed sessions; passive side done (401 anon).
+impact: cross-affiliate player record/PII exposure. HIGH.
+testability: AUTH_HELPED
+[HYP] RainBet Broker Default/Weak-Credential AMQP (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671/15671
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207), no CF/ACL; /api/overview 401 Basic re-verified prior cycle; default guest/guest or weak broker creds untested.
+evidence_needed: single authorized anonymous AMQP client connect reading server properties (no brute-force).
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow manipulation if valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] api.777.dev trust-root chain (42): no passive confirmation path, requires authorized staging XSS testing.
+[PARKED] RainBet broker default/weak AMQP (45): no anonymous path, requires authorized AMQP client; base exposure (74) already report-ready.
+[PARKED] Affiliate BOLA (68): AUTH_HELPED, blocked on credentialed sessions — not a FINAL until proven cross-uid.
+[FINAL] 1. Roobet CORS namespace-wide trust (90) — re-verified live this cycle: ACAO https://www.777.dev + ACAC:true on 200, evil777.dev control no-ACAO, clean. No drift.
+[FINAL] 2. Casino /rest/user/details unauth user-state model (86) — re-verified live this cycle: 200, full model (country/US, kyc/principal flags, currentLevel), x-site-name-id echo, ACAO pinned betpandacasino.io. No drift.
+[FINAL] 3. RainBet broker mgmt-UI+AMQP public on raw DO origins (74) — unchanged.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-wide trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev (live-reverified), 11/11 member census → Roobet CF pair, api.777.dev live Express, clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands); (b) betpandacasino.io /rest/user/details 301B anon user-state leak (live-reverified); (c) RainBet broker mgmt-UI+AMQP on raw DO origins (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates BOLA (`/rest/player/uid/{uid}`) + casino post-auth `/rest/user/{account-balances-and-bonuses,refresh,details}`.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: live probe this cycle — GET /_api/currency/balances, Origin https://www.777.dev → 200 + ACAO reflected + ACAC:true; Origin https://evil777.dev → 200, NO ACAO. Top finding stable, controls clean, no drift.
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details: live probe this cycle — 200 JSON user-state model (loggedIn=false, blockedStatus=NONE, country=US, kycVerified=false, currentLevel=0), x-site-name-id=betpandacasino_io, ACAO pinned https://betpandacasino.io. No drift.
+[LEARN] ACCEPTED OTHER @ avatarux-studios passive surface: delta empty — broker /api 401, casino config/callback 404, help.desk 303, cpanel takeover monitoring-only; passives closed, no new anonymous exposure.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 90 — top CORS finding re-verified live with clean controls (no drift), casino user-state byte-stable, no new anonymous surface, no disclosure inflation, no active testing against live customer data; three report-ready findings (90/86/74) stable pending HUMAN submission and credentialed sessions.

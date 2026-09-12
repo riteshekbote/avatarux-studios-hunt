@@ -648,3 +648,13 @@ www.avatarux.com
 - CHANGED rainbet-com-rabbitmq.rainbet.com/api/* — /api/overview re-verified 401 Basic — anonymous API topology claim falsified; exposure = mgmt-UI+AMQP only
 - CHANGED cpanel.avatarux.com — NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only (reconfirmed)
 - CHANGED betpandacasino.io/rest/public/config + callback/webhook surface — all 404 — passive gaps CLOSED (reconfirmed)
+
+## 2026-09-12 19:37:44 UTC
+- NEW rainbet-com-rabbitmq.rainbet.com:15671/15672 + rainbet-us-staging-rabbitmq.rainbet.com:15671/15672 — RabbitMQ Management UI (Cowboy) + AMQP 5671/5672 exposed on raw DigitalOcean origins (159.203.34.20
+- NEW staging-api.rainbet.com — x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-empty
+- NEW api.777.dev — live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin confirmed real running service, route tree ≠ roobet.com/_api
+- NEW 777.dev zone — 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete
+- CHANGED betpandacasino.io/rest/user/details — x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint
+- CHANGED rainbet-com-rabbitmq.rainbet.com/api/* — /api/overview re-verified 401 Basic — anonymous API topology claim falsified; exposure = mgmt-UI+AMQP only
+- CHANGED cpanel.avatarux.com — NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only (reconfirmed)
+- CHANGED betpandacasino.io/rest/public/config + callback/webhook surface — all 404 — passive gaps CLOSED (reconfirmed)
