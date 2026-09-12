@@ -4042,3 +4042,70 @@ testability: PASSIVE
 [LEARN] ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api — sibling staging app, not endpoint map mirror.
 [LEARN] REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
 [RISK] avatarux-studios: 88 — Top 3 exploitable paths: BetPanda Casino unauthenticated user state disclosure (92, PASSIVE), Roobet staging-to-prod CORS trust (88, PASSIVE), Help Desk mass tenant enumeration (85, PASSIVE). Fresh credentialed targets identified for BetPanda affiliate/casino APIs; Roobet Socket.IO accessible from game Origin. Passive surface: help.desk 96+ portals exposed, casino SSRF falsified, mail config stale, cPanel takeover unclaimable. Risk = HIGH — BetPanda exposes user state model without auth; Roobet trusts staging origin on production gaming API with credentials; RainBet exposes messaging backbone management UI on raw origins (no CF/ACL) with AMQP ports open.
+## 2026-09-12 14:19:25 UTC [target] (model nemotron3)
+[NEW] rainbet-com-rabbitmq.rainbet.com + rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) exposed on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no CF/ACL — in-scope RainBet messaging backbone
+[NEW] staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-empty
+[NEW] api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin confirmed real running service
+[NEW] 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete
+[CHANGED] betpandacasino.io/rest/user/details: x-site-name-id header test (stake_com) → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint
+[CHANGED] rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic — anonymous API topology claim falsified; exposure = mgmt-UI+AMQP only
+[CHANGED] cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only (reconfirmed)
+[CHANGED] betpandacasino.io/rest/public/config + callback/webhook surface: all 404 — passive gaps CLOSED (reconfirmed)
+[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,8.2,attack_surface=8,business_value=9,tech_exposure=9,gate_ease=3,cloud_surface=9,freshness=10
+[PRIO] rainbet-us-staging-rabbitmq.rainbet.com:15671,7.8,attack_surface=7,business_value=8,tech_exposure=9,gate_ease=3,cloud_surface=9,freshness=10
+[PRIO] staging-api.rainbet.com,7.1,attack_surface=6,business_value=7,tech_exposure=7,gate_ease=10,cloud_surface=8,freshness=8
+[PRIO] betpandacasino.io/rest/user/details,9.0,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=6,freshness=10
+[PRIO] roobet.com/_api,8.7,attack_surface=8,business_value=9,tech_exposure=8,gate_ease=10,cloud_surface=8,freshness=8
+[PRIO] help.desk.avatarux.com,8.2,attack_surface=9,business_value=6,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=7
+[PRIO] api.777.dev,6.5,attack_surface=6,business_value=6,tech_exposure=6,gate_ease=10,cloud_surface=7,freshness=9
+[HYP] RainBet RabbitMQ Management UI + AMQP Exposed on Raw DigitalOcean Origins
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671,15672,5671,5672 / rainbet-us-staging-rabbitmq.rainbet.com:15671,15672,5671,5672
+confidence: 90
+reasoning: Two live RabbitMQ brokers on raw DigitalOcean IPs (159.203.34.207, 165.227.255.111) with Management UI (15671/15672) and AMQP (5671/5672) publicly accessible, no Cloudflare/WAF. /api/* requires Basic auth (401), but management UI landing page and AMQP protocol ports are open. Cluster enumeration closed (rbtmq-dev/preprod/preprod-us/stg-us all NXDOMAIN). In-scope RainBet messaging infrastructure.
+evidence_needed: Confirm if management UI leaks cluster topology, queue names, or metrics without auth; test AMQP anonymous connection attempt (protocol-level); verify if any queue/message data accessible via management API with default/weak creds
+verify_steps: GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview -H "Accept: application/json" (expect 401); GET https://rainbet-com-rabbitmq.rainbet.com:15671/ (landing page); openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -servername rainbet-com-rabbitmq.rainbet.com (TLS handshake); repeat for rainbet-us-staging-rabbitmq.rainbet.com
+impact: Messaging backbone exposure enables queue enumeration, potential message interception/injection, cluster topology disclosure, DoS via AMQP — HIGH (production + staging brokers exposed)
+testability: PASSIVE
+[HYP] BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 92
+reasoning: NEW endpoint returns HTTP 200 with full user state object (loggedIn:false, blocked:false, emailVerified:false, kycVerified:false, country:"US", currentLevel:1, currencies:[...], blockedStatus:null, phoneNumberVerified:false, principalVerified:false, oneTimeTokenLogin:false) without authentication; other user endpoints (/me, /profile, /info) return 404, /settings returns 401; Spring Boot backend confirmed by JSON error format; data model discloses auth/authorization structure, KYC fields, level progression, currency handling. x-site-name-id header test (stake_com) shows no passive tenant switch.
+evidence_needed: Confirm if endpoint returns different data with valid session vs anonymous; test if it leaks PII when authenticated; verify no other unauthenticated user endpoints exist
+verify_steps: GET https://betpandacasino.io/rest/user/details -H "Accept: application/json" — capture full response body/headers; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers; GET https://betpandacasino.io/rest/user/details -H "x-site-name-id: stake_com" — confirm no tenant switch
+impact: User state model disclosure enables reconnaissance for targeted attacks, potential logic flaws in state transitions, KYC bypass enumeration — MEDIUM
+testability: PASSIVE
+[HYP] Roobet Production API Trusts Entire *.777.dev Staging Namespace in CORS with Credentials
+class: MISCONFIG
+asset: roobet.com/_api
+confidence: 88
+reasoning: CORS preflight (OPTIONS) and GET on /_api/game/tiki21/currentRoundHash reflect ACAO: https://777.dev and https://api.777.dev with ACAC: true on production game data endpoints; 777.dev is a Roobet/Cozy staging environment (live behind Cloudflare, 403 root, HSTS-preload); topkek.com (Cozy prod) is NOT whitelisted; namespace-wide string-suffix match confirmed (any *.777.dev including non-resolving www.777.dev, 11/11 cert names resolve to Roobet CF pair). Staging origin trusted on production API with credentials enables potential credentialed cross-origin requests from compromised staging.
+evidence_needed: Verify ACAO reflection on additional production endpoints (/currency/balances, /game/*/currentRoundHash, /socket.io); confirm 777.dev subdomain takeover risk or XSS on staging
+verify_steps: OPTIONS https://roobet.com/_api/game/tiki21/currentRoundHash -H "Origin: https://777.dev" -H "Access-Control-Request-Method: GET" — capture ACAO/ACAC; GET https://roobet.com/_api/currency/balances -H "Origin: https://777.dev" — capture ACAO; OPTIONS https://roobet.com/_api/socket.io -H "Origin: https://777.dev" -H "Access-Control-Request-Method: GET" — capture ACAO/ACAC; enumerate 777.dev subdomains via crt.sh/certspotter for takeover surface
+impact: Staging-to-production trust chain bypass; if 777.dev compromised (XSS/takeover), attacker can make credentialed requests to production game APIs — HIGH
+testability: PASSIVE
+[PARKED] AvatarUX Help Desk Mass Tenant/Org ID Enumeration via 96+ Accessible JSM Portals: confidence 85 but impact LOW-MEDIUM, already well-documented, no new attack path beyond reconnaissance
+[PARKED] BetPanda Affiliate Cross-Tenant Player Data Access via IDOR on /rest/player/uid/{id}: confidence 78 but testability AUTH_HELPED — requires two valid affiliate sessions with different operatorId/tenant; no passive verification path
+[PARKED] BetPanda Casino Multi-Tenant Isolation Bypass via x-site-name-id Header on Financial Endpoints: confidence 55 but testability AUTH_HELPED — requires valid casino session; x-site-name-id test on /rest/user/details already negative
+[PARKED] Roobet Socket.IO Realtime Channel Subscription for Game State Observation: confidence 55 but testability HUMAN_ONLY — requires WebSocket client not available in this environment
+[PARKED] cpanel.avatarux.com Subdomain Takeover: confidence 25 — NS/SOA confirms Bluehost apex delegation, no separate claimable delegation; Cloudflare 1001 persists but standard zone claim impossible without program cooperation
+[PARKED] BetPanda Casino SSRF via Game Provider Callback/Webhook Endpoints: all 5 endpoints 404 — hypothesis falsified
+[PARKED] AvatarUX Legacy Mail Config Exposure via autoconfig.avatarux.com: confidence 65 but impact LOW-MEDIUM — stale config pointing to web host, actual MX records show Google Workspace/Zoho/Mandrill/ProtonMail
+[PARKED] RainBet RabbitMQ Anonymous API Topology Disclosure: /api/* all 401 Basic — claim falsified; exposure limited to mgmt-UI+AMQP
+[FINAL] 1. RainBet RabbitMQ Management UI + AMQP Exposed on Raw DigitalOcean Origins (90) — HIGH impact, PASSIVE, NEW in-scope infrastructure
+[FINAL] 2. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (92) — MEDIUM impact, PASSIVE, NEW endpoint confirmed
+[FINAL] 3. Roobet Production API Trusts Entire *.777.dev Staging Namespace in CORS (88) — HIGH impact, PASSIVE, staging-to-prod trust chain
+[NEXT] PROBE: GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview -H "Accept: application/json" — capture 401 response headers and body; GET https://rainbet-com-rabbitmq.rainbet.com:15671/ — capture management UI landing page; openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -servername rainbet-com-rabbitmq.rainbet.com < /dev/null — verify AMQP TLS handshake
+[LEARN] ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/* 401 Basic gated. In-scope RainBet messaging backbone.
+[LEARN] ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-empty.
+[LEARN] ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api — sibling staging app.
+[LEARN] ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete.
+[LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposure is mgmt-UI+AMQP only.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted.
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only.
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
+[LEARN] REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+[RISK] avatarux-studios: 89 — Top 3 exploitable paths: RainBet RabbitMQ messaging backbone exposed on raw origins (90, PASSIVE, HIGH), BetPanda Casino unauthenticated user state disclosure (92, PASSIVE, MEDIUM), Roobet staging-to-prod CORS trust chain (88, PASSIVE, HIGH). Fresh credentialed targets identified for BetPanda affiliate/casino APIs; Roobet Socket.IO accessible from game Origin. Passive surface: help.desk 96+ portals exposed, casino SSRF falsified, mail config stale, cPanel takeover unclaimable. Risk = HIGH — RainBet exposes production + staging RabbitMQ management UI + AMQP ports on raw DigitalOcean origins with no Cloudflare/ACL; Roobet trusts entire *.777.dev staging namespace on production gaming API with credentials; BetPanda exposes full user state model without auth.

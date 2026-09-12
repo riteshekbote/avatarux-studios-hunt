@@ -17339,3 +17339,482 @@ no ACAO (clean control)
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mcd /tmp && grep -i "access-control" h1.txt; echo "===H2==="; grep -i "access-control" h2.txt || echo "clean-control-no-ACAO"; echo "===B1 body==="; head -c 200 b1.txt; echo; sleep 1; curl -sS -D /tmp/h3.txt -o /tmp/b3.txt https://betpandacasino.io/rest/user/details -H "Accept: application/json" -w "HTTP %{http_code} %{size_download}B\n"; echo "===DETAILS ACAO==="; grep -i "access-control" /tmp/h3.txt; echo "===BODY==="; cat /tmp/b3.txt failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-12 14:19:36 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt 2>/dev/null && echo "---" && ls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/art 2>/dev/null
+total 412
+drwxr-xr-x 12 runner runner   4096 Sep 12 14:12 .
+drwxr-xr-x  3 runner runner   4096 Sep 12 14:12 ..
+drwxr-xr-x  7 runner runner   4096 Sep 12 14:12 .git
+drwxr-xr-x  3 runner runner   4096 Sep 12 14:12 .github
+-rw-r--r--  1 runner runner   1738 Sep 12 14:12 README.md
+-rw-r--r--  1 runner runner     32 Sep 12 14:12 analyst-out.txt
+-rw-r--r--  1 runner runner 160790 Sep 12 14:12 analyst-prompt.txt
+-rw-r--r--  1 runner runner 156954 Sep 12 14:12 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 leads
+-rw-r--r--  1 runner runner  11487 Sep 12 14:12 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 reports
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 12 14:12 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 scripts
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 triage
+---
+[0m
+[0m$ [0mfind /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt -maxdepth 2 -name "*.txt" -o -maxdepth 2 -name "*.yml" -o -maxdepth 2 -name "*.md" 2>/dev/null | head -50
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/analyst-out.txt
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-00-29.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-19-56.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-19-09.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-17-46.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-17-13.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-18-44.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-22-23.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-20-50.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-00-50.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-23-32.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-16-06.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-02-23-56.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-23-46.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-14-07.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-17-40.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-15-17.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-13-31.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-08-43.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-04-03.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-15-23.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-12-47.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-11-51.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-16-11.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-05-06.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-21-42.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-19-32.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-13-28.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-04-41.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-21-42.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-08-55.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-22-29.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-09-01.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-09-47.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-02-21-54.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-01-08.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-23-54.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-08-38.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-13-29.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-12-13-09.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-19-50.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-06-07.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-20-17.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-12-00-38.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-17-40.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-05-53.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-12-09.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-18-25.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-17-14.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-22-50.md
+[0m
+[0m→ [0mRead scope.yml
+[0m
+[0m$ [0mfor f in state_*.json; do echo "== $f =="; cat "$f"; echo; done; echo "== analyst-out =="; cat analyst-out.txt
+== state_bigpickle.json ==
+{"phase": "POC", "target": "api"}
+== state_laguna.json ==
+{"phase": "POC", "target": "api"}
+== state_ling3.json ==
+{"phase": "POC", "target": "api"}
+== state_longcat.json ==
+{"phase": "POC", "target": "api"}
+== state_mimo.json ==
+{"phase": "POC", "target": "api"}
+== state_nemotron3.json ==
+{"phase": "POC", "target": "api"}
+== analyst-out ==
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt 2>/dev/null && echo "---" && ls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/art 2>/dev/null
+total 412
+drwxr-xr-x 12 runner runner   4096 Sep 12 14:12 .
+drwxr-xr-x  3 runner runner   4096 Sep 12 14:12 ..
+drwxr-xr-x  7 runner runner   4096 Sep 12 14:12 .git
+drwxr-xr-x  3 runner runner   4096 Sep 12 14:12 .github
+-rw-r--r--  1 runner runner   1738 Sep 12 14:12 README.md
+-rw-r--r--  1 runner runner     32 Sep 12 14:12 analyst-out.txt
+-rw-r--r--  1 runner runner 160790 Sep 12 14:12 analyst-prompt.txt
+-rw-r--r--  1 runner runner 156954 Sep 12 14:12 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 leads
+-rw-r--r--  1 runner runner  11487 Sep 12 14:12 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 reports
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 12 14:12 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 scripts
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 12 14:12 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 triage
+---
+[0m
+[0m$ [0mfind /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt -maxdepth 2 -name "*.txt" -o -maxdepth 2 -name "*.yml" -o -maxdepth 2 -name "*.md" 2>/dev/null | head -50
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/analyst-out.txt
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-00-29.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-19-56.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-19-09.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-17-46.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-17-13.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-18-44.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-22-23.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-20-50.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-00-50.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-23-32.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-16-06.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-02-23-56.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-23-46.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-14-07.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-17-40.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-15-17.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-13-31.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-08-43.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-04-03.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-15-23.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-12-47.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-11-51.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-16-11.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-05-06.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-21-42.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-19-32.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-13-28.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-04-41.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-21-42.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-08-55.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-22-29.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-03-09-01.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-04-09-47.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-02-21-54.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-01-08.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-10-23-54.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-08-38.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-13-29.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-12-13-09.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-19-50.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-09-06-07.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-08-20-17.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-12-00-38.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-05-17-40.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-05-53.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-07-12-09.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-18-25.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-11-17-14.md
+/home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/triage/run-2026-09-06-22-50.md
+[0m
+[0m→ [0mRead scope.yml
+[0m
+[0m$ [0mls -la leads/ knowledge/ recon-notes/ reports/ inventory/ scripts/ 2>/dev/null
+inventory/:
+total 88
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:12 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:12 ..
+-rw-r--r--  1 runner runner 78234 Sep 12 14:12 avatarux-studios.md
+
+knowledge/:
+total 72
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:12 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:12 ..
+-rw-r--r--  1 runner runner 65084 Sep 12 14:12 index.md
+
+leads/:
+total 1044
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:12 .
+drwxr-xr-x 12 runner runner   4096 Sep 12 14:12 ..
+-rw-r--r--  1 runner runner 381429 Sep 12 14:12 lead-bigpickle.md
+-rw-r--r--  1 runner runner   3264 Sep 12 14:12 lead-laguna.md
+-rw-r--r--  1 runner runner   3200 Sep 12 14:12 lead-ling3.md
+-rw-r--r--  1 runner runner   3328 Sep 12 14:12 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep 12 14:12 lead-mimo.md
+-rw-r--r--  1 runner runner 640792 Sep 12 14:12 lead-nemotron3.md
+-rw-r--r--  1 runner runner  13626 Sep 12 14:12 reposcan-avatarux-studios.md
+
+recon-notes/:
+total 20
+drwxr-xr-x  2 runner runner 4096 Sep 12 14:12 .
+drwxr-xr-x 12 runner runner 4096 Sep 12 14:12 ..
+-rw-r--r--  1 runner runner  899 Sep 12 14:12 DEDICATED-DEEP.md
+-rw-r--r--  1 runner runner 4779 Sep 12 14:12 DEEPER-FINDINGS.md
+
+reports/:
+total 2612
+drwxr-xr-x  2 runner runner    4096 Sep 12 14:12 .
+drwxr-xr-x 12 runner runner    4096 Sep 12 14:12 ..
+-rw-r--r--  1 runner runner 1410049 Sep 12 14:12 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   13888 Sep 12 14:12 analyst-laguna.log
+-rw-r--r--  1 runner runner   13824 Sep 12 14:12 analyst-ling3.log
+-rw-r--r--  1 runner runner   13952 Sep 12 14:12 analyst-longcat.log
+-rw-r--r--  1 runner runner  980004 Sep 12 14:12 analyst-nemotron3.log
+-rw-r--r--  1 runner runner      54 Sep 12 14:12 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 12 14:12 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 12 14:12 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 12 14:12 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   10662 Sep 12 14:12 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  220049 Sep 12 14:12 hypotheses.md
+-rw-r--r--  1 runner runner    2855 Sep 12 14:12 valid-bugs.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:12 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:12 ..
+-rw-r--r--  1 runner runner 16987 Sep 12 14:12 sync-issues.py
+[0m
+[0m→ [0mRead triage/run-2026-09-12-13-09.md
+[0m→ [0mRead reports/hypotheses-bigpickle.txt
+[0m→ [0mRead probe-results.md[90m [limit=120][0m
+[0m→ [0mRead probe-results.md[90m [offset=240][0m
+[0m
+[0m$ [0mtail -80 leads/lead-bigpickle.md
+confidence: 74
+reasoning: HTTPS mgmt UI (Cowboy, DigitalOcean 159.203.34.207, no CF/ACL) 200; /api/* 401 Basic; AMQP 5671/5672 open; betting/payment event backbone. Staging twin 165.227.255.111.
+evidence_needed: none for exposure; weak-cred/AMQP abuse requires authorized active testing.
+verify_steps: done — GET https://...:15671/ → 200; /api/overview|vhosts|queues|connections → 401.
+impact: event backbone reachable from internet; mgmt brute-force + AMQP census if creds acquired. MEDIUM-HIGH.
+testability: PASSIVE (confirmed)
+[HYP] BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 85
+reasoning: GET → 200, 301B, byte-stable: loggedIn, blocked, emailVerified, kycVerified, country, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin. Spring Boot backend (JSON 404/405 signature); /rest/user/{me,profile,info} 404, /settings 401 — only unauthenticated user endpoint.
+evidence_needed: none for exposure; whether it leaks different data with a session needs credentials.
+verify_steps: done — GET, OPTIONS, Accept-variant.
+impact: exact field map for auth-gated financial/JWT endpoints pre-auth profiling; KYC/level/blocked state recon. MEDIUM.
+testability: PASSIVE (confirmed)
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS **updated to namespace-wide trust**: ACAO+ACAC:true for any `*.777.dev` origin incl. non-resolving www.777.dev (include clean-controls list: evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands), plus live-origin proof via api.777.dev; (b) casino /rest/user/details user-state model; (c) RainBet broker mgmt-UI+AMQP (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and betpandacasino.io post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
+[RISK] avatarux-studios: 86 — top finding widened host→whole namespace incl. dead-DNS names (DNS-independent reflection); three passive findings report-ready (85/85/74); nemotron3's falsified /api claim suppressed, no disclosure inflation; RainBet staging tier challenge-gated, broker /api endpoints stay 401.
+## 2026-09-12 01:33:02 UTC [target] (model bigpickle)
+[PRIO] rainbet-com-rabbitmq.rainbet.com,6.3,attack_surface+business_value+gate_ease(raw origin)
+[PRIO] roobet.com/_api,6.1,business_value+gate_ease+cloud_surface(CF origins)
+[PRIO] betpandacasino.io/rest/user/details,5.65,gate_ease+freshness
+[HYP] Roobet Production API CORS-Trusts Entire .777.dev Staging Namespace (Credentials, incl. Dead-DNS Names)
+class: MISCONFIG
+asset: roobet.com/_api + *.777.dev
+confidence: 87
+reasoning: ACAO reflects `https://www.777.dev` (no A record) with ACAC:true on /_api/currency/balances; census shows 11/11 zone members resolve to Roobet CF pair, www non-resolving. Controls clean (evil777.dev / 777.dev.evil.com / http://777.dev / null / stake/gamdom/betpanda/rainbet/cozy.gg — no ACAO). Proper https-only suffix match, credentials=true.
+evidence_needed: XSS/compromise on any namespace member for a live credentialed chain; trust-boundary break itself proven.
+verify_steps: done — GET + 12 Origin variants; census GET `/root` on 8 members.
+impact: any usable `.777.dev` host (incl. future released names, reflection is DNS-independent) is a trusted origin for credentialed reads of prod game API (balances/round state/session). Staging-to-prod trust break. HIGH.
+testability: PASSIVE (confirmed)
+[HYP] RainBet Broker Default-Credential/AMQP Guest Exposure on Raw Origin (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671/5671/5672
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207), /api/* 401 Basic; default guest/guest or weak broker creds untested — exposure claim already FINAL 74.
+evidence_needed: single authorized anonymous AMQP client connect reading server properties (no brute-force).
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side already done (401 Basic).
+impact: vhost/queue census + message-flow manipulation if default creds valid. HIGH.
+testability: HUMAN_ONLY
+[PARKED] RainBet guest/weak-cred AMQP: speculative, no anonymous path, requires authorized AMQP client; exposure itself already reported — parked pending HUMAN.
+[PARKED] casino /rest/user/details tenant-switch via x-site-name-id: FALSIFIED this cycle — stake_com header yields identical body, ACAO pinned to https://betpandacasino.io, echo betpandacasino_io; consistent with public-manifest evidence. Dead.
+[FINAL] 1. Roobet CORS namespace-wide trust (87) — census-complete, DNS-independent, clean controls.
+[FINAL] 2. Casino /rest/user/details unauthenticated user-state model (86) — byte-reverified 301B.
+[FINAL] 3. RainBet broker mgmt-UI+AMQP public on raw origin (74).
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-WIDE trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev, 11/11 member census (all resolve to Roobet CF pair), clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands), live-origin proof via api.777.dev; (b) casino /rest/user/details 301B user-state leak; (c) RainBet broker mgmt-UI+AMQP (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and betpandacasino.io post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
+[LEARN] ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: re-verify stable (ACAO https://www.777.dev + ACAC:true), controls clean — no drift.
+[RISK] avatarux-studios: 87 — top finding (CORS namespace) census-complete and stable across independent verifications; casino user-state leak byte-stable; no new anonymous surface (777.dev members all challenge-walled); broker/passive surfaces unchanged; passive lambda effectively closed pending credentialed sessions.
+## 2026-09-12 06:29:39 UTC [target] (model bigpickle)
+[HYP] Roobet Prod API CORS-Trusts Entire .777.dev Namespace (Credentials, incl. Dead-DNS Members)
+class: MISCONFIG
+asset: roobet.com/_api + *.777.dev
+confidence: 87
+reasoning: ACAO reflects `https://www.777.dev` (no A record) with ACAC:true on anonymous 200 probe of /_api/currency/balances; 12-name cert census all wildcarded to Roobet CF pair; api.777.dev is a live Express/session app. Controls clean (evil777.dev, 777.dev.evil.com, http://777.dev, Origin:null, sister brands → no ACAO). Proper https-only suffix match, credentials=true.
+evidence_needed: XSS/compromise on a namespace member to complete a credentialed chain; trust-boundary break itself is proven.
+verify_steps: done — GET /_api/currency/balances with 12 Origin variants + census; re-verified stable this cycle.
+impact: any usable or future `.777.dev` host is a trusted origin for credentialed prod requests (balances, round state, socket session) — staging-to-prod trust break. HIGH.
+testability: PASSIVE (confirmed)
+[HYP] api.777.dev Staging App as Credentialed Trust Root (residual chain)
+class: MISCONFIG
+asset: api.777.dev
+confidence: 40
+reasoning: live Express/session backend (connect.sid, helmet, CF 104.18.43.25); prod CORS whitelists it with credentials=true; route tree ≠ roobet.com/_api. If it (or a released namespace member) ever reflects untrusted input, it becomes a direct source-origin for credentialed prod reads.
+evidence_needed: confirmed reflection/XSS on api.777.dev or any member — requires authorized active testing.
+verify_steps: HUMAN under program authorization only; passive side (whitelist+live origin) already complete.
+impact: staging-to-prod ATO chain via CORS-trusted origin. HIGH.
+testability: HUMAN_ONLY
+[HYP] RainBet Broker Default/Weak Broker Credential AMQP (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671/15671
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DigitalOcean origin (159.203.34.207), no CF/ACL; /api/* 401 Basic; default guest/guest untested. Exposure itself already FINAL 74.
+evidence_needed: single authorized anonymous AMQP client connect reading server properties (no brute-force).
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side done (401 Basic re-confirmed prior cycle).
+impact: vhost/queue census + message-flow insight if default creds valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-WIDE trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev, 12-name cert census (all → Roobet CF pair, api.777.dev live Express), clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands); (b) betpandacasino.io /rest/user/details 301B anon user-state leak; (c) RainBet broker mgmt-UI+AMQP on raw DO origins (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and casino post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
+[RISK] avatarux-studios: 87 — three report-ready passive findings re-verified stable (87/86/74), CORS controls clean, no new anonymous surface, no disclosure inflation, no active-testing leakage against live customer data; passive lambda closed pending reported credentialed sessions.
+## 2026-09-12 11:15:27 UTC [target] (model bigpickle)
+[0m
+[0m→ [0mRead README.md
+[0m
+[0m$ [0mtimeout 15 curl -s -o /dev/null -w "%{http_code}" https://betpandacasino.io/ 2>&1; echo; timeout 15 curl -s -o /dev/null -w "%{http_code}" https://affiliates.betpanda.io/ 2>&1; echo
+200
+200
+[0m
+Network is live. Running a passive delta re-verification on the key report-ready and monitoring surfaces (≤1 rps, GET only).
+[0m$ [0mecho "== roobet CORS with 777.dev origin =="; timeout 20 curl -s -D - -o /dev/null -H "Origin: https://www.777.dev" https://roobet.com/_api/currency/balances | grep -iE "HTTP/|access-control|cross-origin"; sleep 2
+echo "== roobet CORS control evil777.dev =="; timeout 20 curl -s -D - -o /dev/null -H "Origin: https://evil777.dev" https://roobet.com/_api/currency/balances | grep -iE "HTTP/|access-control|cross-origin"
+== roobet CORS with 777.dev origin ==
+HTTP/2 200 
+access-control-allow-origin: https://www.777.dev
+access-control-allow-credentials: true
+== roobet CORS control evil777.dev ==
+HTTP/2 200 
+access-control-allow-credentials: true
+[0m
+[0m$ [0mecho "== casino /rest/user/details =="; timeout 20 curl -s -w "\nHTTP %{http_code} len=%{size_download}\n" -H "Accept: application/json" https://betpandacasino.io/rest/user/details; sleep 2
+echo "== affiliates /rest/public/config =="; timeout 20 curl -s -o /dev/null -w "HTTP %{http_code} len=%{size_download}\n" https://affiliates.betpanda.io/rest/public/config; sleep 2
+echo "== help.desk portal/4 =="; timeout 20 curl -s -o /dev/null -w "HTTP %{http_code} len=%{size_download}\n" https://help.desk.avatarux.com/servicedesk/customer/portal/4
+== casino /rest/user/details ==
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVerified":false,"country":"US","currencies":[],"phoneNumberVerified":false,"principalVerified":false,"oneTimeTokenLogin":false,"currentLevel":0}
+HTTP 200 len=301
+== affiliates /rest/public/config ==
+HTTP 200 len=398
+== help.desk portal/4 ==
+HTTP 200 len=208068
+[0m
+[0m$ [0mtimeout 25 curl -s "https://api.certspotter.com/v1/issuances?domain=rainbet.com&include_subdomains=true&expand=dns_names" | tr ',' '\n' | grep -oE "\"[a-z0-9.-]*\.rainbet\.com\"" | sort -u | head -60
+"aiostaging.rainbet.com"
+"alerts.rainbet.com"
+"blog.rainbet.com"
+"chat.rainbet.com"
+"clever.rainbet.com"
+"dev-mono.rainbet.com"
+"dev-services.rainbet.com"
+"files.rainbet.com"
+"help.rainbet.com"
+"maintenance.rainbet.com"
+"media.rainbet.com"
+"mines.rainbet.com"
+"originals.rainbet.com"
+"preprod.rainbet.com"
+"preview.rainbet.com"
+"rainbet-com-rabbitmq.rainbet.com"
+"rainbet-us-staging-rabbitmq.rainbet.com"
+"rbtmq-dev.rainbet.com"
+"rbtmq-preprod-us.rainbet.com"
+"rbtmq-preprod.rainbet.com"
+"rbtmq-stg-us.rainbet.com"
+"services.rainbet.com"
+"slot-integrations.rainbet.com"
+"socket.rainbet.com"
+"sportsbook.rainbet.com"
+"staging-alerts.rainbet.com"
+"staging-api.rainbet.com"
+"staging-blog.rainbet.com"
+"staging-chat.rainbet.com"
+"staging-mono.rainbet.com"
+"staging-monorepo.rainbet.com"
+"staging-originals.rainbet.com"
+"staging-raffles.rainbet.com"
+"staging-services.rainbet.com"
+"staging-socket.rainbet.com"
+"staging.rainbet.com"
+"www.rainbet.com"
+[0m
+[0m$ [0mecho "== rainbet broker mgmt =="; timeout 20 curl -s -o /dev/null -w "HTTP %{http_code} len=%{size_download}\n" https://rainbet-com-rabbitmq.rainbet.com:15671/; sleep 2
+echo "== staging-api leak =="; timeout 20 curl -s -D - -o /dev/null https://staging-api.rainbet.com/ | grep -iE "HTTP/|x-do-app-origin"
+== rainbet broker mgmt ==
+HTTP 200 len=3056
+== staging-api leak ==
+HTTP/2 200 
+x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504
+[0m
+New CT labels found for rainbet.com (alerts, chat, clever, dev-mono, preview, sportsbook, staging-raffles, etc.) — checking which resolve/live (passive DNS + GET).
+[0m$ [0mfor h in alerts.rainbet.com staging-alerts.rainbet.com chat.rainbet.com clever.rainbet.com preview.rainbet.com sportsbook.rainbet.com staging-raffles.rainbet.com maintenance.rainbet.com dev-mono.rainbet.com mines.rainbet.com originals.rainbet.com files.rainbet.com; do
+  ip=$(getent hosts "$h" | awk '{print $1}' | head -1)
+  echo "$h -> ${ip:-NXDOMAIN}"
+  sleep 1
+done
+alerts.rainbet.com -> 2606:4700::6812:13b5
+staging-alerts.rainbet.com -> 2606:4700::6812:13b5
+chat.rainbet.com -> 2606:4700::6812:12b5
+clever.rainbet.com -> 2606:4700::6812:12b5
+preview.rainbet.com -> NXDOMAIN
+sportsbook.rainbet.com -> NXDOMAIN
+staging-raffles.rainbet.com -> 2606:4700::6812:12b5
+maintenance.rainbet.com -> 2606:4700::6812:12b5
+dev-mono.rainbet.com -> NXDOMAIN
+mines.rainbet.com -> 2606:4700::6812:12b5
+originals.rainbet.com -> 2606:4700::6812:12b5
+files.rainbet.com -> 2606:4700::6812:13b5
+[0m
+[0m$ [0mfor h in clever.rainbet.com alerts.rainbet.com staging-alerts.rainbet.com chat.rainbet.com staging-raffles.rainbet.com maintenance.rainbet.com mines.rainbet.com originals.rainbet.com files.rainbet.com; do
+  code=$(timeout 15 curl -s -o /dev/null -w "%{http_code}" "https://$h/" -L --max-redirs 2)
+  echo "$h -> HTTP $code"
+  sleep 1
+done
+clever.rainbet.com -> HTTP 200
+alerts.rainbet.com -> HTTP 403
+staging-alerts.rainbet.com -> HTTP 404
+chat.rainbet.com -> HTTP 403
+staging-raffles.rainbet.com -> HTTP 404
+maintenance.rainbet.com -> HTTP 403
+mines.rainbet.com -> HTTP 200
+originals.rainbet.com -> HTTP 403
+files.rainbet.com -> HTTP 403
+[0m
+[0m$ [0mecho "=== clever.rainbet.com headers+title ==="; timeout 20 curl -s -D - "https://clever.rainbet.com/" -o /tmp/clever.html | grep -iE "HTTP/|server:|x-powered|location|cf-ray"; echo "--- body head ---"; head -c 600 /tmp/clever.html; echo; echo "--- title ---"; grep -ioE "<title>[^<]*</title>" /tmp/clever.html | head -3; grep -ioE "src=\"[^\"]*\.js[^\"]*\"" /tmp/clever.html | head -5; sleep 2
+echo "=== mines.rainbet.com ==="; timeout 20 curl -s -D - "https://mines.rainbet.com/" -o /tmp/mines.html | grep -iE "HTTP/|server:|location"; grep -ioE "<title>[^<]*</title>" /tmp/mines.html | head -3; grep -ioE "src=\"[^\"]*\.js[^\"]*\"" /tmp/mines.html | head -5
+=== clever.rainbet.com headers+title ===
+HTTP/2 200 
+server: cloudflare
+cf-ray: a39f845c1d177891-DFW
+--- body head ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clever &ndash; Rainbet</title>
+</head>
+<body>
+
+<script>
+(function () {
+  // Read URL parameters
+  const params = new URLSearchParams(window.location.search);
+
+  // Get the stag parameter
+  const stag = params.get("stag");
+
+  // Create/update cookie if stag exists
+  if (stag) {
+    document.cookie =
+      "stag=" + encodeURIComponent(stag) +
+      "; domain=rainbet.com" +
+      "; path=/" +
+      "; max-age=" + (60 * 60 * 2
+--- title ---
+<title>Clever &ndash; Rainbet</title>
+=== mines.rainbet.com ===
+HTTP/2 301 
+location: https://minesgames.io/
+server: cloudflare
+<title>301 Moved Permanently</title>
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcat /tmp/clever.html failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+`clever.rainbet.com` is a live 200 host (new, not in knowledge base) that sets a `stag` cookie on the parent `rainbet.com` domain. Inspecting the full page for param reflection.
