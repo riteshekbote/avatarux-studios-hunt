@@ -17818,3 +17818,69 @@ server: cloudflare
 [0m✗ [0mcat /tmp/clever.html failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
 `clever.rainbet.com` is a live 200 host (new, not in knowledge base) that sets a `stag` cookie on the parent `rainbet.com` domain. Inspecting the full page for param reflection.
+===== ANALYST bigpickle 2026-09-12 17:17:10 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/ 2>/dev/null; ls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/art/ 2>/dev/null; ls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/leads/ 2>/dev/null
+total 412
+drwxr-xr-x 12 runner runner   4096 Sep 12 17:15 .
+drwxr-xr-x  3 runner runner   4096 Sep 12 17:15 ..
+drwxr-xr-x  7 runner runner   4096 Sep 12 17:15 .git
+drwxr-xr-x  3 runner runner   4096 Sep 12 17:15 .github
+-rw-r--r--  1 runner runner   1738 Sep 12 17:15 README.md
+-rw-r--r--  1 runner runner     32 Sep 12 17:15 analyst-out.txt
+-rw-r--r--  1 runner runner 162631 Sep 12 17:15 analyst-prompt.txt
+-rw-r--r--  1 runner runner 158795 Sep 12 17:15 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 leads
+-rw-r--r--  1 runner runner  11516 Sep 12 17:15 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 reports
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 12 17:15 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 scripts
+-rw-r--r--  1 runner runner     33 Sep 12 17:15 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:15 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:15 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:15 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:15 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 12 17:15 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 triage
+total 1064
+drwxr-xr-x  2 runner runner   4096 Sep 12 17:15 .
+drwxr-xr-x 12 runner runner   4096 Sep 12 17:15 ..
+-rw-r--r--  1 runner runner 391081 Sep 12 17:15 lead-bigpickle.md
+-rw-r--r--  1 runner runner   3315 Sep 12 17:15 lead-laguna.md
+-rw-r--r--  1 runner runner   3250 Sep 12 17:15 lead-ling3.md
+-rw-r--r--  1 runner runner   3380 Sep 12 17:15 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep 12 17:15 lead-mimo.md
+-rw-r--r--  1 runner runner 652933 Sep 12 17:15 lead-nemotron3.md
+-rw-r--r--  1 runner runner  13741 Sep 12 17:15 reposcan-avatarux-studios.md
+[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead probe-results.md[90m [offset=1, limit=80][0m
+[0m→ [0mRead probe-results.md[90m [offset=220][0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mu="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+echo "=== A casino /rest/user/details ==="
+curl -s -o /tmp/a_body --dump-header /tmp/a_hdr -w "HTTP %{http_code} size=%{size_download}\n" --max-time 12 -H "Accept: application/json" -H "User-Agent: $u" https://betpandacasino.io/rest/user/details
+echo "--- body ---"; cat /tmp/a_body; echo
+sleep 1.2
+echo "=== B roobet CORS www.777.dev OPTIONS ==="
+curl -s -o /tmp/b_body --dump-header /tmp/b_hdr -w "HTTP %{http_code}\n" --max-time 12 -X OPTIONS -H "Origin: https://www.777.dev" -H "Access-Control-Request-Method: GET" -H "User-Agent: $u" https://roobet.com/_api/currency/balances
+grep -i "access-control" /tmp/b_hdr; sleep 1.2
+echo "=== C affiliates /rest/public/config ==="
+curl -s -o /tmp/c_body -w "HTTP %{http_code} size=%{size_download}\n" --max-time 12 -H "User-Agent: $u" https://affiliates.betpanda.io/rest/public/config
+head -c 400 /tmp/c_body; echo; sleep 1.2
+echo "=== D rabbitmq :15671 root ==="
+curl -s -o /tmp/d_body --dump-header /tmp/d_hdr -w "HTTP %{http_code}\n" --max-time 10 -k https://rainbet-com-rabbitmq.rainbet.com:15671/
+grep -iE "^(HTTP|server|content-type)" /tmp/d_hdr; sleep 1.2
+echo "=== E N1 casino /rest/graphql GET ==="
+curl -s -o /tmp/e_body --dump-header /tmp/e_hdr -w "HTTP %{http_code} size=%{size_download}\n" --max-time 12 -H "Accept: application/json" -H "User-Agent: $u" "https://betpandacasino.io/rest/graphql?query=%7B__typename%7D"
+head -c 300 /tmp/e_body; echo; sleep 1.2
+echo "=== F N2 affiliates /rest/graphql GET ==="
+curl -s -o /tmp/f_body --dump-header /tmp/f_hdr -w "HTTP %{http_code} size=%{size_download}\n" --max-time 12 -H "Accept: application/json" -H "User-Agent: $u" "https://affiliates.betpanda.io/rest/graphql?query=%7B__typename%7D"
+head -c 300 /tmp/f_body; echo failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
