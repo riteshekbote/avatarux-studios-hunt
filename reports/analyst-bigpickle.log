@@ -16581,3 +16581,128 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 86 — top finding widened host→whole namespace incl. dead-DNS names (DNS-independent reflection); three passive findings report-ready (85/85/74); nemotron3's falsified /api claim suppressed, no disclosure inflation; RainBet staging tier challenge-gated, broker /api endpoints stay 401.
+===== ANALYST bigpickle 2026-09-12 01:33:27 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor h in www tiki-21.games yeti-towers.games api; do printf "%-15s " "$h"; getent ahosts "$h.777.dev" 2>/dev/null | awk 'NR==1{print $1}'; done
+www             tiki-21.games   104.18.43.25
+yeti-towers.games 104.18.43.25
+api             104.18.43.25
+[0m
+[0m$ [0mfor n in api-lbc api-test gamebook promotions storybook testsite x xtest; do printf "%-12s " "$n"; getent ahosts "$n.777.dev" 2>/dev/null | awk 'NR==1{print $1}'; done
+api-lbc      104.18.43.25
+api-test     104.18.43.25
+gamebook     172.64.144.231
+promotions   104.18.43.25
+storybook    104.18.43.25
+testsite     104.18.43.25
+x            172.64.144.231
+xtest        172.64.144.231
+[0m
+[0m$ [0mfor h in api-lbc api-test gamebook promotions storybook testsite x xtest tiki-21.games yeti-towers.games; do printf "%-15s " "$h"; curl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}B" --max-time 12 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" "https://$h.777.dev/"; echo; sleep 1; done
+api-lbc         403 text/html; charset=UTF-8 5481B
+api-test        403 text/html; charset=UTF-8 5481B
+gamebook        403 text/html; charset=UTF-8 5481B
+promotions      403 text/html; charset=UTF-8 5481B
+storybook       403 text/html; charset=UTF-8 5481B
+testsite        403 text/html; charset=UTF-8 5481B
+x               403 text/html; charset=UTF-8 5481B
+xtest           403 text/html; charset=UTF-8 5481B
+tiki-21.games   403 text/html; charset=UTF-8 5481B
+yeti-towers.games 403 text/html; charset=UTF-8 5481B
+[0m
+[0m$ [0mecho "== CORS re-verify: Origin www.777.dev (non-resolving) =="; curl -s -D - -o /dev/null --max-time 15 -H "Origin: https://www.777.dev" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://roobet.com/_api/currency/balances | grep -i "access-control\|HTTP/"; sleep 1; echo "== control: evil777.dev =="; curl -s -D - -o /dev/null --max-time 15 -H "Origin: https://evil777.dev" -H "User-Agent: Mozilla/5.0" https://roobet.com/_api/currency/balances | grep -i "access-control\|HTTP/"; sleep 1; echo "== control: 777.dev.evil.com =="; curl -s -D - -o /dev/null --max-time 15 -H "Origin: https://777.dev.evil.com" -H "User-Agent: Mozilla/5.0" https://roobet.com/_api/currency/balances | grep -i "access-control\|HTTP/"
+== CORS re-verify: Origin www.777.dev (non-resolving) ==
+HTTP/2 200 
+access-control-allow-origin: https://www.777.dev
+access-control-allow-credentials: true
+== control: evil777.dev ==
+HTTP/2 200 
+access-control-allow-credentials: true
+== control: 777.dev.evil.com ==
+HTTP/2 200 
+access-control-allow-credentials: true
+[0m
+[0m$ [0mecho "== casino /rest/user/details =="; curl -s --max-time 15 -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -H "Accept: application/json" https://betpandacasino.io/rest/user/details | tr -d '\n' | cut -c1-400; echo; echo "== size =="; curl -s -o /dev/null -w "%{http_code} %{size_download}B\n" --max-time 15 -H "User-Agent: Mozilla/5.0" https://betpandacasino.io/rest/user/details
+== casino /rest/user/details ==
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVerified":false,"country":"US","currencies":[],"phoneNumberVerified":false,"principalVerified":false,"oneTimeTokenLogin":false,"currentLevel":0}
+
+== size ==
+200 301B
+[0m
+[0m$ [0mecho "== /rest/user/details with x-site-name-id: stake_com =="; curl -s -D - --max-time 15 -H "User-Agent: Mozilla/5.0" -H "Accept: application/json" -H "x-site-name-id: stake_com" -H "Origin: https://stake.com" https://betpandacasino.io/rest/user/details | grep -i "access-control\|HTTP/\|^[a-z-]*:\|{" | cut -c1-160; echo; echo "== body =="; curl -s --max-time 15 -H "User-Agent: Mozilla/5.0" -H "Accept: application/json" -H "x-site-name-id: stake_com" https://betpandacasino.io/rest/user/details | tr -d '\n' | cut -c1-200; echo
+== /rest/user/details with x-site-name-id: stake_com ==
+HTTP/2 200 
+date: Sat, 12 Sep 2026 01:32:38 GMT
+content-type: application/json
+cf-ray: a39b28cf1e01e60b-IAD
+cf-cache-status: DYNAMIC
+access-control-allow-origin: https://betpandacasino.io
+cache-control: no-cache, no-store, max-age=0, must-revalidate, must-revalidate
+expires: 0
+server: cloudflare
+set-cookie: __cflb=02DiuHvZXV12ut48bRfpY9SfHui9PYtcxEN8KZvdk1L52; HttpOnly; SameSite=None; Secure; Path=/; Expires=Sun, 13 Sep 2026 00:32:38 GMT
+strict-transport-security: max-age=31536000 ; includeSubDomains
+vary: Origin
+pragma: no-cache
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Conne
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 0
+x-site-name-id: betpandacasino_io
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVer
+
+== body ==
+{"loggedIn":false,"blocked":false,"emailVerified":false,"newUser":false,"blockedStatus":"NONE","attributes":{},"responseStatus":"NONE","userSettings":{},"kycVerified":false,"country":"US","currencies"
+[0m
+STEP 1 — DELTA:
+- [NEW] 777.dev staging-zone census complete: 11/11 cert-name members resolve to Roobet CF pair (104.18.43.25/172.64.144.231); `www.777.dev` has no A record yet still reflects ACAO — DNS-independent reflection fully evidenced. All 10 resolving members uniformly CF-challenge 403 (5481B), zero anonymous content.
+- [CHANGED] roobet.com/_api CORS (ACAO `https://www.777.dev` + ACAC:true, controls clean) and betpandacasino.io/rest/user/details (200, 301B, identical field map) re-verified byte/header-stable this cycle.
+
+STEP 2 — PRIORITIZE:
+[PRIO] rainbet-com-rabbitmq.rainbet.com,6.3,attack_surface+business_value+gate_ease(raw origin)
+[PRIO] roobet.com/_api,6.1,business_value+gate_ease+cloud_surface(CF origins)
+[PRIO] betpandacasino.io/rest/user/details,5.65,gate_ease+freshness
+
+STEP 3 — HYPOTHESES:
+[HYP] Roobet Production API CORS-Trusts Entire .777.dev Staging Namespace (Credentials, incl. Dead-DNS Names)
+class: MISCONFIG
+asset: roobet.com/_api + *.777.dev
+confidence: 87
+reasoning: ACAO reflects `https://www.777.dev` (no A record) with ACAC:true on /_api/currency/balances; census shows 11/11 zone members resolve to Roobet CF pair, www non-resolving. Controls clean (evil777.dev / 777.dev.evil.com / http://777.dev / null / stake/gamdom/betpanda/rainbet/cozy.gg — no ACAO). Proper https-only suffix match, credentials=true.
+evidence_needed: XSS/compromise on any namespace member for a live credentialed chain; trust-boundary break itself proven.
+verify_steps: done — GET + 12 Origin variants; census GET `/root` on 8 members.
+impact: any usable `.777.dev` host (incl. future released names, reflection is DNS-independent) is a trusted origin for credentialed reads of prod game API (balances/round state/session). Staging-to-prod trust break. HIGH.
+testability: PASSIVE (confirmed)
+
+[HYP] RainBet Broker Default-Credential/AMQP Guest Exposure on Raw Origin (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671/5671/5672
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207), /api/* 401 Basic; default guest/guest or weak broker creds untested — exposure claim already FINAL 74.
+evidence_needed: single authorized anonymous AMQP client connect reading server properties (no brute-force).
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side already done (401 Basic).
+impact: vhost/queue census + message-flow manipulation if default creds valid. HIGH.
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE:
+[PARKED] RainBet guest/weak-cred AMQP: speculative, no anonymous path, requires authorized AMQP client; exposure itself already reported — parked pending HUMAN.
+[PARKED] casino /rest/user/details tenant-switch via x-site-name-id: FALSIFIED this cycle — stake_com header yields identical body, ACAO pinned to https://betpandacasino.io, echo betpandacasino_io; consistent with public-manifest evidence. Dead.
+[FINAL] 1. Roobet CORS namespace-wide trust (87) — census-complete, DNS-independent, clean controls.
+[FINAL] 2. Casino /rest/user/details unauthenticated user-state model (86) — byte-reverified 301B.
+[FINAL] 3. RainBet broker mgmt-UI+AMQP public on raw origin (74).
+
+STEP 5 — NEXT ACTION:
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-WIDE trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev, 11/11 member census (all resolve to Roobet CF pair), clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands), live-origin proof via api.777.dev; (b) casino /rest/user/details 301B user-state leak; (c) RainBet broker mgmt-UI+AMQP (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and betpandacasino.io post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
+
+STEP 6 — LEARNING:
+[LEARN] ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: re-verify stable (ACAO https://www.777.dev + ACAC:true), controls clean — no drift.
+
+STEP 7 — RISK:
+[RISK] avatarux-studios: 87 — top finding (CORS namespace) census-complete and stable across independent verifications; casino user-state leak byte-stable; no new anonymous surface (777.dev members all challenge-walled); broker/passive surfaces unchanged; passive lambda effectively closed pending credentialed sessions.

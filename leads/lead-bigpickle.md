@@ -2913,3 +2913,35 @@ impact: exact field map for auth-gated financial/JWT endpoints pre-auth profilin
 testability: PASSIVE (confirmed)
 [NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS **updated to namespace-wide trust**: ACAO+ACAC:true for any `*.777.dev` origin incl. non-resolving www.777.dev (include clean-controls list: evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands), plus live-origin proof via api.777.dev; (b) casino /rest/user/details user-state model; (c) RainBet broker mgmt-UI+AMQP (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and betpandacasino.io post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
 [RISK] avatarux-studios: 86 — top finding widened host→whole namespace incl. dead-DNS names (DNS-independent reflection); three passive findings report-ready (85/85/74); nemotron3's falsified /api claim suppressed, no disclosure inflation; RainBet staging tier challenge-gated, broker /api endpoints stay 401.
+## 2026-09-12 01:33:02 UTC [target] (model bigpickle)
+[PRIO] rainbet-com-rabbitmq.rainbet.com,6.3,attack_surface+business_value+gate_ease(raw origin)
+[PRIO] roobet.com/_api,6.1,business_value+gate_ease+cloud_surface(CF origins)
+[PRIO] betpandacasino.io/rest/user/details,5.65,gate_ease+freshness
+[HYP] Roobet Production API CORS-Trusts Entire .777.dev Staging Namespace (Credentials, incl. Dead-DNS Names)
+class: MISCONFIG
+asset: roobet.com/_api + *.777.dev
+confidence: 87
+reasoning: ACAO reflects `https://www.777.dev` (no A record) with ACAC:true on /_api/currency/balances; census shows 11/11 zone members resolve to Roobet CF pair, www non-resolving. Controls clean (evil777.dev / 777.dev.evil.com / http://777.dev / null / stake/gamdom/betpanda/rainbet/cozy.gg — no ACAO). Proper https-only suffix match, credentials=true.
+evidence_needed: XSS/compromise on any namespace member for a live credentialed chain; trust-boundary break itself proven.
+verify_steps: done — GET + 12 Origin variants; census GET `/root` on 8 members.
+impact: any usable `.777.dev` host (incl. future released names, reflection is DNS-independent) is a trusted origin for credentialed reads of prod game API (balances/round state/session). Staging-to-prod trust break. HIGH.
+testability: PASSIVE (confirmed)
+[HYP] RainBet Broker Default-Credential/AMQP Guest Exposure on Raw Origin (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:15671/5671/5672
+confidence: 45
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207), /api/* 401 Basic; default guest/guest or weak broker creds untested — exposure claim already FINAL 74.
+evidence_needed: single authorized anonymous AMQP client connect reading server properties (no brute-force).
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side already done (401 Basic).
+impact: vhost/queue census + message-flow manipulation if default creds valid. HIGH.
+testability: HUMAN_ONLY
+[PARKED] RainBet guest/weak-cred AMQP: speculative, no anonymous path, requires authorized AMQP client; exposure itself already reported — parked pending HUMAN.
+[PARKED] casino /rest/user/details tenant-switch via x-site-name-id: FALSIFIED this cycle — stake_com header yields identical body, ACAO pinned to https://betpandacasino.io, echo betpandacasino_io; consistent with public-manifest evidence. Dead.
+[FINAL] 1. Roobet CORS namespace-wide trust (87) — census-complete, DNS-independent, clean controls.
+[FINAL] 2. Casino /rest/user/details unauthenticated user-state model (86) — byte-reverified 301B.
+[FINAL] 3. RainBet broker mgmt-UI+AMQP public on raw origin (74).
+[NEXT] HUMAN: submit at bugs.olivermaicher.eu — (a) Roobet CORS NAMESPACE-WIDE trust: ACAO+ACAC:true for any `*.777.dev` incl. non-resolving www.777.dev, 11/11 member census (all resolve to Roobet CF pair), clean-controls list (evil777.dev / 777.dev.evil.com / http://777.dev / null / sister brands), live-origin proof via api.777.dev; (b) casino /rest/user/details 301B user-state leak; (c) RainBet broker mgmt-UI+AMQP (159.203.34.207 / 165.227.255.111). Request credentialed sessions for affiliates.betpanda.io BOLA (`/rest/player/uid/{uid}`) and betpandacasino.io post-auth `/rest/user/{account-balances-and-bonuses,refresh}`.
+[LEARN] ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: re-verify stable (ACAO https://www.777.dev + ACAC:true), controls clean — no drift.
+[RISK] avatarux-studios: 87 — top finding (CORS namespace) census-complete and stable across independent verifications; casino user-state leak byte-stable; no new anonymous surface (777.dev members all challenge-walled); broker/passive surfaces unchanged; passive lambda effectively closed pending credentialed sessions.

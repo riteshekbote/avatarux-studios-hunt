@@ -1,22 +1,37 @@
-## 2026-09-11 23:35:12 UTC [target] (model nemotron3)
-[PRIO] betpandacasino.io/rest/user/details,8.5,attack_surface=9,business_value=7,tech_exposure=9,gate_ease=10,cloud_surface=6,freshness=10
-[PRIO] roobet.com/_api,8.3,attack_surface=8,business_value=9,tech_exposure=8,gate_ease=10,cloud_surface=8,freshness=7
-[PRIO] help.desk.avatarux.com,7.8,attack_surface=9,business_value=6,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=6
-[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,6.5,attack_surface=7,business_value=8,tech_exposure=6,gate_ease=3,cloud_surface=9,freshness=5
+## 2026-09-12 01:33:05 UTC [target] (model nemotron3)
+[NEW] betpandacasino.io/rest/user/details: NEW unauthenticated endpoint returning full user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, oneTimeTokenLogin) — 301B JSON, Spring Boot backend confirmed
+[NEW] roobet.com/_api CORS: whitelist is namespace-wide string-suffix match on `.777.dev` (any subdomain incl. non-resolving) with ACAC=true on production game data endpoints; topkek.com (prod) NOT whitelisted
+[NEW] help.desk.avatarux.com portals 4–100+: surface expanded from 7 to 96+ portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID, Statsig config (prod-euwest, shard jira-prod-eu-3)
+[NEW] rainbet-com-rabbitmq.rainbet.com + rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) exposed on raw DigitalOcean origins (159.203.34.207, 165.227.255.111), no CF/ACL; /api/* 401 Basic gated
+[NEW] staging-api.rainbet.com: leaks x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) through Cloudflare on 200-empty
+[NEW] roobet.com/_api/socket.io: Engine.IO handshake succeeds (200, sid assigned, WS upgrade, maxPayload=1000) from Origin: tiki-21.games.roobet.com — transport layer accessible from game SPA domain
+[NEW] roobet.com/_api/game/{chess,yeti-towers,pop_towers}/currentRoundHash: all HTTP 401 (12B) — uniform auth boundary across 4 game types confirmed
+[CHANGED] cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 persists but takeover mechanism unproven, downgraded to monitoring only
+[CHANGED] betpandacasino.io/rest/public/config: Spring JSON 404 confirmed — casino does NOT mirror affiliates leak; passive corroboration gap CLOSED
+[CHANGED] betpandacasino.io callback/webhook surface: all 5 endpoints (/rest/callback, /rest/webhook, /rest/notify, /rest/game/callback, /rest/api/game/callback) return 404; SSRF hypothesis falsified
+[CHANGED] affiliates.betpanda.io/rest/public/config: stable 200 byte-identical (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty)
+[CHANGED] affiliates.betpanda.io/rest/player/uid/1: 401-gated confirmed — auth boundary intact anonymously, supports AUTH_HELPED classification
+[CHANGED] RainBet RabbitMQ cluster: exactly 2 live hosts confirmed (rbtmq-dev/preprod/preprod-us/stg-us all NXDOMAIN); enumeration closed
+[PRIO] betpandacasino.io/rest/user/details,9.0,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=6,freshness=10
+[PRIO] roobet.com/_api,8.7,attack_surface=8,business_value=9,tech_exposure=8,gate_ease=10,cloud_surface=8,freshness=8
+[PRIO] help.desk.avatarux.com,8.2,attack_surface=9,business_value=6,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=7
+[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,7.5,attack_surface=7,business_value=8,tech_exposure=6,gate_ease=3,cloud_surface=9,freshness=6
+[PRIO] staging-api.rainbet.com,6.8,attack_surface=5,business_value=7,tech_exposure=6,gate_ease=10,cloud_surface=8,freshness=6
+[PRIO] affiliates.betpanda.io/rest/public/config,6.5,attack_surface=6,business_value=7,tech_exposure=6,gate_ease=10,cloud_surface=5,freshness=4
 [HYP] BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details
 class: MISCONFIG
 asset: betpandacasino.io/rest/user/details
 confidence: 92
 reasoning: NEW endpoint returns HTTP 200 with full user state object (loggedIn:false, blocked:false, emailVerified:false, kycVerified:false, country:"US", currentLevel:1, currencies:[...], blockedStatus:null, phoneNumberVerified:false, principalVerified:false, oneTimeTokenLogin:false) without authentication; other user endpoints (/me, /profile, /info) return 404, /settings returns 401; Spring Boot backend confirmed by JSON error format; data model discloses auth/authorization structure, KYC fields, level progression, currency handling
 evidence_needed: Confirm if endpoint returns different data with valid session vs anonymous; test if it leaks PII when authenticated
-verify_steps: GET https://betpandacasino.io/rest/user/details — capture full response body/headers; GET https://betpandacasino.io/rest/user/details with Accept: application/json vs text/html; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers; with valid casino session GET /rest/user/details — compare response
+verify_steps: GET https://betpandacasino.io/rest/user/details -H "Accept: application/json" — capture full response body/headers; GET https://betpandacasino.io/rest/user/details with valid session cookie (if available) — compare response; OPTIONS https://betpandacasino.io/rest/user/details — capture allow-methods and CORS headers
 impact: User state model disclosure enables reconnaissance for targeted attacks, potential logic flaws in state transitions, KYC bypass enumeration — MEDIUM
 testability: PASSIVE
 [HYP] Roobet Production API Trusts Entire *.777.dev Staging Namespace in CORS with Credentials
 class: MISCONFIG
 asset: roobet.com/_api
 confidence: 88
-reasoning: CORS preflight (OPTIONS) and GET on /_api/game/tiki21/currentRoundHash reflect ACAO: https://777.dev and https://api.777.dev with ACAC: true on production game data endpoints; 777.dev is a Roobet/Cozy staging environment (live behind Cloudflare, 403 root, HSTS-preload); topkek.com (Cozy prod) is NOT whitelisted; staging origin trusted on production API with credentials enables potential credentialed cross-origin requests from compromised staging
+reasoning: CORS preflight (OPTIONS) and GET on /_api/game/tiki21/currentRoundHash reflect ACAO: https://777.dev and https://api.777.dev with ACAC: true on production game data endpoints; 777.dev is a Roobet/Cozy staging environment (live behind Cloudflare, 403 root, HSTS-preload); topkek.com (Cozy prod) is NOT whitelisted; staging origin trusted on production API with credentials enables potential credentialed cross-origin requests from compromised staging; namespace-wide match confirmed (any *.777.dev including non-resolving names)
 evidence_needed: Verify ACAO reflection on additional production endpoints (/currency/balances, /game/*/currentRoundHash, /socket.io); confirm 777.dev subdomain takeover risk or XSS on staging
 verify_steps: OPTIONS https://roobet.com/_api/game/tiki21/currentRoundHash -H "Origin: https://777.dev" -H "Access-Control-Request-Method: GET" — capture ACAO/ACAC; GET https://roobet.com/_api/currency/balances -H "Origin: https://777.dev" — capture ACAO; OPTIONS https://roobet.com/_api/socket.io -H "Origin: https://777.dev" -H "Access-Control-Request-Method: GET" — capture ACAO/ACAC; enumerate 777.dev subdomains via crt.sh/certspotter for takeover surface
 impact: Staging-to-production trust chain bypass; if 777.dev compromised (XSS/takeover), attacker can make credentialed requests to production game APIs — HIGH
