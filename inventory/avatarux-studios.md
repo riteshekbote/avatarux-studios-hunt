@@ -712,3 +712,5 @@ www.avatarux.com
 - CHANGED help.desk.avatarux.com portals 4-100 stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config — no delta
 - CHANGED affiliates.betpanda.io/rest/public/config byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms) — unchanged
 - CHANGED betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
+
+## 2026-09-13 16:28:46 UTC

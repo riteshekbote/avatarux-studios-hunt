@@ -374,3 +374,6 @@
 - 2026-09-13 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only.
 - 2026-09-13 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
 - 2026-09-13 REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+- 2026-09-13 REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; management-API auth uniform; bigpickle "closed on all endpoint families" claim now directly evidenced.
+- 2026-09-13 ACCEPTED OTHER @ roobet.com/_api: connect.sid SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS trust chain exploitation leg broken.
+- 2026-09-13 ACCEPTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: connection timeout this cycle — mgmt-port fluxing persists; prod broker is the only stable reachable surface.

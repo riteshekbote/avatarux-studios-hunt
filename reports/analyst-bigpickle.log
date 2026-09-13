@@ -19971,3 +19971,336 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 90 — passive surface now conclusively exhausted (RabbitMQ anon /api closed on all endpoint families; broker residual is HUMAN_ONLY weak-credential note). Three report-ready finals stable (90/86/74); probes this cycle = 3 read-only GETs ≤1 rps, no mutating/credentialed tests, no disclosure inflation; pending only human submission + credential grants.
+===== ANALYST bigpickle 2026-09-13 16:28:46 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && echo "---" && ls art/ 2>/dev/null && echo "---" && ls inventory/ 2>/dev/null
+total 436
+drwxr-xr-x 12 runner runner   4096 Sep 13 16:24 .
+drwxr-xr-x  3 runner runner   4096 Sep 13 16:24 ..
+drwxr-xr-x  7 runner runner   4096 Sep 13 16:24 .git
+drwxr-xr-x  3 runner runner   4096 Sep 13 16:24 .github
+-rw-r--r--  1 runner runner   1738 Sep 13 16:24 README.md
+-rw-r--r--  1 runner runner     32 Sep 13 16:24 analyst-out.txt
+-rw-r--r--  1 runner runner 174167 Sep 13 16:24 analyst-prompt.txt
+-rw-r--r--  1 runner runner 170331 Sep 13 16:24 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 leads
+-rw-r--r--  1 runner runner  11719 Sep 13 16:24 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 reports
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 13 16:24 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 scripts
+-rw-r--r--  1 runner runner     33 Sep 13 16:24 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 13 16:24 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 13 16:24 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 13 16:24 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 13 16:24 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 13 16:24 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 13 16:24 triage
+---
+[0m
+[0m$ [0mcat scope.yml && echo "=== STATE bigpickle ===" && cat state_bigpickle.json && echo && echo "=== leads ===" && ls leads/ && echo "=== knowledge ===" && ls knowledge/ && echo "=== state nemotron3 ===" && cat state_nemotron3.json
+programs:
+  avatarux-studios:
+    name: AvatarUX Studios Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "Brands: Roobet, Stake, Gamdom, BetPanda, RainBet. All infrastructure, game services, APIs and systems operated by AvatarUX Studios and its distributed gaming integrations"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+=== STATE bigpickle ===
+{"phase": "POC", "target": "api"}
+=== leads ===
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-avatarux-studios.md
+=== knowledge ===
+index.md
+=== state nemotron3 ===
+{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mcat leads/lead-nemotron3.md 2>/dev/null | tail -40; echo "=== bigpickle ==="; tail -30 leads/lead-bigpickle.md; echo "=== probe-results tail ==="; tail -40 probe-results.md
+confidence: 78
+reasoning: Management UI (Cowboy) returns 200 on /; /api/overview returns 401 Basic. RabbitMQ management API has multiple endpoints (/api/queues, /api/exchanges, /api/connections, /api/vhosts, /api/channels) that may have inconsistent auth. Raw DigitalOcean origin (159.203.34.207) with no Cloudflare/WAF. Same exposure on staging broker (rainbet-us-staging-rabbitmq.rainbet.com:15671, 165.227.255.111). AMQP ports 5671/5672 also open publicly.
+evidence_needed: Anonymous 200 on any /api/* endpoint beyond /api/overview revealing queue names, message counts, exchange topology, or connection details
+verify_steps: GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json"; GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/exchanges -H "Accept: application/json"; GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/vhosts -H "Accept: application/json"; GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/connections -H "Accept: application/json"; repeat for rainbet-us-staging-rabbitmq.rainbet.com:15671
+impact: Full messaging topology disclosure — queue names, routing keys, message rates, consumer details, vhost layout — enables targeted queue poisoning, message interception, or business logic abuse in gaming transaction flows (bets, payouts, bonuses) — HIGH
+testability: PASSIVE
+[HYP] Roobet Production Game API Credentialed Requests via Compromised *.777.dev Staging Origin
+class: AUTH
+asset: roobet.com/_api
+confidence: 84
+reasoning: Production /_api reflects ACAO: https://*.777.dev with ACAC:true on game data endpoints (currentRoundHash, currency/balances, socket.io). 777.dev is a live Roobet/Cozy staging environment (11/11 cert names resolve to Roobet CF pair 104.18.43.25). Non-resolving www.777.dev still reflects ACAO — namespace-wide string-suffix match. api.777.dev is a live Express/session backend (connect.sid, helmet, ACAC:true preset). If any *.777.dev subdomain has XSS/takeover, attacker can make credentialed cross-origin requests to production game APIs from victim's browser.
+evidence_needed: Confirmed XSS/takeover on any *.777.dev subdomain OR demonstration that cookies (connect.sid) are sent cross-origin from 777.dev to roobet.com/_api
+verify_steps: GET https://roobet.com/_api/game/tiki21/currentRoundHash -H "Origin: https://www.777.dev" -H "Accept: application/json" — capture ACAO/ACAC; GET https://roobet.com/_api/currency/balances -H "Origin: https://api.777.dev" -H "Accept: application/json" — capture ACAO; GET https://roobet.com/_api/socket.io/?EIO=4&transport=polling -H "Origin: https://tiki-21.games.roobet.com" -H "Accept: application/json"; enumerate 777.dev subdomains via crt.sh for takeover/XSS surface
+impact: Staging-to-production trust chain bypass — compromised staging origin enables credentialed requests to production gaming APIs (round hashes, balances, socket.io) leading to game state manipulation, balance tampering, or session hijacking — HIGH
+testability: PASSIVE
+[HYP] BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 92
+reasoning: /rest/user/details returns HTTP 200 with full user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified) without authentication. Backend is Spring Boot (confirmed by JSON error format). OPTIONS on /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context with ACAO pinned to https://betpandacasino.io. x-site-name-id echo betpandacasino_io confirms multi-tenant capability. x-site-name-id header testing (stake_com, roobet_com) on /rest/user/details shows no body/ACAO/echo change — but only tested on unauthenticated endpoint.
+evidence_needed: Confirmation that authenticated requests to /rest/user/details return PII (email, username, balance, KYC docs) — requires credentialed session
+verify_steps: GET https://betpandacasino.io/rest/user/details -H "Accept: application/json" (unauthenticated baseline); OPTIONS https://betpandacasino.io/rest/user/details -H "Access-Control-Request-Method: GET" -H "Origin: https://betpandacasino.io" -H "Access-Control-Request-Headers: x-site-name-id"
+impact: Unauthenticated disclosure of user state schema and default values (country=US, kycVerified=false, currentLevel=0, blockedStatus=NONE) — aids reconnaissance for credentialed attacks, reveals multi-tenant architecture — MEDIUM
+testability: PASSIVE
+[FINAL] 1. Roobet Production Game API Credentialed Requests via Compromised *.777.dev Staging Origin (84) — HIGH, PASSIVE, staging-to-prod trust chain
+[FINAL] 2. RainBet RabbitMQ Anonymous Queue/Exchange Enumeration via Management API (78) — HIGH, PASSIVE, messaging topology disclosure
+[FINAL] 3. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (92) — MEDIUM, PASSIVE, confirmed endpoint
+[NEXT] PROBE: GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json" — test anonymous queue enumeration on production RabbitMQ management API; GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/exchanges -H "Accept: application/json" — test anonymous exchange enumeration; GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/vhosts -H "Accept: application/json" — test vhost disclosure
+[LEARN] ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/overview 401 Basic gated. In-scope RainBet messaging backbone.
+[LEARN] ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-empty.
+[LEARN] ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service, route tree ≠ roobet.com/_api — sibling staging app.
+[LEARN] ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence complete.
+[LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposure is mgmt-UI+AMQP only.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted.
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only.
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
+[LEARN] REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+[RISK] avatarux-studios: 91 — Top 3 exploitable paths: Roobet staging-to-prod CORS trust chain (84, PASSIVE, HIGH) — entire *.777.dev namespace trusted with credentials on production gaming API; RainBet RabbitMQ management UI + AMQP exposed on raw DigitalOcean origins (78, PASSIVE, HIGH) — anonymous queue/exchange enumeration possible; BetPanda Casino unauthenticated user state disclosure (92, PASSIVE, MEDIUM) — full user model (KYC, level, blocked, country) without auth. Passive surface otherwise closed: cPanel takeover unclaimable, casino SSRF/config falsified, help.desk portals stable reconnaissance only. Risk = HIGH — staging-to-production trust bypass and exposed messaging backbone represent critical attack paths.
+=== bigpickle ===
+## 2026-09-13 12:03:00 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; /config/config.json + /rest/public/config leak operatorId=1 and full endpoint map; /rest/player/uid/1 → 401 anonymously — BOLA class when authz binds to session not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with credentialed sessions; passive side done (401-gated, endpoint map complete).
+impact: cross-affiliate player/PII exposure. HIGH.
+testability: AUTH_HELPED
+[HYP] api-graphql mutation-side-effect auth-gap on staging (fair-seed rotate / limits / raffle)
+class: AUTH
+asset: api.777.dev/graphql mutations (instantRaffleCreate, liveRTPUpdate, lossLimitUpdate, wagerLimitUpdate, stakeEngineFairSeedsRotate)
+confidence: 50
+reasoning: query-side auth plugin fires at resolver AFTER arg validation (arg-required errors precede NOT_AUTHENTICATED); 26 mutations mapped; 14-path sweep found no alternate anonymous surface.
+evidence_needed: authorized staging session — invoke each mutation with no/invalid cookie, confirm NOT_AUTHENTICATED with zero side-effects; verify session-store isolation from prod.
+verify_steps: HUMAN with staging credential under scoped authorization; passive side COMPLETE.
+impact: staging raffle/reward/limit-state manipulation; MEDIUM staging, HIGH only if prod session store shared (unverified).
+testability: AUTH_HELPED
+[HYP] RainBet broker default/weak AMQP credential (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671
+confidence: 35
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207); all /api/* now re-verified 401 Basic; guest/guest untested.
+evidence_needed: one authorized AMQP client connect reading server properties.
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow manipulation if valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+[NEXT] HUMAN: at bugs.olivermaicher.eu extend the pending submission — add this cycle's negative evidence (api.777.dev 14-path sweep, CORS controls clean, RabbitMQ /api/queues 401 closing the last anonymous topology probe) and request (a) api.777.dev staging credential for the 26-mutation side-effect surface, (b) two credentialed affiliate sessions for the /rest/player/uid BOLA test — alongside ready finals 90/86/74.
+[RISK] avatarux-studios: 90 — passive surface now conclusively exhausted (RabbitMQ anon /api closed on all endpoint families; broker residual is HUMAN_ONLY weak-credential note). Three report-ready finals stable (90/86/74); probes this cycle = 3 read-only GETs ≤1 rps, no mutating/credentialed tests, no disclosure inflation; pending only human submission + credential grants.
+=== probe-results tail ===
+https://help.desk.avatarux.com/servicedesk/customer/portal/{4..100 -> HTTP 303
+
+## 2026-09-11 21:44:49 UTC
+
+
+## 2026-09-11 23:35:23 UTC
+https://help.desk.avatarux.com/servicedesk/customer/portal/{4..100 -> HTTP 303
+
+## 2026-09-12 01:33:30 UTC
+https://help.desk.avatarux.com/servicedesk/customer/portal/{4..100 -> HTTP 303
+
+## 2026-09-12 06:33:39 UTC
+https://help.desk.avatarux.com/servicedesk/customer/portal/{4..100 -> HTTP 303
+
+## 2026-09-12 11:21:01 UTC
+https://help.desk.avatarux.com/servicedesk/customer/portal/{4..100 -> HTTP 303
+
+## 2026-09-12 14:19:36 UTC
+
+
+## 2026-09-12 17:17:10 UTC
+
+
+## 2026-09-12 19:37:44 UTC
+
+
+## 2026-09-12 21:41:43 UTC
+
+
+## 2026-09-12 23:22:14 UTC
+
+
+## 2026-09-13 01:14:21 UTC
+
+
+## 2026-09-13 06:20:35 UTC
+
+
+## 2026-09-13 12:03:09 UTC
+[0m
+[0m$ [0mgrep -n -i "rabbitmq\|api/queues\|api/exchanges\|api/vhosts\|15671\|15672" probe-results.md | tail -30
+(no output)
+[0m
+[0m$ [0mcurl -sS -o /tmp/rq_q.json -w "prod queues: HTTP %{http_code} | size=%{size_download} | ct=%{content_type}\n" --max-time 15 -H "Accept: application/json" "https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues"; head -c 300 /tmp/rq_q.json 2>/dev/null; echo
+prod queues: HTTP 401 | size=0 | ct=
+[0m
+[0m$ [0msleep 1; curl -sS -o /tmp/rq_q2.json -w "stg queues(15671): HTTP %{http_code} | size=%{size_download}\n" --max-time 15 -H "Accept: application/json" "https://rainbet-us-staging-rabbitmq.rainbet.com:15671/api/queues"; head -c 300 /tmp/rq_q2.json 2>/dev/null; echo; sleep 1; curl -sS -o /tmp/rq_q3.json -w "stg queues(15672 plain): HTTP %{http_code} | size=%{size_download}\n" --max-time 15 -H "Accept: application/json" "http://rainbet-us-staging-rabbitmq.rainbet.com:15672/api/queues"; head -c 300 /tmp/rq_q3.json 2>/dev/null; echo
+curl: (28) Connection timed out after 15000 milliseconds
+stg queues(15671): HTTP 000 | size=0
+
+curl: (28) Connection timed out after 15001 milliseconds
+stg queues(15672 plain): HTTP 000 | size=0
+[0m
+Production broker `/api/queues` → 401 Basic (size 0), same challenge as `/api/overview`; staging mgmt ports timing out (flux, consistent with prior cycles). One decisive passive check remains for the #1 hypothesis: the SameSite attribute of the roobet session cookie determines whether the CORS staging-trust chain is browser-exploitable at all.
+[0m$ [0msleep 1; curl -sS -o /dev/null -D /tmp/roo_headers.txt -w "tiki21 currentRoundHash: HTTP %{http_code}\n" --max-time 20 -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125 Safari/537.36" -H "Origin: https://tiki-21.games.roobet.com" -H "Accept: application/json" "https://roobet.com/_api/game/tiki21/currentRoundHash"; grep -i "set-cookie\|same-site\|same-site" /tmp/roo_headers.txt
+tiki21 currentRoundHash: HTTP 401
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax
+set-cookie: connect.sid=; Domain=roobet.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: userId=; Domain=roobet.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: userId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: twofactorRequired=; Domain=roobet.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+set-cookie: twofactorRequired=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+[0m
+[0m$ [0mcat >> probe-results.md <<'EOF'
+
+## 2026-09-13 16:2x UTC
+GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues -> HTTP 401 (size 0, Basic challenge) — anonymous queue enumeration falsified on prod, last untested mgmt-API family
+GET https://rainbet-us-staging-rabbitmq.rainbet.com:15671/api/queues -> timeout 15s
+GET http://rainbet-us-staging-rabbitmq.rainbet.com:15672/api/queues -> timeout 15s (mgmt ports fluxing, prod-only stable)
+GET https://roobet.com/_api/game/tiki21/currentRoundHash (UA+Origin tiki-21.games.roobet.com) -> HTTP 401; Set-Cookie clears connect.sid with Path=/; HttpOnly; SameSite=Lax (+Domain/Path variants) — session cookie is SameSite=Lax, cross-site credentialed fetch/WS from *.777.dev excluded by browser
+EOF
+echo appended
+appended
+[0m
+Decisive result: `connect.sid` carries **SameSite=Lax + HttpOnly** — cross-site `fetch()`/`WS` from a `*.777.dev` page to roobet.com is cookie-blocked by browser policy. The CORS staging-trust chain's exploitation leg is broken; severity drops. Logging evidence to the pipeline files.
+[0m$ [0mcat >> leads/lead-bigpickle.md <<'EOF'
+## 2026-09-13 16:2x UTC [target] (model bigpickle)
+[HYP] Roobet /_api CORS staging-namespace trust chain (exploitation-leg re-test)
+class: MISCONFIG
+asset: roobet.com/_api (CORS *.777.dev; session cookie connect.sid)
+confidence: 40 (was 62 pre-cycle)
+reasoning: ACAO+ACAC true for *.777.dev confirmed; but connect.sid Set-Cookie attributes now captured = SameSite=Lax + HttpOnly → cross-site subresource/WS from 777.dev cannot carry the session cookie on modern browsers; chain broken for fetch-based exfil.
+evidence_needed: none passive — would require SameSite=None cookie or a 777.dev page with same-site (777.dev) API surface reaching roobet; both absent.
+verify_steps: PASSIVE closed; HUMAN-only to revisit if cookie attrs drift.
+impact: downgraded to informational CORS over-trust (defense-in-depth); no session theft path.
+testability: PASSIVE (closed) / HUMAN_ONLY (drift monitor)
+[LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; management-API auth uniform; bigpickle "closed on all endpoint families" claim now directly evidenced.
+[LEARN] ACCEPTED OTHER @ roobet.com/_api: connect.sid SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS trust chain exploitation leg broken.
+[LEARN] ACCEPTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: connection timeout this cycle — mgmt-port fluxing persists; prod broker is the only stable reachable surface.
+[RISK] avatarux-studios: 84 — SameSite=Lax mitigation deflates the CORS HIGH chain; RabbitMQ anon-/api falsified on all families; report-ready finals are MED/INFO tier (casino /rest/user/details, help.desk portal tenant-id, affiliates /rest/public/config, rabbitmq mgmt-UI+AMQP via HUMAN AMQP probe). Probes 4 read-only GET ≤1 rps, no mutating/credentialed tests. High-value paths remain AUTH_HELPED (affiliate BOLA, api.777.dev 26-mutation side-effect gap) pending credential grants.
+EOF
+echo appended
+appended
+[0m
+STEP 1 — DELTA
+- [CHANGED] rainbet-com-rabbitmq.rainbet.com:15671/api/queues → HTTP 401 Basic (size 0) — first probe of the last untested mgmt-API family; anonymous topology disclosure falsified on reachable broker.
+- [CHANGED] rainbet-us-staging-rabbitmq.rainbet.com:15671/15672 → both connection timeouts this cycle (mgmt-port flux continues; prod broker is sole stable surface).
+- [CHANGED] roobet.com/_api: connect.sid cookie attributes now captured = SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev is browser-blocked; CORS staging-trust chain's exploitation leg broken.
+- NO_DELTA otherwise: no new hosts/endpoints; all prior passive surfaces re-verified closed this cycle.
+
+STEP 2 — PRIORITIZE
+- [PRIO] roobet.com/_api,7.4,tech_exposure+freshness — downgraded in practice: exploitation leg broken by SameSite=Lax
+- [PRIO] betpandacasino.io/rest,6.6,business_value+gate_ease — /rest/user/details 200 anon; authenticated /rest/user census untested
+- [PRIO] affiliates.betpanda.io/rest,6.15,business_value — BOLA pending two credentialed sessions
+- [PRIO] help.desk.avatarux.com portals,6.0,gate_ease — 96+ portals 200 leak tenant-id/atlassianOrgId (report-ready, stable)
+- [PRIO] api.777.dev/graphql,5.95,tech_exposure — 26 mutations mapped; side-effect auth-gap blocked on staging credential
+- [PRIO] rainbet RabbitMQ cluster,5.0,cloud_surface — reduced: anon /api falsified; residual HUMAN_ONLY weak-credential (conf 35)
+
+STEP 3 — HYPOTHESES
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; /config/config.json + /rest/public/config leak operatorId=1 + endpoint map; /rest/player/uid/1 → 401 anonymously; authz binds to session, not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with two credentialed sessions; passive side complete (401-gated, endpoint map done).
+impact: cross-affiliate player/PII exposure. HIGH.
+testability: AUTH_HELPED
+
+[HYP] api.777.dev GraphQL mutation pre-auth side-effects (fair-seed rotate / limits / raffle)
+class: AUTH
+asset: api.777.dev/graphql (stakeEngineFairSeedsRotate, instantRaffleCreate, liveRTPUpdate, lossLimitUpdate, wagerLimitUpdate)
+confidence: 50
+reasoning: query-side auth plugin fires AFTER arg validation (arg-required errors precede NOT_AUTHENTICATED); 26 mutations mapped; 14-path sweep found no alternate anonymous surface; CORS + SameSite posture do not protect server-side effects.
+evidence_needed: authorized staging session; invoke each mutation with no/invalid cookie → confirm NOT_AUTHENTICATED with zero side-effects; verify session-store isolation from prod.
+verify_steps: HUMAN with staging credential under scoped authorization; passive side COMPLETE.
+impact: staging raffle/reward/limit-state manipulation; MEDIUM staging, HIGH only if prod session store shared (unverified).
+testability: AUTH_HELPED
+
+[HYP] Casino authenticated /rest/user endpoint census (PII via post-auth surface)
+class: AUTH
+asset: betpandacasino.io/rest/user/{details,settings} (Spring Boot)
+confidence: 45
+reasoning: anonymous /rest/user/details 200 exposes user-state model; /rest/user/settings 401 "No http-session"; /rest/user/{me,profile,info} 404; authenticated request set unknown, x-site-name-id tenant switch ignored only on anonymous path.
+evidence_needed: one credentialed casino session; enumerate GET /rest/user/* authenticated; test cross-tenant x-site-name-id on authenticated endpoints.
+verify_steps: HUMAN with credentialed casino session under scoped authorization; passive side complete (ua-200 baseline, endpoint 404/401 map).
+impact: tenant-switch or self-data model census on money-flow platform; MEDIUM unless cross-tenant proven.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] Roobet /_api CORS staging-namespace trust chain: ACAO+ACAC for *.777.dev reconfirmed, but new capture shows connect.sid SameSite=Lax+HttpOnly → browser refuses cross-site fetch/WS cookie delivery; exploitation leg broken. Informational CORS over-trust only; drop to conf 40, no passive path forward short of drфt monitoring.
+- [PARKED] RainBet anonymous /api queue/exchange/vhost topology: falsified on production broker via /api/queues 401 (uniform with /api/overview); staging unreachable this cycle. Residual weak-credential check is conf 35 (<40) → not survivable.
+- [FINAL] Affiliate BOLA /rest/player/uid (68, AUTH_HELPED) — evidence path concrete, blocked solely on credential grant.
+- [FINAL] api.777.dev GraphQL mutation-side-effect gap (50, AUTH_HELPED) — passive complete, single authorized test settles.
+- [FINAL] Casino authenticated /rest/user census (45, AUTH_HELPED) — low-cost credential test on money-flow platform.
+
+STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: extend pending submission at bugs.olivermaicher.eu with this cycle's negative controls — (1) RabbitMQ prod /api/queues 401 closing the last mgmt-API family + staging mgmt-port timeout, (2) roobet connect.sid SameSite=Lax/HttpOnly proving the CORS *.777.dev chain is cookie-blocked cross-site (reduce to informational, no disclosure inflation); request (a) api.777.dev staging credential (26-mutation side-effect test), (b) two credentialed affiliate sessions (/rest/player/uid BOLA), (c) one credentialed casino session (authenticated /rest/user census) — alongside report-ready finals (casino /rest/user/details, help.desk portals tenant-id, affiliates /rest/public/config; rabbitmq mgmt-UI+AMQP pending HUMAN AMQP connect).
+
+STEP 6 — LEARNING
+- [LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: HTTP 401 Basic, identical to /api/overview — anonymous queue enumeration falsified; management-API auth uniform across endpoint families.
+- [LEARN] ACCEPTED OTHER @ roobet.com/_api: connect.sid is SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser; CORS staging-trust exploitation leg broken.
+- [LEARN] ACCEPTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: connection timeout this cycle — mgmt-port fluxing persists; production broker is the only stable reachable surface.
+
+STEP 7 — RISK
+- [RISK] avatarux-studios: 84 — SameSite=Lax mitigation deflates the top CORS HIGH chain; RabbitMQ anonymous /api falsified on all families; effective exposure is MED/INFO-tied report-ready finals (casino /rest/user/details 200 model, help.desk 96 portals tenant-id, affiliates /rest/public/config, rabbitmq mgmt-UI+AMQP). Credentials hold the remaining HIGH-value paths (BOLA, staging mutations) in pending-AUTH_HELPED state. Probes this cycle = 4 read-only GET ≤1 rps, no mutating/credentialed tests, no disclosure inflation; risk managed, awaiting human submission + grants.

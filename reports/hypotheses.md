@@ -1703,3 +1703,34 @@
 - LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
 - LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
 - LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+
+## RANKED HYPOTHESES 2026-09-13 16:28:46 UTC
+- [78] roobet.com/_api: Roobet Production Game API Credentialed Requests via Compromised *.777.dev Staging Origin (from art/lead_bigpickle.txt)
+- [78] rainbet-com-rabbitmq.rainbet.com:15671/api: RainBet RabbitMQ Anonymous Queue/Exchange Enumeration via Management API (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json" — test anonymous queue enumeration on production RabbitMQ man
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json"
+- LEARN: ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public 
+- LEARN: ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-em
+- LEARN: ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real runnin
+- LEARN: ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence compl
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposu
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
+- LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+- LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; manag
+- LEARN: ACCEPTED OTHER @ roobet.com/_api: connect.sid SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS 
+- LEARN: ACCEPTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: connection timeout this cycle — mgmt-port fluxing persists; prod broker is the only stable
+- LEARN: ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public 
+- LEARN: ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin: 1ce4ff55-e85f-4c30-8033-5129a1812504 (DO App Platform origin UUID) leaks through Cloudflare on 200-em
+- LEARN: ACCEPTED OTHER @ api.777.dev: live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real runnin
+- LEARN: ACCEPTED OTHER @ 777.dev zone: 11/11 cert-name members resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO — namespace-trust evidence compl
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview re-verified 401 Basic over HTTPS — "anonymous /api endpoints" claim falsified; exposu
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
+- LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+- LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
