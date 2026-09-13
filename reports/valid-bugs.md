@@ -30,3 +30,6 @@
 
 - 1 lead(s) marked VALID at 2026-09-07 23:46:20 UTC
   - | Q3 Impact | **YES** | Timing differential could enumerate valid accounts |
+
+- 1 lead(s) marked VALID at 2026-09-13 19:00:05 UTC
+  - | Q7 Reasonable triager | YES — Cloudflare 1001 with stable dangling DNS is accepted by most triagers as a valid subdomain takeover lead |
