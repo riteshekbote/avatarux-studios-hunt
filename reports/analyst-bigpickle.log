@@ -19893,3 +19893,8 @@ testability: HUMAN_ONLY
 
 ## STEP 7 — RISK
 [RISK] avatarux-studios: 90 — three report-ready finals stable (90/86/74) with controls re-verified clean this cycle; all probes read-only GET (17 requests, ≤1 rps, spaced); api.777.dev sweep was negative (no new surface), CORS negative control clean, no mutating/credentialed tests, no disclosure inflation; pending only human submission + credentialed session grants.
+===== ANALYST bigpickle 2026-09-13 06:20:35 UTC =====
+[0m
+> build · big-pickle
+[0m
+[91m[1mError: [0mError from provider (Console): Upstream request failed: [invalid_request_error] Unrecognized request argument supplied: prompt_cache_key
