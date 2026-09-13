@@ -1,12 +1,12 @@
-## 2026-09-13 06:19:57 UTC [target] (model nemotron3)
-[NEW] RainBet RabbitMQ management API endpoints beyond /api/overview remain untested (/api/queues, /api/exchanges, /api/vhosts, /api/connections) on both production and staging brokers
-[NEW] Roobet CORS trust chain: 777.dev namespace (11 subdomains) all resolve to Roobet CF pair; non-resolving www.777.dev still reflects ACAO with ACAC:true — namespace-wide trust confirmed
+## 2026-09-13 12:02:51 UTC [target] (model nemotron3)
+[NEW] RainBet RabbitMQ management API endpoints beyond /api/overview untested (/api/queues, /api/exchanges, /api/vhosts, /api/connections) on both production (rainbet-com-rabbitmq.rainbet.com:15671) and staging (rainbet-us-staging-rabbitmq.rainbet.com:15671) brokers
+[NEW] Roobet CORS trust chain: 777.dev namespace (11 subdomains) all resolve to Roobet CF pair (104.18.43.25); non-resolving www.777.dev still reflects ACAO with ACAC:true — namespace-wide string-suffix trust confirmed
 [CHANGED] betpandacasino.io/rest/user/details x-site-name-id stake_com test re-verified negative — no passive tenant switch on user-state endpoint
-[CHANGED] cpanel.avatarux.com takeover downgraded to monitoring-only (NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation) — reconfirmed
+[CHANGED] cpanel.avatarux.com takeover downgraded to monitoring-only (NS/SOA confirms Bluehost apex delegation ns1/ns2.bluehost.com, no claimable subdomain delegation) — reconfirmed
 [CHANGED] help.desk.avatarux.com portals 4-100 stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config — no delta
 [CHANGED] affiliates.betpanda.io/rest/public/config byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms) — unchanged
 [CHANGED] betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
-[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,15672,5671,5672,9.15,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=9
+[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,9.15,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=10,cloud_surface=8,freshness=9
 [PRIO] roobet.com/_api,8.65,attack_surface=9,business_value=8,tech_exposure=9,gate_ease=8,cloud_surface=8,freshness=9
 [PRIO] betpandacasino.io/rest/user/details,7.65,attack_surface=8,business_value=7,tech_exposure=7,gate_ease=10,cloud_surface=6,freshness=8
 [PRIO] help.desk.avatarux.com,6.85,attack_surface=7,business_value=6,tech_exposure=6,gate_ease=10,cloud_surface=7,freshness=6
@@ -38,7 +38,6 @@ evidence_needed: Confirmation that authenticated requests to /rest/user/details 
 verify_steps: GET https://betpandacasino.io/rest/user/details -H "Accept: application/json" (unauthenticated baseline); OPTIONS https://betpandacasino.io/rest/user/details -H "Access-Control-Request-Method: GET" -H "Origin: https://betpandacasino.io" -H "Access-Control-Request-Headers: x-site-name-id"
 impact: Unauthenticated disclosure of user state schema and default values (country=US, kycVerified=false, currentLevel=0, blockedStatus=NONE) — aids reconnaissance for credentialed attacks, reveals multi-tenant architecture — MEDIUM
 testability: PASSIVE
-[PARKED] BetPanda Casino Cross-Tenant User State Access via x-site-name-id Header on /rest/user/details: confidence 55 below threshold; x-site-name-id test on /rest/user/details already negative for stake_com/roobet_com; no evidence of tenant-switching on unauthenticated endpoint; requires valid tenant IDs unknown to attacker
 [FINAL] 1. Roobet Production Game API Credentialed Requests via Compromised *.777.dev Staging Origin (84) — HIGH, PASSIVE, staging-to-prod trust chain
 [FINAL] 2. RainBet RabbitMQ Anonymous Queue/Exchange Enumeration via Management API (78) — HIGH, PASSIVE, messaging topology disclosure
 [FINAL] 3. BetPanda Casino Unauthenticated User State Disclosure via /rest/user/details (92) — MEDIUM, PASSIVE, confirmed endpoint

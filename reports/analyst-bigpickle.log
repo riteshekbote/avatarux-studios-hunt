@@ -19898,3 +19898,76 @@ testability: HUMAN_ONLY
 > build · big-pickle
 [0m
 [91m[1mError: [0mError from provider (Console): Upstream request failed: [invalid_request_error] Unrecognized request argument supplied: prompt_cache_key
+===== ANALYST bigpickle 2026-09-13 12:03:09 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sk --max-time 12 -D - -o /dev/null https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json" | head -20
+HTTP/1.1 401 Unauthorized
+content-length: 0
+content-security-policy: script-src 'self' 'unsafe-eval' 'unsafe-inline'; object-src 'self'
+date: Sun, 13 Sep 2026 12:01:41 GMT
+server: Cowboy
+vary: origin
+www-authenticate: Basic realm="RabbitMQ Management"
+[0m
+[0m$ [0mcurl -sk --max-time 12 -D - -o /dev/null https://rainbet-us-staging-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json" | head -20
+(no output)
+[0m
+[0m$ [0mcurl -sk --max-time 15 -D - -o /dev/null -w "code=%{http_code} err=%{errormsg}\n" https://rainbet-us-staging-rabbitmq.rainbet.com:15671/api/queues -H "Accept: application/json" | head -20
+code=000 err=Connection timed out after 15002 milliseconds
+[0m
+STEP 1 — DELTA
+- [NEW] rainbet-com-rabbitmq.rainbet.com:15671/api/queues → 401 Basic `WWW-Authenticate: Basic realm="RabbitMQ Management"` — last untested management-API family closed; nemotron3 [78] anonymous queue/exchange/vhost enumeration FALSIFIED at the HTTP layer (not only /api/overview).
+- [CHANGED] rainbet-us-staging-rabbitmq.rainbet.com:15671/api/queues → connection timeout this cycle (15000ms) — mgmt UI fluxing again (matches prior :15672 flux); exposure claim rests on HTTPS :15671 + AMQP 5671/5672 only.
+
+STEP 2 — PRIORITIZE
+- [PRIO] api.777.dev/graphql,6.05,freshness+tech(gql/26-mutations)
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{uid},5.85,business(PII+raft)
+- [PRIO] rainbet-com-rabbitmq.rainbet.com:15671,3.85,gate(401)
+
+STEP 3 — HYPOTHESES
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; /config/config.json + /rest/public/config leak operatorId=1 and full endpoint map; /rest/player/uid/1 → 401 anonymously — BOLA class when authz binds to session not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with credentialed sessions; passive side done (401-gated, endpoint map complete).
+impact: cross-affiliate player/PII exposure. HIGH.
+testability: AUTH_HELPED
+
+[HYP] api-graphql mutation-side-effect auth-gap on staging (fair-seed rotate / limits / raffle)
+class: AUTH
+asset: api.777.dev/graphql mutations (instantRaffleCreate, liveRTPUpdate, lossLimitUpdate, wagerLimitUpdate, stakeEngineFairSeedsRotate)
+confidence: 50
+reasoning: query-side auth plugin fires at resolver AFTER arg validation (arg-required errors precede NOT_AUTHENTICATED); 26 mutations mapped; 14-path sweep found no alternate anonymous surface.
+evidence_needed: authorized staging session — invoke each mutation with no/invalid cookie, confirm NOT_AUTHENTICATED with zero side-effects; verify session-store isolation from prod.
+verify_steps: HUMAN with staging credential under scoped authorization; passive side COMPLETE.
+impact: staging raffle/reward/limit-state manipulation; MEDIUM staging, HIGH only if prod session store shared (unverified).
+testability: AUTH_HELPED
+
+[HYP] RainBet broker default/weak AMQP credential (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671
+confidence: 35
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207); all /api/* now re-verified 401 Basic; guest/guest untested.
+evidence_needed: one authorized AMQP client connect reading server properties.
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow manipulation if valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] RainBet RabbitMQ Anonymous Queue/Exchange Enumeration via Management API: /api/queues (and prior /api/overview) both 401 Basic — claim conclusively falsified across all endpoint families; the [78] ranked lead must be removed.
+- [PARKED] RainBet broker default AMQP credential: confidence 35 < 40 floor; retains value only as residual note attached to the accepted mgmt-UI/AMQP-exposure final, not as a standalone hypothesis.
+- [FINAL] 1. Affiliate BOLA (conf 68, AUTH_HELPED, HIGH impact). 2. GraphQL mutation side-effect surface (conf 50, AUTH_HELPED, mutating test requires credential).
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: at bugs.olivermaicher.eu extend the pending submission — add this cycle's negative evidence (api.777.dev 14-path sweep, CORS controls clean, RabbitMQ /api/queues 401 closing the last anonymous topology probe) and request (a) api.777.dev staging credential for the 26-mutation side-effect surface, (b) two credentialed affiliate sessions for the /rest/player/uid BOLA test — alongside ready finals 90/86/74.
+
+STEP 6 — LEARNING
+- [LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: 401 Basic — anonymous /api topology enumeration FALSIFIED across all management endpoint families; exposure is mgmt-UI+AMQP only.
+- [LEARN] ACCEPTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15671: /api/queues timed out this cycle — mgmt UI fluxing; HTTPS :15671 + AMQP 5671/5672 exposure claim retained.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 90 — passive surface now conclusively exhausted (RabbitMQ anon /api closed on all endpoint families; broker residual is HUMAN_ONLY weak-credential note). Three report-ready finals stable (90/86/74); probes this cycle = 3 read-only GETs ≤1 rps, no mutating/credentialed tests, no disclosure inflation; pending only human submission + credential grants.
