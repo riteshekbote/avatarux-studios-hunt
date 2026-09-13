@@ -714,3 +714,12 @@ www.avatarux.com
 - CHANGED betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
 
 ## 2026-09-13 16:28:46 UTC
+
+## 2026-09-13 19:03:21 UTC
+- NEW RainBet RabbitMQ management API endpoints beyond `/api/overview` remain completely untested on both production (`rainbet-com-rabbitmq.rainbet.com:15671`) and staging (`rainbet-us-staging-rabbitmq.rain
+- NEW Roobet CORS trust chain: `777.dev` namespace (11 subdomains) all resolve to Roobet CF pair (104.18.43.25); non-resolving `www.777.dev` still reflects ACAO with `ACAC:true` — namespace-wide string-suff
+- CHANGED BetPanda Casino `/rest/user/details` x-site-name-id stake_com test re-verified negative — no passive tenant switch on user-state endpoint.
+- CHANGED Cpanel.avatarux.com takeover downgraded to monitoring-only (NS/SOA confirms Bluehost apex delegation ns1/ns2.bluehost.com, no claimable subdomain delegation) — reconfirmed.
+- CHANGED Help.desk.avatarux.com portals 4-100 stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config — no delta.
+- CHANGED Affiliates.betpanda.io/rest/public/config byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms) — unchanged.
+- CHANGED Betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed.

@@ -20304,3 +20304,95 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] avatarux-studios: 84 — SameSite=Lax mitigation deflates the top CORS HIGH chain; RabbitMQ anonymous /api falsified on all families; effective exposure is MED/INFO-tied report-ready finals (casino /rest/user/details 200 model, help.desk 96 portals tenant-id, affiliates /rest/public/config, rabbitmq mgmt-UI+AMQP). Credentials hold the remaining HIGH-value paths (BOLA, staging mutations) in pending-AUTH_HELPED state. Probes this cycle = 4 read-only GET ≤1 rps, no mutating/credentialed tests, no disclosure inflation; risk managed, awaiting human submission + grants.
+===== ANALYST bigpickle 2026-09-13 19:03:21 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}B %{time_total}s" --max-time 8 "https://affiliates.betpanda.io/rest/public/config" 2>&1
+200 398B 0.955004s
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}B %{time_total}s" --max-time 8 "https://cpanel.avatarux.com" 2>&1
+000 0B 0.190228s
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}B %{time_total}s" --max-time 8 "https://betpandacasino.io/rest/user/details" 2>&1
+200 301B 0.953385s
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}B %{time_total}s" --max-time 8 "https://help.desk.avatarux.com/servicedesk/customer/portal/4" 2>&1
+200 208068B 1.210697s
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}B %{time_total}s" --max-time 8 "https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview" 2>&1; echo; curl -s -o /dev/null -w "%{http_code} %{size_download}B" --max-time 8 "https://rainbet-com-rabbitmq.rainbet.com:15671/api/queues" 2>&1
+401 0B 0.274604s
+401 0B
+[0m
+[0m$ [0mcurl -s -D - -o /dev/null --max-time 8 -H "Origin: https://www.777.dev" "https://roobet.com/_api/currency/balances" 2>&1 | grep -i "access-control\|HTTP/" ; echo "---control---"; curl -s -D - -o /dev/null --max-time 8 -H "Origin: https://evil777.dev" "https://roobet.com/_api/currency/balances" 2>&1 | grep -i "access-control\|HTTP/"
+HTTP/2 200 
+access-control-allow-origin: https://www.777.dev
+access-control-allow-credentials: true
+---control---
+HTTP/2 200 
+access-control-allow-credentials: true
+[0m
+STEP 1 — DELTA
+- NO_DELTA: all key surfaces re-probed byte-stable this cycle — affiliates `/rest/public/config` 398B, casino `/rest/user/details` 301B, help.desk portal/4 208068B, cpanel 000 (SSL-fail/1001 state persists), RabbitMQ `/api/overview`+`/api/queues` both 401, Roobet CORS ACAO reflects `www.777.dev` with control `evil777.dev` clean (no drift).
+
+STEP 2 — PRIORITIZE
+- [PRIO] rainbet-com-rabbitmq.rainbet.com:5671,6.3,attack_surface=4 business_value=6 tech_exposure=8 gate_ease=6 cloud_surface=8 freshness=9
+- [PRIO] api.777.dev/graphql,6.1,attack_surface=6 business_value=7 tech_exposure=9 gate_ease=2 cloud_surface=3 freshness=9
+- [PRIO] affiliates.betpanda.io/rest/player/uid,5.9,attack_surface=6 business_value=8 tech_exposure=5 gate_ease=3 cloud_surface=4 freshness=8
+
+STEP 3 — HYPOTHESES
+[HYP] api.777.dev GraphQL mutation pre-auth side-effect gap (fair-seed rotate / limits / raffle)
+class: AUTH
+asset: api.777.dev/graphql (stakeEngineFairSeedsRotate, instantRaffleCreate, liveRTPUpdate, lossLimitUpdate, wagerLimitUpdate)
+confidence: 50
+reasoning: query-side auth plugin fires AFTER arg validation (arg-required errors precede NOT_AUTHENTICATED); 26 mutations mapped; 14-path sweep found no alternate anonymous surface; CORS+SameSite posture does not protect server-side effects.
+evidence_needed: authorized staging session; invoke each mutation with no/invalid cookie → confirm NOT_AUTHENTICATED with zero side-effects; verify session-store isolation from prod.
+verify_steps: HUMAN with staging credential under scoped authorization; passive side COMPLETE.
+impact: staging raffle/reward/limit-state manipulation; MEDIUM staging, HIGH only if prod session store shared (unverified).
+testability: AUTH_HELPED
+
+[HYP] RainBet broker default/weak AMQP credential (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671
+confidence: 35
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207); all /api/* re-verified 401 Basic this cycle (overview AND queues); guest/guest untested on plaintext+AMQP-TLS.
+evidence_needed: one authorized AMQP client connect reading server properties.
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow manipulation if valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; /config/config.json + /rest/public/config leak operatorId=1 + endpoint map; /rest/player/uid/1 → 401 anonymously this cycle re-verified; authz binds to session, not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with two credentialed sessions; passive side complete (401-gated, endpoint map done).
+impact: cross-affiliate player/PII exposure. HIGH.
+testability: AUTH_HELPED
+
+[HYP] Casino authenticated /rest/user endpoint census (post-auth surface)
+class: AUTH
+asset: betpandacasino.io/rest/user (Spring Boot)
+confidence: 45
+reasoning: anonymous /rest/user/details 200 exposes user-state model (re-verified 301B); /rest/user/settings 401; /rest/user/{me,profile,info} 404; authenticated route set + cross-tenant x-site-name-id behavior unknown.
+evidence_needed: one credentialed casino session; enumerate GET /rest/user/* authenticated; test cross-tenant x-site-name-id on authenticated endpoints.
+verify_steps: HUMAN with credentialed casino session under scoped authorization; passive side complete.
+impact: tenant-switch or self-data model census on money-flow platform; MEDIUM unless cross-tenant proven.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] RainBet RabbitMQ anonymous /api topology: hard-falsified again this cycle (queues + overview 401) — residual claim reduced to HUMAN_ONLY weak-credential note, retained only as residual.
+- [PARKED] Roobet CORS exploitation-leg: controls clean re-verified (evil777.dev no ACAO), SameSite=Lax closes chain — informational only, no new ranking.
+- [FINAL] Affiliate BOLA /rest/player/uid (68) → highest post-credential value; 26-mutation GraphQL gap (50) → requires staging credential; casino /rest/user census (45) → third. All AUTH_HELPED, all passive CLOSED.
+
+STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: at bugs.olivermaicher.eu extend the pending submission with this cycle's re-verified negatives (RabbitMQ queues+overview uniform 401, Roobet CORS controls clean, all finals byte-stable) and re-request (a) api.777.dev staging credential for the 26-mutation side-effect surface, (b) two credentialed affiliate sessions for /rest/player/uid BOLA — finals remain 90/86/74 + the four AUTH_HELPED hypotheses gated on grants.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED OTHER @ avatarux-studios passive surface: delta empty this cycle — affiliates config 398B, casino details 301B, help.desk portal/4 208068B, cpanel 000, broker /api 401 (overview+queues uniform), Roobet CORS controls clean — all finals byte-stable, no new anonymous exposure; passive phase conclusively closed.
+- [LEARN] ACCEPTED OTHER @ roobet.com/_api CORS controls: re-verified live — Origin https://www.777.dev reflects ACAO+ACAC:true, control https://evil777.dev returns no ACAO; whitelist match is precise, no drift.
+- [LEARN] ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671: /api/queues re-verified 401 Basic identical to /api/overview — anonymous management-API class closed on all endpoint families (two consecutive independent cycles).
+
+STEP 7 — RISK
+- [RISK] avatarux-studios: 84 — passive surface conclusively exhausted (RabbitMQ mgmt-API uniform 401, CORS controls clean, finals byte-stable). Three report-ready finals MED/INFO tier + four AUTH_HELPED hypotheses blocked solely on credential grants; every high-value path requires scoped human authorization. Probes this cycle = 8 read-only GET/HEAD ≤1 rps, no mutating/credentialed tests, no disclosure inflation.

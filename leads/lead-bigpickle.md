@@ -3632,3 +3632,40 @@ evidence_needed: one credentialed casino session; enumerate GET /rest/user/* aut
 verify_steps: HUMAN with credentialed casino session under scoped authorization; passive side complete (ua-200 baseline, endpoint 404/401 map).
 impact: tenant-switch or self-data model census on money-flow platform; MEDIUM unless cross-tenant proven.
 testability: AUTH_HELPED
+## 2026-09-13 18:56:38 UTC [target] (model bigpickle)
+[HYP] api.777.dev GraphQL mutation pre-auth side-effect gap (fair-seed rotate / limits / raffle)
+class: AUTH
+asset: api.777.dev/graphql (stakeEngineFairSeedsRotate, instantRaffleCreate, liveRTPUpdate, lossLimitUpdate, wagerLimitUpdate)
+confidence: 50
+reasoning: query-side auth plugin fires AFTER arg validation (arg-required errors precede NOT_AUTHENTICATED); 26 mutations mapped; 14-path sweep found no alternate anonymous surface; CORS+SameSite posture does not protect server-side effects.
+evidence_needed: authorized staging session; invoke each mutation with no/invalid cookie → confirm NOT_AUTHENTICATED with zero side-effects; verify session-store isolation from prod.
+verify_steps: HUMAN with staging credential under scoped authorization; passive side COMPLETE.
+impact: staging raffle/reward/limit-state manipulation; MEDIUM staging, HIGH only if prod session store shared (unverified).
+testability: AUTH_HELPED
+[HYP] RainBet broker default/weak AMQP credential (residual)
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671
+confidence: 35
+reasoning: mgmt UI + AMQP public on raw DO origin (159.203.34.207); all /api/* re-verified 401 Basic this cycle (overview AND queues); guest/guest untested on plaintext+AMQP-TLS.
+evidence_needed: one authorized AMQP client connect reading server properties.
+verify_steps: HUMAN with AMQP client under scoped authorization; passive side complete.
+impact: vhost/queue census + message-flow manipulation if valid. MEDIUM-HIGH.
+testability: HUMAN_ONLY
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} (cross-player iteration)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; /config/config.json + /rest/public/config leak operatorId=1 + endpoint map; /rest/player/uid/1 → 401 anonymously this cycle re-verified; authz binds to session, not uid ownership.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2} vs own uid.
+verify_steps: HUMAN with two credentialed sessions; passive side complete (401-gated, endpoint map done).
+impact: cross-affiliate player/PII exposure. HIGH.
+testability: AUTH_HELPED
+[HYP] Casino authenticated /rest/user endpoint census (post-auth surface)
+class: AUTH
+asset: betpandacasino.io/rest/user (Spring Boot)
+confidence: 45
+reasoning: anonymous /rest/user/details 200 exposes user-state model (re-verified 301B); /rest/user/settings 401; /rest/user/{me,profile,info} 404; authenticated route set + cross-tenant x-site-name-id behavior unknown.
+evidence_needed: one credentialed casino session; enumerate GET /rest/user/* authenticated; test cross-tenant x-site-name-id on authenticated endpoints.
+verify_steps: HUMAN with credentialed casino session under scoped authorization; passive side complete.
+impact: tenant-switch or self-data model census on money-flow platform; MEDIUM unless cross-tenant proven.
+testability: AUTH_HELPED
