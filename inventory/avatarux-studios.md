@@ -743,3 +743,13 @@ www.avatarux.com
 - CHANGED Betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
 - CHANGED RainBet RabbitMQ `/api/overview` re-verified 401 Basic on both brokers — management API auth uniform; `/api/queues` also 401 Basic (falsified anonymous enumeration)
 - CHANGED Roobet `/_api` connect.sid cookie: SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS trust chain exploitation leg broken
+
+## 2026-09-14 01:20:45 UTC
+- CHANGED rainbet-com-rabbitmq.rainbet.com:15671/api/* — all management endpoints (/exchanges, /vhosts, /connections, /channels, /queues, /overview) return HTTP 401 Basic; auth is uniform, inconsistent-auth hyp
+- CHANGED rainbet-us-staging-rabbitmq.rainbet.com:15671/15672 — both management ports unreachable (connection timeout); only prod broker stable
+- CHANGED Roobet /_api connect.sid SameSite=Lax + HttpOnly confirmed — cross-origin credentialed fetch/WS from *.777.dev blocked by browser cookie policy; CORS trust chain exploitation leg BROKEN
+- CHANGED betpandacasino.io/rest/user/details x-site-name-id stake_com test re-verified negative — no passive tenant switch on user-state endpoint
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only (NS/SOA confirms Bluehost apex delegation ns1/ns2.bluehost.com, no claimable subdomain delegation) — reconfirmed
+- CHANGED help.desk.avatarux.com portals 4-100 stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config — no delta
+- CHANGED affiliates.betpanda.io/rest/public/config byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms) — unchanged
+- CHANGED betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed

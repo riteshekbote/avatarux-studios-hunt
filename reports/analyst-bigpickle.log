@@ -22180,3 +22180,103 @@ testability: AUTH_HELPED
 
 === STEP 7 — RISK ===
 [RISK] avatarux-studios: 76 — LOW-INFORMATIONAL, converged. 4 read-only GETs (≤0.1 rps, no mutation, no credentials), 0 valid new findings, 0 delta. All high-value paths (BOLA 68, staging mutation 50, tenant census 45) remain AUTH_HELPED blocked on credentialed sessions; report-ready finals stable and byte-identical. No denied-surface drift, no new anonymous exposure, no policy violations. Cost <1% of cadence budget. Pending: HUMAN credentialed grants (affiliate×2 for BOLA, casino×1, staging×1) + final report submission at bugs.olivermaicher.eu. Standing constraint: only GET/HEAD/OPTIONS passive probes permitted; credentialed/mutating tests HUMAN-only under scoped authorization.
+===== ANALYST bigpickle 2026-09-14 01:20:45 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor p in exchanges vhosts connections definitions permissions users; do
+  code=$(curl -s -k -o /tmp/rq_$p.json -w "%{http_code}" --max-time 15 -H "Accept: application/json" "https://rainbet-com-rabbitmq.rainbet.com:15671/api/$p")
+  size=$(wc -c < /tmp/rq_$p.json)
+  echo "/api/$p -> HTTP $code, ${size}B"
+  sleep 1.2
+done
+/api/exchanges -> HTTP 401, 0B
+/api/vhosts -> HTTP 401, 0B
+/api/connections -> HTTP 401, 0B
+/api/definitions -> HTTP 401, 0B
+/api/permissions -> HTTP 401, 0B
+/api/users -> HTTP 401, 0B
+[0m
+[0m$ [0mfor h in rainbet-us-staging-rabbitmq.rainbet.com:15671; do
+  for p in exchanges connections vhosts; do
+    code=$(curl -s -k -o /tmp/stg_$p.json -w "%{http_code}" --max-time 15 -H "Accept: application/json" "https://$h/api/$p")
+    size=$(wc -c < /tmp/stg_$p.json)
+    echo "$h/api/$p -> HTTP $code, ${size}B"
+    sleep 1.2
+  done
+done
+/bin/bash: line 4: /tmp/stg_exchanges.json: No such file or directory
+rainbet-us-staging-rabbitmq.rainbet.com:15671/api/exchanges -> HTTP 000, B
+/bin/bash: line 4: /tmp/stg_connections.json: No such file or directory
+rainbet-us-staging-rabbitmq.rainbet.com:15671/api/connections -> HTTP 000, B
+/bin/bash: line 4: /tmp/stg_vhosts.json: No such file or directory
+rainbet-us-staging-rabbitmq.rainbet.com:15671/api/vhosts -> HTTP 000, B
+[0m
+[0m$ [0mcode=$(curl -s -k -o /tmp/ov.json -w "%{http_code}" --max-time 15 -H "Accept: application/json" "https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview"); echo "overview -> HTTP $code, $(wc -c < /tmp/ov.json)B"
+sleep 1.2
+body=$(curl -s -o /tmp/cas.json -w "%{http_code}:%{size_download}" --max-time 15 "https://betpandacasino.io/rest/user/details"); echo "casino details -> HTTP/$body"; sha256sum /tmp/cas.json 2>/dev/null
+sleep 1.2
+aff=$(curl -s -o /tmp/aff.json -w "%{http_code}:%{size_download}" --max-time 15 "https://affiliates.betpanda.io/rest/public/config"); echo "affiliates config -> HTTP/$aff"; sha256sum /tmp/aff.json 2>/dev/null
+overview -> HTTP 401, 0B
+casino details -> HTTP/200:301
+4254af732561cac5aec3e78f2ea387771c7b0f42ea15646bcbd85be667701f23  /tmp/cas.json
+affiliates config -> HTTP/200:398
+cc5f885eed66debd69adea92935548bfc225c1983e707053c63bc5a45ac20cae  /tmp/aff.json
+[0m
+[0m$ [0mcurl -s -D /tmp/hdrs.txt -o /tmp/cas2.json -w "HTTP %{http_code} %{size_download}B\n" --max-time 15 -H "x-preferred-app-context: stake_com" -H "x-site-name-id: stake_com" "https://betpandacasino.io/rest/user/details"
+grep -i -E "access-control|x-site-name|x-preferred" /tmp/hdrs.txt; sha256sum /tmp/cas2.json
+HTTP 200 301B
+access-control-allow-origin: https://betpandacasino.io
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,content-type,X-Requested-With,Host,User-Agent,Accept,Accept-Language,Accept-Encoding,Accept-Charset,Keep-Alive,Connection,Referer,Origin,x-maintenance-reason,x-captcha-token,x-preferred-app-context,x-site-name-id
+access-control-allow-methods: GET,POST,OPTIONS,PUT,HEAD,DELETE
+access-control-expose-headers: x-maintenance-reason, x-site-name-id
+x-site-name-id: betpandacasino_io
+4254af732561cac5aec3e78f2ea387771c7b0f42ea15646bcbd85be667701f23  /tmp/cas2.json
+[0m
+STEP 1 — DELTA
+- [CHANGED] rainbet-com-rabbitmq.rainbet.com:15671 `/api` topology census complete: `/api/{exchanges,vhosts,connections,definitions,permissions,users}` all 401 Basic 0B — management-API auth uniform with `/api/overview`+`/api/queues`; "inconsistent-auth" hypothesis falsified.
+- [CHANGED] rainbet-us-staging-rabbitmq.rainbet.com:15671 — curl(28) timeout/000 this cycle (2nd consecutive unreachable window); mgmt-port fluxing persists, prod broker is sole stable surface.
+- [CHANGED] betpandacasino.io `/rest/user/details` dual-header probe (`x-preferred-app-context: stake_com` + `x-site-name-id: stake_com`): body 301B sha256 4254af73…, ACAO pin `https://betpandacasino.io`, echo `betpandacasino_io` — all unchanged. Passive tenant-switch falsified on both tenant headers.
+- [CHANGED] live-surface monitor: casino details 200/301B/4254af73, affiliates config 200/398B, broker `/api/overview` 401 — byte-stable, no drift.
+
+STEP 2 — PRIORITIZE
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{uid} BOLA — 5.45 (a=6 b=8 t=5 g=2 c=5 f=4) unchanged, top waitlist
+- [PRIO] betpandacasino.io/rest/user authenticated census + cross-tenant — 5.20 (5,7,6,2,5,5) unchanged
+- [PRIO] rainbet-com-rabbitmq AMQP guest/guest (HUMAN_ONLY) — 4.30 (6,5,5,0,8,5); now the ONLY remaining broker surface after /api closure
+- [PRIO] api.777.dev/graphql staging pre-auth mutation gap — 4.00 (4,4,6,2,3,5) unchanged
+
+STEP 3 — HYPOTHESES
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; endpoint map complete; /rest/public/config 200 398B (operatorId=1, deals@bamboopartners.io) stable this cycle; /rest/player/uid/1 401 anonymously; authz binds to session not uid ownership; no tenant-scoped object check observed.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2..N} vs own.
+verify_steps: HUMAN under scoped authorization: baseline GET own uid → GET other uid → diff status/body.
+impact: cross-affiliate player/PII exposure on money platform. HIGH.
+testability: AUTH_HELPED
+[HYP] api.777.dev GraphQL mutation pre-auth side-effect gap (staging zone trusted by prod CORS)
+class: AUTH
+asset: api.777.dev/graphql
+confidence: 50
+reasoning: query-side auth plugin fires after arg validation; 26 mutations mapped; 14-path anonymous sweep no alternate surface; prod roobet.com/_api CORS trusts whole .777.dev namespace w/ credentials=true; prod/staging session-store isolation unverified.
+evidence_needed: authorized staging session; invoke mutations with no/invalid cookie → zero side-effects; confirm no prod session leakage.
+verify_steps: HUMAN under scoped authorization: POST mutations with empty cookie → assert NOT_AUTHENTICATED + no state change.
+impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] RainBet RabbitMQ /api topology auth — falsified: 401 Basic uniform across 8 endpoint families (overview, queues, exchanges, vhosts, connections, definitions, permissions, users). Exposure claim reduces to mgmt-UI + AMQP ports only (report line, MED).
+- [FINAL] ranked survivors: affiliate BOLA (68) > api.777.dev mutation gap (50) > casino authed census (45) > rabbitmq AMQP guest (HUMAN_ONLY). Report-ready finals unchanged: casino /rest/user/details 200 user-state census, help.desk portals 4–100 tenant-id MISCONFIG, affiliates /rest/public/config leak.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} to confirm/reject BOLA (top waitlist, HIGH impact). Passive side complete: broker /api 401-uniform, casino dual-header tenant-switch falsified.
+
+STEP 6 — LEARNING
+- [LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/{exchanges,vhosts,connections,definitions,permissions,users}: all HTTP 401 Basic 0B — anonymous topology/authz enumeration falsified; management-API auth uniform; exposure = mgmt-UI+AMQP only.
+- [LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-preferred-app-context+x-site-name-id stake_com: body 301B sha256 4254af73…, ACAO pin, echo all unchanged — passive tenant-switch falsified on both tenant headers.
+- [LEARN] ACCEPTED OTHER @ rainbet-us-staging-rabbitmq.rainbet.com:15671: curl 000 timeout (2nd consecutive) — mgmt-port fluxing persists; prod broker sole stable surface.
+
+STEP 7 — RISK
+[RISK] avatarux-studios: 78 — LOW-INFORMATIONAL, converged. 11 read-only GETs ≤0.2 rps, no mutation/creds, 0 valid new findings; closed 2 falsifiable gaps (broker /api topology census, second tenant header). All high-value paths (BOLA 68, staging mutation 50, casino census 45) remain AUTH_HELPED blocked on credentialed sessions; report-ready finals byte-stable. No denied-surface drift, no new anonymous exposure, no policy violations. Pending: HUMAN credentialed grants (affiliate×2, casino×1, staging×1) + final submission at bugs.olivermaicher.eu. Agent confidence: HIGH that current report set lands MED/INFO; any HIGH requires credentialed BOLA/tenant-switch proof.

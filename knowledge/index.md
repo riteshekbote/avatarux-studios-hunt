@@ -383,3 +383,13 @@
 - 2026-09-13 ACCEPTED OTHER @ avatarux-studios live surface: 4 read-only GETs (casino /rest/user/details 200 301B sha256 4254af73; affiliates /rest/public/config 200 398B; help.desk portal/4 200; rabbitmq :15671/api/overview 401 Basic) — byte-stable vs recorded state, no drift, passive convergence reconfirmed.
 - 2026-09-13 ACCEPTED OTHER @ betpandacasino.io/rest/user/details: 200 JSON user-state model unauthenticated leak (301B) reconfirmed — report-ready finding unchanged, controls clean.
 - 2026-09-13 ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 anonymous boundary intact — BOLA classification requires credentialed cross-uid test, unchanged.
+- 2026-09-14 ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/* 401 Basic gated uniformly. In-scope RainBet messaging backbone.
+- 2026-09-14 REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview, /api/queues, /api/exchanges, /api/vhosts, /api/connections, /api/channels all 401 Basic — anonymous topology disclosure claim FULLY FALSIFIED; management API auth uniform.
+- 2026-09-14 REJECTED MISCONFIG @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: management ports fluxing (timeout) — only prod broker stable.
+- 2026-09-14 ACCEPTED OTHER @ roobet.com/_api: connect.sid SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS trust chain exploitation leg BROKEN.
+- 2026-09-14 REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+- 2026-09-14 REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- 2026-09-14 REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted.
+- 2026-09-14 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven, monitoring only.
+- 2026-09-14 REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked.
+- 2026-09-14 REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.

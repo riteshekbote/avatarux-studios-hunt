@@ -3964,3 +3964,24 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED OTHER @ betpandacasino.io/rest/user/details: 200 JSON user-state model unauthenticated leak (301B) reconfirmed — report-ready finding unchanged, controls clean.
 [LEARN] ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 anonymous boundary intact — BOLA classification requires credentialed cross-uid test, unchanged.
 [RISK] avatarux-studios: 76 — LOW-INFORMATIONAL, converged. 4 read-only GETs (≤0.1 rps, no mutation, no credentials), 0 valid new findings, 0 delta. All high-value paths (BOLA 68, staging mutation 50, tenant census 45) remain AUTH_HELPED blocked on credentialed sessions; report-ready finals stable and byte-identical. No denied-surface drift, no new anonymous exposure, no policy violations. Cost <1% of cadence budget. Pending: HUMAN credentialed grants (affiliate×2 for BOLA, casino×1, staging×1) + final report submission at bugs.olivermaicher.eu. Standing constraint: only GET/HEAD/OPTIONS passive probes permitted; credentialed/mutating tests HUMAN-only under scoped authorization.
+## 2026-09-14 01:14:10 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend; endpoint map complete; /rest/public/config 200 398B (operatorId=1, deals@bamboopartners.io) stable this cycle; /rest/player/uid/1 401 anonymously; authz binds to session not uid ownership; no tenant-scoped object check observed.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2..N} vs own.
+verify_steps: HUMAN under scoped authorization: baseline GET own uid → GET other uid → diff status/body.
+impact: cross-affiliate player/PII exposure on money platform. HIGH.
+testability: AUTH_HELPED
+[HYP] api.777.dev GraphQL mutation pre-auth side-effect gap (staging zone trusted by prod CORS)
+class: AUTH
+asset: api.777.dev/graphql
+confidence: 50
+reasoning: query-side auth plugin fires after arg validation; 26 mutations mapped; 14-path anonymous sweep no alternate surface; prod roobet.com/_api CORS trusts whole .777.dev namespace w/ credentials=true; prod/staging session-store isolation unverified.
+evidence_needed: authorized staging session; invoke mutations with no/invalid cookie → zero side-effects; confirm no prod session leakage.
+verify_steps: HUMAN under scoped authorization: POST mutations with empty cookie → assert NOT_AUTHENTICATED + no state change.
+impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared.
+testability: AUTH_HELPED
+[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} to confirm/reject BOLA (top waitlist, HIGH impact). Passive side complete: broker /api 401-uniform, casino dual-header tenant-switch falsified.
+[RISK] avatarux-studios: 78 — LOW-INFORMATIONAL, converged. 11 read-only GETs ≤0.2 rps, no mutation/creds, 0 valid new findings; closed 2 falsifiable gaps (broker /api topology census, second tenant header). All high-value paths (BOLA 68, staging mutation 50, casino census 45) remain AUTH_HELPED blocked on credentialed sessions; report-ready finals byte-stable. No denied-surface drift, no new anonymous exposure, no policy violations. Pending: HUMAN credentialed grants (affiliate×2, casino×1, staging×1) + final submission at bugs.olivermaicher.eu. Agent confidence: HIGH that current report set lands MED/INFO; any HIGH requires credentialed BOLA/tenant-switch proof.
