@@ -4100,3 +4100,37 @@ evidence_needed: one credentialed casino session; enumerate authenticated GET /r
 verify_steps: HUMAN under scoped authorization: GET /rest/user/details, /rest/user/settings, /rest/user/account-balances-and-bonuses auth'd, then same set with tenant headers toggled; compare ACAO/body/status
 impact: tenant-switch or self-data-model census on real-money flow platform. MEDIUM unless cross-tenant → HIGH.
 testability: AUTH_HELPED
+## 2026-09-14 22:17:45 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend, 20+ route map complete; /rest/public/config 200 398B sha256 cc5f885e stable; /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, ownership contest untested on any path.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2..N} vs own uid
+verify_steps: HUMAN under scoped authorization: register 2 test affiliate accounts → baseline GET own uid → GET other uid → diff status/body/code
+impact: cross-affiliate player/PII exposure on money platform. HIGH.
+testability: AUTH_HELPED
+[HYP] Staging GraphQL mutation pre-auth side-effect gap on api.777.dev
+class: AUTH
+asset: api.777.dev/graphql
+confidence: 50
+reasoning: Apollo Server (400 CSRF-preflight on urlencoded GET); query-side auth plugin fires after arg validation; 26 mutations mapped; prod roobet.com/_api CORS trusts whole .777.dev namespace w/ credentials=true (ACAO+ACAC:true re-verified clean this cycle); connect.sid SameSite=Lax+HttpOnly blocks cross-site credentialed leg; prod↔staging session-store isolation unverified.
+evidence_needed: authorized staging session; mutations with no/invalid cookie → assert NOT_AUTHENTICATED + zero state change; no prod session leakage
+verify_steps: HUMAN under scoped authorization: POST /graphql (application/json) with empty cookie → assert NOT_AUTHENTICATED + no state change; POST with valid staging session → confirm isolated state
+impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared, MED otherwise.
+testability: AUTH_HELPED
+[HYP] Casino authenticated /rest/user census + cross-tenant x-site-name-id behavior
+class: AUTH
+asset: betpandacasino.io/rest/user (Spring Boot)
+confidence: 45
+reasoning: anonymous /rest/user/details 200 (301B, geo-derived `country`, size-stable; spoof headers inert); /rest/user/settings 401 "No http-session"; /rest/user/{me,profile,info} 404; tenant headers inert on anonymous path (falsified); authenticated route set + header behaviour on auth'd endpoints unknown.
+evidence_needed: one credentialed casino session; enumerate authenticated GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com toggled
+verify_steps: HUMAN under scoped authorization: GET /rest/user/details, /rest/user/settings, /rest/user/account-balances-and-bonuses auth'd, then same set with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data-model census on real-money platform. MED unless cross-tenant → HIGH.
+testability: AUTH_HELPED
+[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} for BOLA proof (top waitlist, HIGH, passive side complete); same credential grant unlocks api.777.dev mutation gap + casino /rest/user census.
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details geo-spoof: X-Forwarded-For/True-Client-IP/X-Real-IP all ignored — `country` tied to real CF-attributed egress (MX vantage, prior US); body byte-identical sha256 2cd9d90a across spoof attempts; no geo-gating bypass.
+[LEARN] ACCEPTED OTHER @ help.desk.avatarux.com portals: template size shifted 209005→207440B but tenant-id df607198-… + atlassianOrgId + Statsig leak intact, portals 4/5/7/10 byte-normalized — leak unchanged, size drift environmental.
+[LEARN] ACCEPTED OTHER @ rainbet-com-rabbitmq.rainbet.com: :5671 AMQP-TLS OPEN stable; :5672 plaintext TIMEOUT (was OPEN) — prod broker now shows staging-like port flux; exposure claim = TLS AMQP + mgmt UI only.
+[LEARN] ACCEPTED OTHER @ avatarux-studios live surface: 4 read-only GETs + CORS re-verified — affiliates config cc5f885e byte-identical, casino details size-stable (geo-dependent hash), rabbitmq /api/overview 401, roobet ACAO+ACAC clean; passive surface converged, zero new anonymous exposure, controls clean.
+[RISK] avatarux-studios: 75 — LOW-INFORMATIONAL, converged. 10 live probes this cycle, ≤0.1 rps, GET/HEAD/OPTIONS only; all deltas environmental (casino country geo, portal template −1.5KB, rmq:5672 flux). Meaningful corpus byte-stable (aff config cc5f885e across cycles). Top 3 paths (BOLA 68, GraphQL 50, casino census 45) all AUTH_HELPED, blocked on HUMAN credentialed sessions; stand-by cost <1% budget. Report-ready finals unchanged + submission-ready at bugs.olivermaicher.eu. No policy violations, no drift in denied surfaces. Progress to HIGH requires 3 credential grants (affiliate×2, casino×1, staging×1).
