@@ -1874,3 +1874,6 @@
 - LEARN: ACCEPTED OTHER @ roobet.com/_api CORS: whitelist is namespace-wide (any *.777.dev incl. dead DNS) with credentials=true — staging-to-prod trust root is the whol
 - LEARN: REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suff
 - LEARN: ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers on Ro
+
+## RANKED HYPOTHESES 2026-09-14 18:53:53 UTC
+- [68] affiliates.betpanda.io/rest/player/uid/{uid}: Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (from art/lead_bigpickle.txt)

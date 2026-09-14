@@ -4072,3 +4072,31 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
 [LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
 [RISK] avatarux-studios: 76 — LOW-INFORMATIONAL, converged. 4 read-only GETs + 30+ new probes ≤0.1 rps, no mutation/creds, 0 valid new findings, 0 delta across 3+ cycles. Guest:guest default creds hypothesis on RabbitMQ FALSIFIED this cycle (was top-ranked at 85). All high-value paths (BOLA 68, staging mutation 50, casino census 45) remain AUTH_HELPED blocked on credentialed sessions. Report-ready finals byte-stable. No denied-surface drift, no new anonymous exposure, no policy violations. Cost <1% of cadence budget. Pending: HUMAN credentialed grants (affiliate×2 for BOLA, casino×1, staging×1) + final submission at bugs.olivermaicher.eu. Agent confidence: HIGH that current report set lands MED/INFO; any HIGH requires credentialed BOLA/tenant-switch proof. Standing constraint: only GET/HEAD/OPTIONS passive probes permitted; credentialed/mutating tests HUMAN-only under scoped authorization.
+## 2026-09-14 18:46:55 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend, 20+ route map complete; /rest/public/config 200 (398B, operatorId=1, deals@bamboopartners.io) byte-stable sha256 cc5f885e…; /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session not uid ownership contest on any public response.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2..N} vs own uid
+verify_steps: HUMAN under scoped authorization: register two test affiliate accounts → baseline GET own uid → GET other uid → diff status/body/code
+impact: cross-affiliate player/PII exposure on money platform. HIGH.
+testability: AUTH_HELPED
+[HYP] Staging GraphQL mutation pre-auth side-effect gap on api.777.dev
+class: AUTH
+asset: api.777.dev/graphql
+confidence: 50
+reasoning: Apollo Server confirmed (400 CSRF-preflight BAD_REQUEST on urlencoded GET); query-side auth plugin fires after arg validation; 26 mutations mapped; prod roobet.com/_api CORS trusts whole .777.dev namespace w/ credentials=true (ACAO ACAC:true verified); connect.sid SameSite=Lax+HttpOnly breaks cross-site credentialed leg; prod↔staging session-store isolation unverified.
+evidence_needed: authorized staging session; invoke mutations with no/invalid cookie → assert NOT_AUTHENTICATED + zero state change; confirm no prod session leakage
+verify_steps: HUMAN under scoped authorization: POST /graphql (content-type: application/json) mutations with empty cookie → assert NOT_AUTHENTICATED + no state change; POST with valid staging cookie → confirm isolated state
+impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared. MED otherwise.
+testability: AUTH_HELPED
+[HYP] Casino authenticated /rest/user census + cross-tenant x-site-name-id behavior
+class: AUTH
+asset: betpandacasino.io/rest/user (Spring Boot)
+confidence: 45
+reasoning: anonymous /rest/user/details 200 (301B sha256 4254af73…, stable); /rest/user/settings 401 "No http-session"; /rest/user/{me,profile,info} 404; tenant headers stake_com AND roobet_com both byte-identical on anonymous path (falsified passively); authenticated route set + header behavior on auth'd endpoints unknown.
+evidence_needed: one credentialed casino session; enumerate authenticated GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com toggled
+verify_steps: HUMAN under scoped authorization: GET /rest/user/details, /rest/user/settings, /rest/user/account-balances-and-bonuses auth'd, then same set with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data-model census on real-money flow platform. MEDIUM unless cross-tenant → HIGH.
+testability: AUTH_HELPED

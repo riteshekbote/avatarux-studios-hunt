@@ -775,3 +775,5 @@ www.avatarux.com
 - CHANGED Betpandacasino.io `/rest/public/config` Spring JSON 404, callback/webhook surface all 404 — passive corroboration gaps CLOSED
 - CHANGED Roobet game servers (`crash-gs.roobet.com`, `dice.roobet.com`) HTTP root + /health /api /socket.io all curl timeout @12s — WS-transport-only, NO anonymous HTTP surface; game-tier HTTP census gap falsi
 - NEW RainBet RabbitMQ AMQP protocol (5671/5672) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level access — management API uniformly 401 
+
+## 2026-09-14 18:53:53 UTC
