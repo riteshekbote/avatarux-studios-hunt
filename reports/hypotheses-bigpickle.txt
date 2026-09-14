@@ -1,9 +1,12 @@
-## 2026-09-14 01:14:10 UTC [target] (model bigpickle)
+## 2026-09-14 06:25:47 UTC [target] (model bigpickle)
+[PRIO] rainbet-com-rabbitmq.rainbet.com:5671,5672, 59.5 (a=6 b=5 t=5 g=0 c=8 f=5) — AMQP+mgmt-UI on raw DO origin, HUMAN_ONLY for actual exploit (guest:guest default creds)
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 55.3 (a=8 b=5 t=2 g=0 c=5 f=5) — BOLA pattern confirmed, 401 auth-gated, needs 2 credentialed sessions (AUTH_HELPED)
+[PRIO] api.777.dev/graphql, 51.0 (a=5 b=7 t=7 g=0 c=5 f=5) — staging mutation surface, prod CORS trusts .777.dev, needs staging session (AUTH_HELPED)
 [HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
 class: IDOR
 asset: affiliates.betpanda.io/rest/player/uid/{uid}
 confidence: 68
-reasoning: same-origin /rest backend; endpoint map complete; /rest/public/config 200 398B (operatorId=1, deals@bamboopartners.io) stable this cycle; /rest/player/uid/1 401 anonymously; authz binds to session not uid ownership; no tenant-scoped object check observed.
+reasoning: same-origin /rest backend; endpoint map complete (20+ routes); /rest/public/config 200 (398B, operatorId=1, deals@bamboopartners.io) stable this cycle; /rest/player/uid/1 401 anonymously; authz binds to session not uid ownership; no tenant-scoped object check observed.
 evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2..N} vs own.
 verify_steps: HUMAN under scoped authorization: baseline GET own uid → GET other uid → diff status/body.
 impact: cross-affiliate player/PII exposure on money platform. HIGH.
@@ -17,5 +20,22 @@ evidence_needed: authorized staging session; invoke mutations with no/invalid co
 verify_steps: HUMAN under scoped authorization: POST mutations with empty cookie → assert NOT_AUTHENTICATED + no state change.
 impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared.
 testability: AUTH_HELPED
-[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} to confirm/reject BOLA (top waitlist, HIGH impact). Passive side complete: broker /api 401-uniform, casino dual-header tenant-switch falsified.
-[RISK] avatarux-studios: 78 — LOW-INFORMATIONAL, converged. 11 read-only GETs ≤0.2 rps, no mutation/creds, 0 valid new findings; closed 2 falsifiable gaps (broker /api topology census, second tenant header). All high-value paths (BOLA 68, staging mutation 50, casino census 45) remain AUTH_HELPED blocked on credentialed sessions; report-ready finals byte-stable. No denied-surface drift, no new anonymous exposure, no policy violations. Pending: HUMAN credentialed grants (affiliate×2, casino×1, staging×1) + final submission at bugs.olivermaicher.eu. Agent confidence: HIGH that current report set lands MED/INFO; any HIGH requires credentialed BOLA/tenant-switch proof.
+[HYP] Casino authenticated /rest/user endpoint census + cross-tenant x-site-name-id
+class: AUTH
+asset: betpandacasino.io/rest/user (Spring Boot)
+confidence: 45
+reasoning: anonymous /rest/user/details 200 (301B sha256 4254af73, re-verified this cycle); /rest/user/settings 401; /rest/user/{me,profile,info} 404; x-site-name-id echoed but ignored on anonymous paths (falsified passive); authenticated route set + tenant header behavior unknown.
+evidence_needed: one credentialed casino session; enumerate authenticated GET /rest/user/*; repeat with x-site-name-id/stake_com|roobet_com.
+verify_steps: HUMAN with credentialed casino session: GET /rest/user/details, /rest/user/settings, /rest/user/account-balances-and-bonuses (auth'd), then same set with tenant headers toggled; compare ACAO/body.
+impact: tenant-switch or self-data-model census on real-money flow platform. MEDIUM unless cross-tenant → HIGH.
+testability: AUTH_HELPED
+[PARKED] cpanel.avatarux.com takeover — Cloudflare 1001 stable 12+ days but NS/SOA confirms apex Bluehost delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; mechanism-unproven reconfirmed, monitoring only.
+[PARKED] RainBet /api/* anonymous enumeration — /api/overview, /api/queues, /api/exchanges, /api/vhosts, /api/connections, /api/channels all re-verified 401 Basic; mgmt-UI+AMQP exposure only.
+[PARKED] Roobet CORS 777.dev exploitation leg — connect.sid SameSite=Lax+HttpOnly defeats cross-site credentialed fetch; controls clean re-verified.
+[PARKED] crash-gs/dice HTTP census — timeout-closed, WS-only, falsified.
+[PARKED] recover-password timing — REJECTED class (program scope), must not rerank.
+[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} to confirm/reject BOLA (top waitlist, HIGH impact). Passive side complete. Credential grant additionally unlocks casino /rest/user census + api.777.dev mutation gap.
+[LEARN] ACCEPTED OTHER @ avatarux-studios live surface: 4 read-only GETs (casino /rest/user/details 200 301B sha256 4254af73; affiliates /rest/public/config 200 398B sha256 cc5f885e; help.desk portal/4 200; rabbitmq :15671/api/overview 401 Basic) — byte-stable vs recorded state, no drift, passive convergence reconfirmed.
+[LEARN] ACCEPTED OTHER @ betpandacasino.io/rest/user/details: 200 JSON user-state model unauthenticated leak (301B) reconfirmed — report-ready finding unchanged, controls clean.
+[LEARN] ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 anonymous boundary intact — BOLA classification requires credentialed cross-uid test, unchanged.
+[RISK] avatarux-studios: 77 — LOW-INFORMATIONAL, converged. 4 read-only GETs ≤0.1 rps, no mutation/creds, 0 valid new findings, 0 delta across 3+ cycles. All high-value paths (BOLA 68, staging mutation 50, tenant census 45) remain AUTH_HELPED blocked on credentialed sessions; report-ready finals byte-stable. No denied-surface drift, no new anonymous exposure, no policy violations. Cost <1% of cadence budget. Pending: HUMAN credentialed grants (affiliate×2 for BOLA, casino×1, staging×1) + final submission at bugs.olivermaicher.eu. Agent confidence: HIGH that current report set lands MED/INFO; any HIGH requires credentialed BOLA/tenant-switch proof. Standing constraint: only GET/HEAD/OPTIONS passive probes permitted; credentialed/mutating tests HUMAN-only under scoped authorization.

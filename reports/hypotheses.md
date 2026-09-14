@@ -1824,3 +1824,26 @@
 - LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
 - LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
 - LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+
+## RANKED HYPOTHESES 2026-09-14 06:30:29 UTC
+- [85] rainbet-com-rabbitmq.rainbet.com:5671,: RainBet RabbitMQ AMQP Anonymous Protocol Access on Raw DigitalOcean Origins (from art/lead_nemotron3.txt)
+- [68] affiliates.betpanda.io/rest/player/uid/{uid}: Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/pl
+- NEXT(hypotheses-nemotron3.txt): PROBE: openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -quiet < /dev/null && echo "---" && nc -vz rainbet-com-rabbitmq.rainbet.com 5672
+- LEARN: ACCEPTED OTHER @ avatarux-studios live surface: 4 read-only GETs (casino /rest/user/details 200 301B sha256 4254af73; affiliates /rest/public/config 200 398B sh
+- LEARN: ACCEPTED OTHER @ betpandacasino.io/rest/user/details: 200 JSON user-state model unauthenticated leak (301B) reconfirmed — report-ready finding unchanged, contro
+- LEARN: ACCEPTED AUTH @ affiliates.betpanda.io/rest/player/uid/1: 401 anonymous boundary intact — BOLA classification requires credentialed cross-uid test, unchanged.
+- LEARN: ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public 
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview, /api/queues, /api/exchanges, /api/vhosts, /api/connections, /api/channels all 401 Ba
+- LEARN: REJECTED MISCONFIG @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: management ports fluxing (timeout) — only prod broker stable.
+- LEARN: ACCEPTED OTHER @ roobet.com/_api: connect.sid SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
+- LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+- LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; manag
+- LEARN: ACCEPTED OTHER @ roobet.com/_api CORS: whitelist is namespace-wide (any *.777.dev incl. dead DNS) with credentials=true — staging-to-prod trust root is the whol
+- LEARN: REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suff
+- LEARN: ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers on Ro

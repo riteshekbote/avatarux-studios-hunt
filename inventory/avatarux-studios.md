@@ -753,3 +753,16 @@ www.avatarux.com
 - CHANGED help.desk.avatarux.com portals 4-100 stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config — no delta
 - CHANGED affiliates.betpanda.io/rest/public/config byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms) — unchanged
 - CHANGED betpandacasino.io/rest/public/config Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
+
+## 2026-09-14 06:30:29 UTC
+- NEW RainBet RabbitMQ AMQP protocol (5671/5672) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level access — management API uniformly 401 
+- NEW BetPanda Casino `/rest/user/details` unauthenticated user-state model disclosure (301B JSON: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVeri
+- CHANGED Roobet `/_api` CORS trust chain: `*.777.dev` namespace-wide suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving `www.777.dev` still reflects ACAO) with `ACAC:true` on 
+- CHANGED Help.desk.avatarux.com portals 4–100+ stable at ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID, Statsig config (pro
+- CHANGED RainBet RabbitMQ management API all endpoints (/overview, /queues, /exchanges, /vhosts, /connections, /channels) return HTTP 401 Basic on both brokers — anonymous topology disclosure hypothesis FULLY 
+- CHANGED RainBet staging broker (`rainbet-us-staging-rabbitmq.rainbet.com:15671/15672`) management ports fluxing (connection timeout) — only prod broker stable
+- CHANGED cPanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no separate claimable delegation for cpanel subdomain; Cloudflare 1001 per
+- CHANGED Betpandacasino.io `/rest/user/details` x-site-name-id header test (`stake_com`) re-verified negative — no passive tenant switch on user-state endpoint
+- CHANGED Affiliates.betpanda.io `/rest/public/config` byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — unchanged
+- CHANGED Betpandacasino.io `/rest/public/config` Spring JSON 404, callback/webhook surface all 404 — passive corroboration gaps CLOSED
+- CHANGED Roobet game servers (`crash-gs.roobet.com`, `dice.roobet.com`) HTTP root + /health /api /socket.io all curl timeout @12s — WS-transport-only, NO anonymous HTTP surface; game-tier HTTP census gap falsi
