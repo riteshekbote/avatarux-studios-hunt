@@ -779,3 +779,14 @@ www.avatarux.com
 ## 2026-09-14 18:53:53 UTC
 
 ## 2026-09-14 22:20:41 UTC
+
+## 2026-09-15 00:48:28 UTC
+- CHANGED RainBet RabbitMQ AMQP protocol (5671/5672) on raw DigitalOcean origins remains completely untested for anonymous protocol-level access; management API uniformly 401 Basic
+- CHANGED Roobet game servers (`crash-gs.roobet.com`, `dice.roobet.com`) HTTP root + /health /api /socket.io all curl timeout @12s — WS-transport-only confirmed, NO anonymous HTTP surface
+- CHANGED betpandacasino.io `/rest/user/details` x-site-name-id header test (`stake_com`) re-verified negative — no passive tenant switch on user-state endpoint
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation
+- CHANGED help.desk.avatarux.com portals 4–100+ stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config
+- CHANGED affiliates.betpanda.io `/rest/public/config` byte-identical 200 — unchanged
+- CHANGED betpandacasino.io `/rest/public/config` Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
+- CHANGED Roobet `/_api` connect.sid SameSite=Lax + HttpOnly confirmed — CORS trust chain exploitation leg BROKEN by browser cookie policy
+- CHANGED avatarux-studios passive surface: delta empty — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), no drift across 30+ probes

@@ -1902,3 +1902,25 @@
 - LEARN: ACCEPTED OTHER @ roobet.com/_api CORS: whitelist is namespace-wide (any *.777.dev incl. dead DNS) with credentials=true — staging-to-prod trust root is the whol
 - LEARN: REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suff
 - LEARN: ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers on Ro
+
+## RANKED HYPOTHESES 2026-09-15 00:48:28 UTC
+- [70] betpandacasino.io/rest/user: BetPanda Casino Authenticated /rest/user/* Endpoint Census via Credentialed Session (from art/lead_nemotron3.txt)
+- [50] api.777.dev/graphql: Staging GraphQL mutation pre-auth side-effect gap on api.777.dev (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: obtain scoped credentialed sessions (affiliate ×2, casino ×1, staging ×1) on bugs.olivermaicher.eu coordination — unlocks the only three remaining live h
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Obtain scoped credentialed session on betpandacasino.io (register test account) → enumerate authenticated /rest/user/* endpoints (me, profile, info, sett
+- LEARN: ACCEPTED OTHER @ avatarux-studios live surface: 6 read-only GETs re-verified — aff config 200 398B, casino details 200 301B, help.desk portal/4 200 207443B (tem
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671,5672 / rainbet-us-staging-rabbitmq.rainbet.com:5671,5672: AMQP protocol requires authentication — ano
+- LEARN: ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public 
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview, /api/queues, /api/exchanges, /api/vhosts, /api/connections, /api/channels all 401 Ba
+- LEARN: REJECTED MISCONFIG @ rainbet-us-staging-rabbitmq.rainbet.com:15671/15672: management ports fluxing (timeout) — only prod broker stable.
+- LEARN: ACCEPTED OTHER @ roobet.com/_api: connect.sid SameSite=Lax + HttpOnly — cross-site credentialed fetch/WS from *.777.dev excluded by browser cookie policy; CORS 
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- LEARN: REJECTED MISCONFIG @ betpandacasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhaus
+- LEARN: ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation — takeover unproven
+- LEARN: REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+- LEARN: REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed.
+- LEARN: REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; manag
+- LEARN: ACCEPTED OTHER @ roobet.com/_api CORS: whitelist is namespace-wide (any *.777.dev incl. dead DNS) with credentials=true — staging-to-prod trust root is the whol
+- LEARN: REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suff
+- LEARN: ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers on Ro
