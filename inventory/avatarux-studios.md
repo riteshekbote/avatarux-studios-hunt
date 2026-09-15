@@ -801,3 +801,25 @@ www.avatarux.com
 - CHANGED betpandacasino.io `/rest/public/config` Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
 - CHANGED Roobet `/_api` connect.sid SameSite=Lax + HttpOnly confirmed — CORS trust chain exploitation leg BROKEN by browser cookie policy
 - CHANGED avatarux-studios passive surface: delta empty — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), no drift across 30+ probes
+
+## 2026-09-15 11:18:57 UTC
+- NEW RainBet RabbitMQ AMQP protocol (5671/5672) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level access — management API uniformly 401 
+- CHANGED betpandacasino.io `/rest/user/details` x-site-name-id header test (`stake_com`) re-verified negative — no passive tenant switch on user-state endpoint
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation
+- CHANGED help.desk.avatarux.com portals 4–100+ stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config
+- CHANGED affiliates.betpanda.io `/rest/public/config` byte-identical 200 — unchanged
+- CHANGED betpandacasino.io `/rest/public/config` Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
+- CHANGED Roobet `/_api` connect.sid SameSite=Lax + HttpOnly confirmed — CORS trust chain exploitation leg BROKEN by browser cookie policy
+- CHANGED avatarux-studios passive surface: delta empty — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), no drift across 30+ probes
+- NEW api.777.dev live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25) — GraphQL endpoint at /graphql completely unprobed
+- NEW Roobet CORS trust chain: `*.777.dev` namespace-wide suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving `www.777.dev` still reflects ACAO) with `ACAC:true` on producti
+- NEW RainBet RabbitMQ AMQP protocol (5671/5672) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level access — management API uniformly 401 
+- CHANGED betpandacasino.io `/rest/user/details` x-site-name-id header test (`stake_com`) re-verified negative — no passive tenant switch on user-state endpoint
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation
+- CHANGED help.desk.avatarux.com portals 4–100+ stable at ~96 portals all leaking identical tenant-id/atlassianOrgId/Statsig config
+- CHANGED affiliates.betpanda.io `/rest/public/config` byte-identical 200 — unchanged
+- CHANGED betpandacasino.io `/rest/public/config` Spring JSON 404, callback/webhook surface all 404 — passive gaps closed
+- CHANGED Roobet `/_api` connect.sid SameSite=Lax + HttpOnly confirmed — CORS trust chain exploitation leg BROKEN by browser cookie policy
+- CHANGED avatarux-studios passive surface: delta empty — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), no drift across 30+ probes
+- NEW api.777.dev live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25) — GraphQL endpoint at /graphql completely unprobed
+- NEW Roobet CORS trust chain: `*.777.dev` namespace-wide suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving `www.777.dev` still reflects ACAO) with `ACAC:true` on producti

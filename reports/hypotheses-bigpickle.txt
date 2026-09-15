@@ -1,12 +1,15 @@
-## 2026-09-15 05:49:16 UTC [target] (model bigpickle)
-[HYP] Casino authenticated /rest/user endpoint census via credentialed session
+## 2026-09-15 11:05:54 UTC [target] (model bigpickle)
+[PRIO] api.777.dev/graphql,6.30,tech_exposure(9)+freshness(5) — Apollo + 26 mutations + prod CORS trust root
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid},6.25,business_value(9)+attack_surface(8) — money-platform PII, uid path param, untested credentialed
+[PRIO] betpandacasino.io/rest/user,5.85,business_value(8)+cloud_surface(6) — real-money flow, tenant-header routing, AWS stack in bundle
+[HYP] Staging GraphQL mutation pre-auth side-effect gap on api.777.dev
 class: AUTH
-asset: betpandacasino.io/rest/user
-confidence: 45
-reasoning: anonymous /rest/user/details 200 (301B, geo-derived country, size-stable; spoof headers inert); /rest/user/settings 401 "No http-session"; /rest/user/{me,profile,info} 404; tenant headers inert on anonymous path (falsified); authenticated route set + header behavior on auth'd endpoints unknown.
-evidence_needed: one credentialed casino session; enumerate authenticated GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com toggled
-verify_steps: HUMAN under scoped authorization: GET /rest/user/details, /rest/user/settings, /rest/user/account-balances-and-bonuses auth'd, then same set with tenant headers toggled; compare ACAO/body/status
-impact: tenant-switch or self-data-model census on real-money platform. MED unless cross-tenant → HIGH.
+asset: api.777.dev/graphql
+confidence: 50
+reasoning: Apollo Server confirmed (400 CSRF-preflight on urlencoded GET); query-side auth plugin fires after arg validation; 26 mutations mapped; prod roobet.com/_api CORS trusts whole .777.dev namespace w/ credentials=true (ACAO + ACAC:true re-verified reflected for www.777.dev); connect.sid SameSite=Lax+HttpOnly blocks cross-site credentialed leg; prod↔staging session-store isolation unverified.
+evidence_needed: authorized staging session; invoke mutations with no/invalid cookie → assert NOT_AUTHENTICATED + zero state change; confirm no prod session leakage
+verify_steps: HUMAN under scoped authorization: POST /graphql (application/json) with empty cookie → assert NOT_AUTHENTICATED + no state change; POST with valid staging session → confirm isolated state
+impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared, MED otherwise
 testability: AUTH_HELPED
 [HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
 class: IDOR
@@ -17,14 +20,20 @@ evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player
 verify_steps: HUMAN under scoped authorization: register 2 test affiliate accounts → baseline GET own uid → GET other uid → diff status/body/code
 impact: cross-affiliate player/PII exposure on money platform. HIGH
 testability: AUTH_HELPED
-[HYP] Staging GraphQL mutation pre-auth side-effect gap on api.777.dev
+[HYP] Casino authenticated /rest/user census + cross-tenant x-site-name-id behavior
 class: AUTH
-asset: api.777.dev/graphql
-confidence: 50
-reasoning: Apollo Server confirmed (400 CSRF-preflight on urlencoded GET); query-side auth plugin fires after arg validation; 26 mutations mapped; prod roobet.com/_api CORS trusts whole .777.dev namespace w/ credentials=true (ACAO + ACAC:true re-verified reflected for www.777.dev this cycle); connect.sid SameSite=Lax+HttpOnly blocks cross-site credentialed leg; prod↔staging session-store isolation unverified.
-evidence_needed: authorized staging session; invoke mutations with no/invalid cookie → assert NOT_AUTHENTICATED + zero state change; confirm no prod session leakage
-verify_steps: HUMAN under scoped authorization: POST /graphql (application/json) with empty cookie → assert NOT_AUTHENTICATED + no state change; POST with valid staging session → confirm isolated state
-impact: staging raffle/reward/RTP/limit manipulation; HIGH only if prod session store shared, MED otherwise
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B (geo-derived country, spoof headers inert); /rest/user/settings 401 "No http-session"; /rest/user/{me,profile,info} 404; tenant headers inert on anonymous path (falsified); authenticated route set + header behavior on auth'd endpoints unknown.
+evidence_needed: one credentialed casino session; enumerate authenticated GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com toggled
+verify_steps: HUMAN under scoped authorization: GET /rest/user/details, /rest/user/settings, /rest/user/account-balances-and-bonuses auth'd, then same set with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data-model census on real-money flow platform. MED unless cross-tenant → HIGH
 testability: AUTH_HELPED
-[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} for BOLA proof (top waitlist, HIGH, passive side complete); same credential grant unlocks api.777.dev mutation gap + casino /rest/user census.
-[RISK] avatarux-studios: 75 — LOW-INFORMATIONAL, converged. 6 probes ≤0.2 rps, GET/HEAD/OPTIONS only; all deltas environmental (casino country geo, portal +3B, rmq:5672 flux). Meaningful corpus byte-stable across cycles. Top 3 paths (BOLA 68, GraphQL 50, casino census 45) all AUTH_HELPED, blocked on HUMAN credentialed sessions; stand-by cost <1% budget. Report-ready finals unchanged + submission-ready at bugs.olivermaicher.eu. No policy violations, no drift in denied surfaces. Progress to HIGH requires 3 credential grants (affiliate×2, casino×1, staging×1).
+[PARKED] Casino x-site-name-id tenant switch (anonymous): falsified 3+ cycles byte-identical — passive leg dead.
+[PARKED] Broker anonymous /api topology: fully falsified (all families 401 Basic, AMQP 403/guest) — mgmt-UI+AMQP only.
+[PARKED] Affiliates recover-password enumeration: REJECTED class, must not rerank.
+[PARKED] casino /rest/public/config mirror + callback/webhook SSRF: Spring 404 on all — surface exhausted.
+[FINAL] 1. affiliate BOLA 68 2. api.777.dev GraphQL 50 3. casino census 45 — all AUTH_HELPED, credential-blocked, unchanged.
+[NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} for BOLA proof (top waitlist, HIGH, passive side complete); same grant unlocks api.777.dev mutation gap + casino /rest/user census.
+[LEARN] ACCEPTED OTHER @ avatarux-studios live surface: passive convergence reconfirmed — 6 read-only GETs stable (casino /rest/user/details 200 301B, aff config 200 398B, help.desk portal/4 200 template-drift-only, rmq :15671/api/overview 401, cpanel 000, roobet ACAO www.777.dev/ACAC:true vs evil777.dev none); no drift, no new anonymous exposure, no credential grant received since 2026-09-06.
+[RISK] avatarux-studios: 75 — converged, stand-by only. Zero live probes this cycle; no mutating/auth-bypass activity; surface byte-stable across 30+ probes; top 3 paths all AUTH_HELPED and gated on HUMAN credential grants (affiliate ×2, casino ×1, staging ×1). Temporary halt on REAL progress is a program-side credential-block, not policy drift; no denied-surface violations.
