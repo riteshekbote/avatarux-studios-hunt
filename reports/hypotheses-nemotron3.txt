@@ -1,4 +1,4 @@
-## 2026-09-15 00:48:17 UTC [target] (model nemotron3)
+## 2026-09-15 05:52:01 UTC [target] (model nemotron3)
 [CHANGED] RainBet RabbitMQ AMQP protocol (5671/5672) on raw DigitalOcean origins remains completely untested for anonymous protocol-level access; management API uniformly 401 Basic
 [CHANGED] Roobet game servers (`crash-gs.roobet.com`, `dice.roobet.com`) HTTP root + /health /api /socket.io all curl timeout @12s — WS-transport-only confirmed, NO anonymous HTTP surface
 [CHANGED] betpandacasino.io `/rest/user/details` x-site-name-id header test (`stake_com`) re-verified negative — no passive tenant switch on user-state endpoint
@@ -9,12 +9,11 @@
 [CHANGED] Roobet `/_api` connect.sid SameSite=Lax + HttpOnly confirmed — CORS trust chain exploitation leg BROKEN by browser cookie policy
 [CHANGED] avatarux-studios passive surface: delta empty — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), no drift across 30+ probes
 [PRIO] betpandacasino.io/rest/user/details,7.95,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=8
-[PRIO] affiliates.betpanda.io/rest/player/uid/{uid},7.10,attack_surface=7,business_value=9,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=5
-[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,5.20,attack_surface=5,business_value=9,tech_exposure=3,gate_ease=10,cloud_surface=8,freshness=3
-[PRIO] help.desk.avatarux.com/servicedesk/customer/portal/{4..100},4.85,attack_surface=7,business_value=5,tech_exposure=6,gate_ease=10,cloud_surface=5,freshness=4
-[PRIO] roobet.com/_api,4.80,attack_surface=6,business_value=8,tech_exposure=5,gate_ease=3,cloud_surface=8,freshness=4
-[PRIO] affiliates.betpanda.io/rest/public/config,4.55,attack_surface=6,business_value=7,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=2
-[PRIO] cpanel.avatarux.com,3.55,attack_surface=4,business_value=5,tech_exposure=2,gate_ease=2,cloud_surface=5,freshness=2
+[PRIO] api.777.dev/graphql,6.80,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=7,freshness=5
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid},6.75,attack_surface=7,business_value=9,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=5
+[PRIO] rainbet-com-rabbitmq.rainbet.com:15671,6.55,attack_surface=5,business_value=9,tech_exposure=3,gate_ease=10,cloud_surface=8,freshness=3
+[PRIO] help.desk.avatarux.com/servicedesk/customer/portal/{4..100},6.35,attack_surface=7,business_value=5,tech_exposure=6,gate_ease=10,cloud_surface=5,freshness=4
+[PRIO] roobet.com/_api,5.90,attack_surface=6,business_value=8,tech_exposure=5,gate_ease=3,cloud_surface=8,freshness=4
 [HYP] BetPanda Casino Authenticated /rest/user/* Endpoint Census via Credentialed Session
 class: AUTH
 asset: betpandacasino.io/rest/user
@@ -24,6 +23,15 @@ evidence_needed: One valid betpandacasino.io session cookie/JWT; authenticated G
 verify_steps: HUMAN: obtain scoped credentialed session; GET /rest/user/me -H "Cookie: <session>"; GET /rest/user/profile -H "Cookie: <session>"; test x-site-name-id: stake_com/roobet_com on authenticated endpoints
 impact: Cross-tenant PII dump (email, balance, KYC docs, transaction history), privilege escalation via tenant header injection, BOLA on player/agent endpoints — HIGH
 testability: AUTH_HELPED
+[HYP] Staging GraphQL Mutation Pre-Auth Side-Effect Gap on api.777.dev
+class: AUTH
+asset: api.777.dev/graphql
+confidence: 50
+reasoning: api.777.dev is live Express/session backend (connect.sid, helmet, ACAC:true preset, CF 104.18.43.25); prod CORS whitelist origin is a real running service. Route tree ≠ roobet.com/_api (all /_api/* 404) — sibling staging app, not endpoint map mirror. GraphQL endpoint likely exists at /graphql given Express/Apollo patterns. Staging environments commonly lack auth guards on mutations or have pre-auth side-effects (account creation, password reset, email change). No passive probe has targeted GraphQL on this host.
+evidence_needed: GraphQL introspection query on api.777.dev/graphql; mutation enumeration (createAccount, resetPassword, updateEmail, etc.) without auth; verify side-effects persist
+verify_steps: PROBE: POST https://api.777.dev/graphql -H "Content-Type: application/json" -d '{"query":"__schema{queryType{name}mutationType{name}subscriptionType{name}}"}'; if introspection enabled, enumerate mutations and test unauthenticated execution
+impact: If pre-auth mutations exist: account takeover via email change, password reset bypass, mass account creation — HIGH. Current evidence: staging backend confirmed live, GraphQL surface unprobed
+testability: PASSIVE
 [HYP] Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} Cross-UID Iteration
 class: IDOR
 asset: affiliates.betpanda.io/rest/player/uid/{uid}
@@ -33,20 +41,9 @@ evidence_needed: Two valid affiliate.betpanda.io sessions; GET /rest/player/uid/
 verify_steps: HUMAN: register two scoped test accounts on affiliates.betpanda.io; GET /rest/player/uid/{own} -H "Cookie: <session1>"; GET /rest/player/uid/{other} -H "Cookie: <session1>"; repeat with session2
 impact: Cross-affiliate PII dump (player records, transactions, commissions), BOLA escalation to agent/admin endpoints — HIGH
 testability: AUTH_HELPED
-[HYP] RainBet RabbitMQ AMQP Anonymous Protocol Access on Raw DigitalOcean Origins
-class: MISCONFIG
-asset: rainbet-com-rabbitmq.rainbet.com:5671,5672 / rainbet-us-staging-rabbitmq.rainbet.com:5671,5672
-confidence: 35
-reasoning: Management API uniformly 401 Basic across all endpoints (/overview, /queues, /exchanges, /vhosts, /connections, /channels). AMQP ports 5671 (TLS) and 5672 (plaintext) open on raw DigitalOcean origins with no Cloudflare/ACL. However, live probe confirmed anonymous/guest connections refused with 403 ACCESS_REFUSED; protocol requires authentication. Staging broker management ports fluxing (timeout).
-evidence_needed: AMQP protocol-level anonymous connection attempt (guest/guest or no auth) against :5671 and :5672 on both brokers; verify if any vhost allows unauthenticated access
-verify_steps: PROBE: amqp-client connect to rainbet-com-rabbitmq.rainbet.com:5671 (TLS) and :5672 (plaintext) with no credentials; test guest/guest; enumerate vhosts if connection succeeds
-impact: If anonymous AMQP access exists: full gaming messaging backbone access (bets, payouts, bonuses, player events) — CRITICAL. Current evidence: authentication required, exposure = mgmt UI + AMQP ports only — MED
-testability: PASSIVE
-[PARKED] RainBet RabbitMQ AMQP Anonymous Protocol Access on Raw DigitalOcean Origins: confidence 35 < 40 threshold; live probe already falsified anonymous access (403 ACCESS_REFUSED on AMQP, 401 Basic on all mgmt API endpoints). No verify path without credentialed broker access.
-[PARKED] Roobet Staging-to-Prod CORS Trust Chain via *.777.dev Namespace: confidence 45 < 50 threshold; connect.sid SameSite=Lax + HttpOnly breaks cross-origin credentialed fetch/WS; requires unproven XSS on *.777.dev or top-level nav; not a direct passive exploit.
+[PARKED] Staging GraphQL Mutation Pre-Auth Side-Effect Gap on api.777.dev: confidence 50 < 55 threshold for AUTH class; GraphQL endpoint existence unconfirmed (no passive probe), introspection may be disabled in staging; requires live probe first.
 [FINAL] 1. BetPanda Casino Authenticated /rest/user/* Endpoint Census via Credentialed Session (70) — HIGH, AUTH_HELPED
 [FINAL] 2. Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} Cross-UID Iteration (68) — HIGH, AUTH_HELPED
-[FINAL] 3. Help.desk.avatarux.com JSM Portal Tenant ID Enumeration at Scale (60) — LOW/INFO, PASSIVE
 [NEXT] HUMAN: Obtain scoped credentialed session on betpandacasino.io (register test account) → enumerate authenticated /rest/user/* endpoints (me, profile, info, settings, account-balances-and-bonuses) and test x-site-name-id/x-preferred-app-context header injection for cross-tenant access.
 [LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671,5672 / rainbet-us-staging-rabbitmq.rainbet.com:5671,5672: AMQP protocol requires authentication — anonymous/guest connections refused (403 ACCESS_REFUSED); management API uniformly 401 Basic. Anonymous topology disclosure claim FULLY FALSIFIED.
 [LEARN] ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com / rainbet-us-staging-rabbitmq.rainbet.com: RabbitMQ Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/* 401 Basic gated uniformly. In-scope RainBet messaging backbone.
