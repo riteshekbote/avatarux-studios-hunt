@@ -2025,3 +2025,11 @@
 - LEARN: ACCEPTED OTHER @ help.desk.avatarux.com portals: template size shifted 209005→207440B but tenant-id df607198-… + atlassianOrgId + Statsig leak intact, portals 4
 - LEARN: ACCEPTED OTHER @ rainbet-com-rabbitmq.rainbet.com: :5671 AMQP-TLS OPEN stable; :5672 plaintext TIMEOUT (was OPEN) — prod broker now shows staging-like port flux
 - LEARN: ACCEPTED OTHER @ avatarux-studios live surface: 4 read-only GETs + CORS re-verified — affiliates config cc5f885e byte-identical, casino details size-stable (geo
+
+## RANKED HYPOTHESES 2026-09-15 15:56:05 UTC
+- [68] affiliates.betpanda.io/rest/player/uid/{uid}: Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: issue two credentialed affiliate test accounts under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} for BOLA pro
+- LEARN: ACCEPTED OTHER @ api.777.dev/graphql: GET + `Apollo-Require-Preflight: true` → 200 anonymous introspection; 29Q/27M/62-field User schema fully mapped; stack tra
+- LEARN: ACCEPTED AUTH @ api.777.dev/graphql: uniform global auth plugin — currentUser, notifications, polymarketUserPortfolio, AND control exchangeRates all NOT_AUTHENT
+- LEARN: ACCEPTED MISCONFIG @ api.777.dev CORS: ACAO only for *.777.dev (evil777.dev/evil.example/null none) — suffix-match identical to prod /_api; staging whitelist co
+- LEARN: REJECTED AUTH @ api.777.dev pre-auth mutation gap: global-plugin wrapping contradicts per-field auth-miss mechanism; hypothesis parked (was 50).

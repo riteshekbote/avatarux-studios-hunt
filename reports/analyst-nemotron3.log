@@ -10757,3 +10757,71 @@ testability: AUTH_HELPED
 **STEP 7 — RISK**
 
 [RISK] avatarux-studios: 78 — Top exploitable paths: RainBet RabbitMQ AMQP anonymous protocol access on raw DigitalOcean origins (75, PASSIVE, CRITICAL) — completely untested wire protocol on exposed brokers; api.777.dev GraphQL introspection/pre-auth mutations (70, PASSIVE, HIGH) — live staging backend with prod CORS namespace trust, GraphQL surface unprobed; BetPanda Casino authenticated /rest/user/* census + cross-tenant header injection (70, AUTH_HELPED, HIGH) — full user model leak aids credentialed recon, x-site-name-id injection vector; Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} (68, AUTH_HELPED, HIGH) — IDOR pattern confirmed, requires two credentialed sessions; Roobet staging-to-prod CORS trust chain (48, AUTH_HELPED, HIGH) — blocked by SameSite=Lax, requires XSS on *.777.dev. Passive surface otherwise closed: cPanel takeover unclaimable (delegation gap), casino config/SSRF falsified, help.desk portals stable reconnaissance only, BetPanda x-site-name-id passive switch falsified. Risk = HIGH — one PASSIVE CRITICAL + one PASSIVE HIGH + two AUTH_HELPED HIGH findings, all actionable with minimal auth barriers.
+===== ANALYST nemotron3 2026-09-15 15:56:05 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/avatarux-studios-hunt/avatarux-studios-hunt/
+total 508
+drwxr-xr-x 12 runner runner   4096 Sep 15 15:35 .
+drwxr-xr-x  3 runner runner   4096 Sep 15 15:35 ..
+drwxr-xr-x  7 runner runner   4096 Sep 15 15:35 .git
+drwxr-xr-x  3 runner runner   4096 Sep 15 15:35 .github
+-rw-r--r--  1 runner runner   1738 Sep 15 15:35 README.md
+-rw-r--r--  1 runner runner     43 Sep 15 15:35 analyst-out.txt
+-rw-r--r--  1 runner runner 210599 Sep 15 15:35 analyst-prompt.txt
+-rw-r--r--  1 runner runner 206763 Sep 15 15:35 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 leads
+-rw-r--r--  1 runner runner  12067 Sep 15 15:35 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 reports
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 15 15:35 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 scripts
+-rw-r--r--  1 runner runner     33 Sep 15 15:35 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 15 15:35 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 15 15:35 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 15 15:35 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 15 15:35 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 15 15:35 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 15 15:35 triage
+[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/avatarux-studios.md
+[0m→ [0mRead inventory/avatarux-studios.md[90m [offset=454][0m
+[0m→ [0mRead probe-results.md
+[0m✱ [0mGlob "leads/*.md"[90m 7 matches[0m
+[0m→ [0mRead leads/lead-nemotron3.md
+[0m→ [0mRead leads/lead-nemotron3.md[90m [offset=388][0m
+Now I have a comprehensive understanding of the current state. Let me execute the 8-step analysis.
+
+---
+
+**STEP 1 — DELTA**
+
+[NEW] `api.777.dev/graphql` — live Express/session backend (connect.sid, helmet, ACAC:true, CF 104.18.43.25) with completely unprobed GraphQL endpoint at `/graphql` (discovered 2026-09-11, re-confirmed 2026-09-15)
+[NEW] RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) — completely untested for anonymous protocol-level connections (management API uniformly 401 Basic)
+[CHANGED] `betpandacasino.io/rest/user/details` — NEW unauthenticated endpoint returning full user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified) — 301B JSON, Spring Boot backend confirmed
+[CHANGED] `help.desk.avatarux.com` portals 4–100+ — surface expanded from 7 to ~96 portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID, Statsig config (prod-euwest, shard jira-prod-eu-3)
+[CHANGED] `rainbet-com-rabbitmq.rainbet.com` — prod broker stable on :15671 (mgmt) + :5671 (AMQP-TLS); staging broker ports fluxing (timeouts on :15671/15672, :5672)
+[CHANGED] `roobet.com/_api` CORS trust chain — namespace-wide `*.777.dev` suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving `www.777.dev` still reflects ACAO) with `ACAC:true` on production game data endpoints; `connect.sid` cookie `SameSite=Lax + HttpOnly` breaks cross-site credentialed fetch/WS from *.777.dev
+[CHANGED] `betpandacasino.io/rest/user/details` x-site-name-id header test (`stake_com`) — body/ACAO/echo unchanged, no passive tenant switch
+[CHANGED] `cpanel.avatarux.com` — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; takeover unproven, monitoring-only (downgraded from CRITICAL)
+[CHANGED] `betpandacasino.io/rest/public/config` Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+[CHANGED] `betpandacasino.io` callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified
+[CHANGED] `affiliates.betpanda.io/rest/public/config` — byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — stable
+[CHANGED] `affiliates.betpanda.io/rest/player/uid/{id}` — 401-gated confirmed; auth boundary intact anonymously
+[CHANGED] `roobet.com` game servers (`crash-gs.roobet.com`, `dice.roobet.com`) — HTTP root + /health /api /socket.io all curl timeout @12s; WS-transport-only, NO anonymous HTTP surface
+[CHANGED] `avatarux-studios` passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no drift
+
+---
+
+**STEP 2 — PRIORITIZE**
+
+[PRIO] `api.777.dev/graphql`,8.35,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=7,freshness=8
+[PRIO] `betpandacasino.io/rest/user`,7.05,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=4,cloud_surface=7,freshness=8
+[PRIO] `affiliates.betpanda.io/rest/player/uid/{uid}`,6.75,attack_surface=7,business_value=9,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=5
+[PRIO] `rainbet-com-rabbitmq.rainbet.com:5671`,6.55,attack_surface=5,business_value=9,tech_exposure=3,gate_ease=10,cloud_surface=8,freshness=3
+[PRIO] `

@@ -4241,3 +4241,47 @@ testability: AUTH_HELPED
 [NEXT] HUMAN: register two credentialed affiliate test accounts on affiliates.betpanda.io under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} for BOLA proof (top waitlist, HIGH, passive side complete); same grant unlocks api.777.dev mutation gap + casino /rest/user census.
 [LEARN] ACCEPTED OTHER @ avatarux-studios live surface: passive convergence reconfirmed — 6 read-only GETs stable (casino /rest/user/details 200 301B, aff config 200 398B, help.desk portal/4 200 template-drift-only, rmq :15671/api/overview 401, cpanel 000, roobet ACAO www.777.dev/ACAC:true vs evil777.dev none); no drift, no new anonymous exposure, no credential grant received since 2026-09-06.
 [RISK] avatarux-studios: 75 — converged, stand-by only. Zero live probes this cycle; no mutating/auth-bypass activity; surface byte-stable across 30+ probes; top 3 paths all AUTH_HELPED and gated on HUMAN credential grants (affiliate ×2, casino ×1, staging ×1). Temporary halt on REAL progress is a program-side credential-block, not policy drift; no denied-surface violations.
+## 2026-09-15 15:40:43 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid},6.75,business_value(9)+attack_surface(8) — money-platform PII, credential-blocked
+[PRIO] betpandacasino.io/rest/user,5.85,business_value(8)+cloud_surface(6) — real-money flow, tenant-header routing
+[PRIO] api.777.dev/graphql,5.60,tech_exposure(9)+freshness(4) — Apollo+27 money mutations+namespace CORS trust; anonymous schema now proven
+[PRIO] help.desk.avatarux.com portals,5.40,gate_ease(10)+freshness(5) — passive tenant-id/Statsig leak, report-ready
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend, 20+ route map complete; /rest/public/config 200 398B byte-stable (sha256 cc5f885e, operatorId=1); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest untested.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET /rest/player/uid/{2..N} vs own uid; diff status/body/code
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → baseline GET own uid → GET other uid → diff
+impact: cross-affiliate player/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+[HYP] Casino authenticated /rest/user census + cross-tenant x-site-name-id behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; tenant header inert anonymously (falsified); authed route set + header behavior unknown.
+evidence_needed: one credentialed casino session; enumerate authed GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com
+verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses}, then with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+[HYP] Staging GraphQL anonymous schema/capability disclosure (mutation intent map)
+class: MISCONFIG
+asset: api.777.dev/graphql
+confidence: 60
+reasoning: verified anonymously this cycle — GET + Apollo-Require-Preflight → 200; full schema incl 27 money-mutations (sendTip, instantRaffleCreate, rewardsClaim/rewardsVaultClaim, polymarketOrderPlace/Cancel, stakeEngineFairSeedsRotate); stack traces leak /opt/roobet/build/workloads/api-graphql + dd-trace → staging runs prod api-graphql codebase; all resolvers uniformly NOT_AUTHENTICATED.
+evidence_needed: none further — schema + capability map already in hand; severity = LOW/informational disclosure, not data leak
+verify_steps: PASSIVE done (introspection dumps stored); if staged creds later granted, diff mutation arg types against prod bundle to surface pre-auth gaps
+impact: full API capability exposure + internal build-path/stack disclosure on shared codebase; feeds chained authed testing. LOW
+testability: PASSIVE
+[PARKED] api.777.dev pre-auth mutation side-effect gap: global nexus auth plugin verified to wrap every resolver (uniform NOT_AUTHENTICATED incl. public-control field exchangeRates) — per-field plugin-miss mechanism unsupported; confidence 50→35, below floor.
+[PARKED] Casino x-site-name-id tenant switch (anonymous): falsified byte-identical 4+ cycles.
+[PARKED] Broker anonymous /api topology: fully falsified (all families 401 Basic, AMQP 403/guest).
+[PARKED] Affiliates recover-password enumeration: REJECTED class, must not rerank.
+[PARKED] Casino /rest/public/config mirror + callback/webhook SSRF: Spring 404 on all — surface exhausted.
+[FINAL] 1. affiliate BOLA 68 (AUTH_HELPED, HIGH) 2. api.777.dev schema disclosure 60 (PASSIVE, reportable LOW) 3. casino census 45 (AUTH_HELPED, MED)
+[NEXT] HUMAN: issue two credentialed affiliate test accounts under scoped authorization → cross-uid GET /rest/player/uid/{own} vs /rest/player/uid/{other} for BOLA proof (top waitlist, HIGH; passive side complete). Same grant unlocks casino /rest/user authed census; a staging credential additionally enables mutation-gap re-test on api.777.dev under the now-mapped schema.
+[LEARN] ACCEPTED OTHER @ api.777.dev/graphql: GET + `Apollo-Require-Preflight: true` → 200 anonymous introspection; 29Q/27M/62-field User schema fully mapped; stack traces expose /opt/roobet/build/workloads/api-graphql (staging = prod api-graphql codebase) + dd-trace; no data leak.
+[LEARN] ACCEPTED AUTH @ api.777.dev/graphql: uniform global auth plugin — currentUser, notifications, polymarketUserPortfolio, AND control exchangeRates all NOT_AUTHENTICATED; anonymous data reads closed on every Query field.
+[LEARN] ACCEPTED MISCONFIG @ api.777.dev CORS: ACAO only for *.777.dev (evil777.dev/evil.example/null none) — suffix-match identical to prod /_api; staging whitelist control clean.
+[LEARN] REJECTED AUTH @ api.777.dev pre-auth mutation gap: global-plugin wrapping contradicts per-field auth-miss mechanism; hypothesis parked (was 50).
+[RISK] avatarux-studios: 75 — converged; this cycle added a genuinely new anonymous surface (introspection schema + capability map) but confirmed every data-bearing resolver is auth-gated and CORS controls clean; ~20 GET-only probes ≤0.3 rps, no mutations, no customer data, no denied-surface drift. All top value paths remain AUTH_HELPED, blocked on HUMAN credential grants; stand-by cost <1% budget.
