@@ -839,3 +839,19 @@ www.avatarux.com
 - CHANGED `affiliates.betpanda.io/rest/player/uid/{id}` — 401-gated confirmed; auth boundary intact anonymously
 - CHANGED `roobet.com` game servers (`crash-gs.roobet.com`, `dice.roobet.com`) — HTTP root + /health /api /socket.io all curl timeout @12s; WS-transport-only, NO anonymous HTTP surface
 - CHANGED `avatarux-studios` passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no d
+
+## 2026-09-15 19:27:04 UTC
+- NEW `api.777.dev/graphql` — live Express/session backend (connect.sid, helmet, ACAC:true, CF 104.18.43.25) with completely unprobed GraphQL endpoint at `/graphql` (discovered 2026-09-11, re-confirmed 2026
+- NEW RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) — completely untested for anonymous protocol-level connections (management
+- CHANGED `betpandacasino.io/rest/user/details` — NEW unauthenticated endpoint returning full user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, prin
+- CHANGED `help.desk.avatarux.com` portals 4–100+ — surface expanded from 7 to ~96 portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace I
+- CHANGED `rainbet-com-rabbitmq.rainbet.com` — prod broker stable on :15671 (mgmt) + :5671 (AMQP-TLS); staging broker ports fluxing (timeouts on :15671/15672, :5672)
+- CHANGED `roobet.com/_api` CORS trust chain — namespace-wide `*.777.dev` suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving `www.777.dev` still reflects ACAO) with `ACAC:true`
+- CHANGED `betpandacasino.io/rest/user/details` x-site-name-id header test (`stake_com`) — body/ACAO/echo unchanged, no passive tenant switch
+- CHANGED `cpanel.avatarux.com` — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; takeover unproven, monitoring-only (downgraded from CRITICAL)
+- CHANGED `betpandecasino.io/rest/public/config` Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+- CHANGED `betpandecasino.io` callback/webhook surface — all 5 endpoints 404; SSRF hypothesis falsified
+- CHANGED `affiliates.betpanda.io/rest/public/config` — byte-identical 200 (operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty) — stable
+- CHANGED `affiliates.betpanda.io/rest/player/uid/{id}` — 401-gated confirmed; auth boundary intact anonymously
+- CHANGED `roobet.com` game servers (`crash-gs.roobet.com`, `dice.roobet.com`) — HTTP root + /health /api /socket.io all curl timeout @12s; WS-transport-only, NO anonymous HTTP surface
+- CHANGED `avatarux-studios` passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no d

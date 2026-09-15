@@ -442,3 +442,7 @@
 - 2026-09-15 ACCEPTED AUTH @ api.777.dev/graphql: uniform global auth plugin — currentUser, notifications, polymarketUserPortfolio, AND control exchangeRates all NOT_AUTHENTICATED; anonymous data reads closed on every Query field.
 - 2026-09-15 ACCEPTED MISCONFIG @ api.777.dev CORS: ACAO only for *.777.dev (evil777.dev/evil.example/null none) — suffix-match identical to prod /_api; staging whitelist control clean.
 - 2026-09-15 REJECTED AUTH @ api.777.dev pre-auth mutation gap: global-plugin wrapping contradicts per-field auth-miss mechanism; hypothesis parked (was 50).
+- 2026-09-15 REJECTED MISCONFIG @ betpandecasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch on user-state endpoint.
+- 2026-09-15 REJECTED MISCONFIG @ betpandecasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
+- 2026-09-15 REJECTED MISCONFIG @ betpandecasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted.
+- 2026-09-15 ACCEPTED OTHER @ betpandecasino.io/rest/user/details: 200 JSON user-state model unauthenticated leak (301B) reconfirmed — report-ready finding unchanged, controls clean.

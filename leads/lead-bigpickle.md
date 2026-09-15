@@ -4285,3 +4285,31 @@ testability: PASSIVE
 [LEARN] ACCEPTED MISCONFIG @ api.777.dev CORS: ACAO only for *.777.dev (evil777.dev/evil.example/null none) — suffix-match identical to prod /_api; staging whitelist control clean.
 [LEARN] REJECTED AUTH @ api.777.dev pre-auth mutation gap: global-plugin wrapping contradicts per-field auth-miss mechanism; hypothesis parked (was 50).
 [RISK] avatarux-studios: 75 — converged; this cycle added a genuinely new anonymous surface (introspection schema + capability map) but confirmed every data-bearing resolver is auth-gated and CORS controls clean; ~20 GET-only probes ≤0.3 rps, no mutations, no customer data, no denied-surface drift. All top value paths remain AUTH_HELPED, blocked on HUMAN credential grants; stand-by cost <1% budget.
+## 2026-09-15 19:13:49 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend, endpoint map complete; /rest/public/config 200 398B byte-stable (sha256 cc5f885e); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest untested.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; diff status/body/code
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own}, GET /rest/player/uid/{other} → diff
+impact: cross-affiliate player/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+[HYP] Staging GraphQL anonymous schema/stacktrace disclosure
+class: MISCONFIG
+asset: api.777.dev/graphql
+confidence: 60
+reasoning: anonymous introspection 200 (29Q/27M/62-field User schema, 27 money-mutations incl. sendTip/rewardsClaim/polymarketOrderPlace); empty-query GET → 400 leaks full Apollo file:line stacktrace under /opt/roobet/node_modules → staging runs prod api-graphql codebase; every resolver uniformly NOT_AUTHENTICATED; CORS suffix-match clean.
+evidence_needed: none further — schema dumps + stacktrace recorded; severity LOW/informational
+verify_steps: PASSIVE done; if staged creds granted, diff mutation arg types vs prod bundle for pre-auth gaps
+impact: full API capability + internal build-path/stack disclosure on shared codebase; feeds chained authed testing. LOW
+testability: PASSIVE
+[HYP] Casino authenticated /rest/user census + cross-tenant x-site-name-id behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; tenant header inert anonymously (falsified); authed route set + header behavior unknown.
+evidence_needed: one credentialed casino session; enumerate authed GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com
+verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses}, then with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
