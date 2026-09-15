@@ -446,3 +446,4 @@
 - 2026-09-15 REJECTED MISCONFIG @ betpandecasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED.
 - 2026-09-15 REJECTED MISCONFIG @ betpandecasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted.
 - 2026-09-15 ACCEPTED OTHER @ betpandecasino.io/rest/user/details: 200 JSON user-state model unauthenticated leak (301B) reconfirmed — report-ready finding unchanged, controls clean.
+- 2026-09-15 REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com/api/*: /api/overview,/queues,/exchanges,/vhosts,/connections,/channels,/bindings,/permissions,/policies,/definitions,/nodes,/users,/health all 401 Basic — anonymous topology disclosure claim FULLY FALSIFIED; management API auth uniform.

@@ -855,3 +855,5 @@ www.avatarux.com
 - CHANGED `affiliates.betpanda.io/rest/player/uid/{id}` — 401-gated confirmed; auth boundary intact anonymously
 - CHANGED `roobet.com` game servers (`crash-gs.roobet.com`, `dice.roobet.com`) — HTTP root + /health /api /socket.io all curl timeout @12s; WS-transport-only, NO anonymous HTTP surface
 - CHANGED `avatarux-studios` passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no d
+
+## 2026-09-15 22:27:35 UTC

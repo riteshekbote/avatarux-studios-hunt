@@ -23529,3 +23529,67 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 - [RISK] avatarux-studios: 70 — 4 GET-only probes, ~1 rps, 12s timeouts, no mutations/auth-bypass/multi-tenant forcing, no customer data touched; added informational stacktrace corroboration + falsified the last staging-GraphQL sibling question. All top value paths remain AUTH_HELPED, blocked on HUMAN credential grants for 9+ days (affiliate ×2, casino ×1, staging ×1); stand-by cost <1% budget. No denied-surface drift.
+===== ANALYST bigpickle 2026-09-15 22:27:35 UTC =====
+[0m
+> build · big-pickle
+[0m
+**STEP 1 — DELTA**
+- [CHANGED] nemotron3 lead `[75] rainbet-com-rabbitmq.rainbet.com:5671` — "anonymous AMQP access" contradicts recorded hard evidence (AMQP 403 ACCESS_REFUSED, guest:guest fails, every /api/* 401 Basic uniform); rerank is stale, recycled at critique.
+- [NEW] 777.dev zone members beyond `api` + game SPAs (`gamebook`, `promotions`, `api-test`, `api-lbc`, `xtest`, `testsite`, `storybook`) resolve to Roobet CF pair but were never probed — only fresh passive surface left.
+- [NEW] cross-brand `/rest/user/details` parity untested — x-site-name-id tenant-routing header schema implies same Nano/Spring platform may serve sibling in-scope brands (roobet.com, stake.com, gamdom.com); if any expose the same anonymous user-state endpoint, accepted finding extends to a second brand.
+- [NO_DELTA] casino details 301B, aff config 398B cc5f885e, help.desk portals 4–100+, rmq :15671 401, cpanel 000, roobet ACAO www.777.dev/ACAC:true — all byte-stable.
+
+**STEP 2 — PRIORITIZE**
+- [PRIO] roobet.com-stake.com-gamdom.com:/rest/user/details parity, 0.60, gate_ease+business_value (no-auth new-brand finding, b=0.8)
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 0.58, business_value+attack_surface (carried HIGH, auth-blocked)
+- [PRIO] 777.dev sibling services (gamebook/promotions/api-test/api-lbc), 0.53, freshness+tech_exposure (never probed, Express/Apollo family)
+
+**STEP 3 — HYPOTHESES**
+
+[HYP] Cross-brand anonymous user-state parity via shared Nano/Spring /rest tenant family
+class: MISCONFIG
+asset: roobet.com|stake.com|gamdom.com/rest/user/details
+confidence: 45
+reasoning: betpandacasino.io/rest/user/details 200 301B anonymous user-state model (accepted); OPTIONS /rest/user/authenticate advertises x-site-name-id tenant-routing schema (candidate tenants roobet_com/stake_com tested, ignored on betpandacasino_io); platform-backed siblings in-scope; on betpandacasino.io the route exists while {me,profile,info} 404 + {authenticate,refresh} 405 — path identity distinctive to this backend family.
+evidence_needed: one 200 JSON user-state model (logggeIn/country/kycVerified/currentLevel) on a sibling in-scope brand origin → extends accepted finding across brands.
+verify_steps: passive GET https://stake.com/rest/user/details and https://gamdom.com/rest/user/details with browser UA, 1 req each ≤0.2rps; catch 200-JSON (parity→new finding) vs 404/403-CF/HTML-spa (falsified).
+impact: anonymous data-model disclosure duplicated on a second money platform brand; if 200 and body-field-rich → MED, report-merged. LOW-MED unless 200.
+testability: PASSIVE
+
+[HYP] 777.dev staging sibling-service census (gamebook/promotions/api-test/api-lbc)
+class: OTHER
+asset: gamebook.777.dev|promotions.777.dev|api-test.777.dev|api-lbc.777.dev
+confidence: 50
+reasoning: 11/11 777.dev cert-names resolve to Roobet CF pair 104.18.43.25; api.777.dev served live Express (connect.sid/helmet) WITHOUT Cloudflare challenge while root www is 403-gated → challenge routing is per-host; api-test/api-lbc names imply sibling REST workloads to the confirmed api-graphql workload (stack trace /opt/roobet/build/workloads/api-graphql = staging runs prod codebase).
+evidence_needed: any live non-challenge HTTP banner/route map on a sibling host; REST sibling of api-graphql would mirror roobet.com/_api class but on staging.
+verify_steps: 4 read-only GETs root (browser UA, ≤0.2rps): gamebook.777.dev, promotions.777.dev, api-test.777.dev, api-lbc.777.dev; classify 200-banner vs 403-CF-challenge vs 302-CF-Access; if api-test/lbc 200 → map route tree like api.777.dev.
+impact: staging REST/Express endpoint-map (prod codebase) for chained authed testing; schema/route disclosure LOW; no data access expected.
+testability: PASSIVE
+
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (carried)
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend endpoint map complete; /rest/public/config 200 398B byte-stable (operatorId=1, cc5f885e); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest untested.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; diff status/body/code.
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own}, GET /rest/player/uid/{other} → diff.
+impact: cross-affiliate player/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+
+**STEP 4 — SELF-CRITIQUE**
+- [PARKED] rainbet-com-rabbitmq AMQP anonymous access (nemotron3 [75]): directly contradicted by recorded probes (AMQP 403 ACCESS_REFUSED both brokers, guest:guest 401 not_authorized, /api/{overview,queues,exchanges,vhosts,connections,channels} all 401 Basic) — stale rerank, class closed.
+- [PARKED] api.777.dev pre-auth mutation gap: already falsified (uniform global auth plugin), parked prior.
+- [KEEP] 777.dev sibling census 50 — verifiable passives listed, no rejected class.
+- [KEEP] parity 45 — cheap, high-value-if-true; drops just above the 40 floor; okay.
+- [KEEP] casino authed census 45 — carried AUTH_HELPED (same credential grant as BOLA).
+- [FINAL] 1. affiliate BOLA 68 (AUTH_HELPED, HIGH) 2. 777.dev sibling census 50 (PASSIVE) 3. casino /rest/user authed census 45 (AUTH_HELPED) 4. cross-brand /rest/user/details parity 45 (PASSIVE).
+
+**STEP 5 — NEXT ACTION**
+[NEXT] PROBE: 4 read-only GETs (browser UA, ≤0.2rps): https://gamebook.777.dev/ , https://promotions.777.dev/ , https://api-test.777.dev/ , https://api-lbc.777.dev/ — classify 200-banner / 403-CF-challenge / 302, and if api-test|api-lbc live, GET /_api/currency/balances + /graphql for workload identity. (Standing HUMAN waitlist unchanged: two credentialed affiliate accounts for BOLA proof.)
+
+**STEP 6 — LEARNING**
+- [LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671,5672 / rainbet-us-staging-rabbitmq.rainbet.com:5671,5672: AMQP requires auth (403 ACCESS_REFUSED, guest fails) and all /api/* 401 Basic — nemotron3 [75] anonymous-protocol lead fully contradicted; must not rerank.
+- [LEARN] ACCEPTED OTHER @ api.777.dev/graphql: anonymous introspection + capability map (29Q/27M/62-field User, 27 money-mutations) with uniform NOT_AUTHENTICATED — reportable LOW/informational, mutation-gap class closed.
+
+**STEP 7 — RISK**
+[RISK] avatarux-studios: 62 — converged core; this cycle adds only read-only GET census (4 staging-zone requests ≤0.2rps) plus optional 2 GETs on sibling prod brands (stake/gamdom), all non-mutating, no auth-bypass, no customer data touched; top value paths remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; stand-by cost <1% budget.
