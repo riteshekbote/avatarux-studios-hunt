@@ -23593,3 +23593,155 @@ testability: AUTH_HELPED
 
 **STEP 7 — RISK**
 [RISK] avatarux-studios: 62 — converged core; this cycle adds only read-only GET census (4 staging-zone requests ≤0.2rps) plus optional 2 GETs on sibling prod brands (stake/gamdom), all non-mutating, no auth-bypass, no customer data touched; top value paths remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; stand-by cost <1% budget.
+===== ANALYST bigpickle 2026-09-16 00:32:08 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mUA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"; for h in gamebook.777.dev promotions.777.dev api-test.777.dev api-lbc.777.dev; do echo "=== $h ==="; curl -sS -o /tmp/opencode/${h}.html -D /tmp/opencode/${h}.hdr -A "$UA" --max-time 12 "https://$h/" -w "code=%{http_code} size=%{size_download} time=%{time_total}\n"; head -c 300 /tmp/opencode/${h}.hdr; echo; sleep 1; done
+=== gamebook.777.dev ===
+code=403 size=5479 time=0.132086
+HTTP/2 403 
+date: Wed, 16 Sep 2026 00:29:51 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-trans
+=== promotions.777.dev ===
+code=403 size=5479 time=0.131209
+HTTP/2 403 
+date: Wed, 16 Sep 2026 00:29:53 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-trans
+=== api-test.777.dev ===
+code=403 size=5479 time=0.127179
+HTTP/2 403 
+date: Wed, 16 Sep 2026 00:29:54 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-trans
+=== api-lbc.777.dev ===
+code=403 size=5479 time=0.140322
+HTTP/2 403 
+date: Wed, 16 Sep 2026 00:29:55 GMT
+content-type: text/html; charset=UTF-8
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+referrer-policy: same-origin
+x-frame-options: SAMEORIGIN
+strict-trans
+[0m
+Sibling census: all 4 resolve but Cloudflare 403-challenge (identical 5479B bot-fight page), unlike api.777.dev's live Express. Now testing cross-brand /rest/user/details parity hypothesis.
+[0m$ [0mUA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"; echo "=== stake.com/rest/user/details ==="; curl -sS -o /tmp/opencode/stake.body -D /tmp/opencode/stake.hdr -A "$UA" --max-time 12 "https://stake.com/rest/user/details" -w "code=%{http_code} size=%{size_download} time=%{time_total}\n"; head -c 400 /tmp/opencode/stake.hdr; echo "---BODY---"; head -c 500 /tmp/opencode/stake.body; echo; sleep 2; echo "=== gamdom.com/rest/user/details ==="; curl -sS -o /tmp/opencode/gamdom.body -D /tmp/opencode/gamdom.hdr -A "$UA" --max-time 12 "https://gamdom.com/rest/user/details" -w "code=%{http_code} size=%{size_download} time=%{time_total}\n"; head -c 400 /tmp/opencode/gamdom.hdr; echo "---BODY---"; head -c 500 /tmp/opencode/gamdom.body; echo
+=== stake.com/rest/user/details ===
+code=403 size=5621 time=0.055265
+HTTP/2 403 
+date: Wed, 16 Sep 2026 00:30:02 GMT
+content-type: text/html; charset=UTF-8
+content-length: 5621
+accept-ch: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA---BODY---
+<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="content-security-policy" content="default-src &#39;none&#39;; script-src &#39;nonce-0PYOgdHyRabxzrTXRuuo9E&#39; &#39;unsafe-eval&#39; https://challenges.cloudflare.com; script-s
+=== gamdom.com/rest/user/details ===
+code=404 size=32619 time=0.590885
+HTTP/2 404 
+content-type: text/html
+set-cookie: gd-lang=en-gb; Max-Age=31536000; Path=/; Expires=Thu, 16 Sep 2027 00:30:05 GMT
+content-security-policy: frame-ancestors 'self' https://*.faucetcrypto.com; object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-7549e485-9981-4907-9432-38fe04aa6cff' 'strict-dynamic' 'wasm-unsafe-eval' https://platform.x.com
+cache-control: private, max-age=300---BODY---
+<!DOCTYPE html><html lang="en-GB"><head><meta charSet="utf-8"/><meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"/><title data-rh="true" data-react-helmet="true">404 Not Found</title><meta name="description" content="The page you are looking for might have been removed, had its name changed, or is temporarily unavailable." data-rh="true" data-react-helmet="true"/><meta name="keywords" content="Crypto Casin
+[0m
+[0m$ [0mgrep -i "^server\|^cf-ray\|^cf-chl" /tmp/opencode/gamebook.777.dev.hdr /tmp/opencode/api-test.777.dev.hdr /tmp/opencode/stake.hdr 2>/dev/null; echo "---"; grep -i "^server\|^cf-ray" /tmp/opencode/gamdom.hdr
+/tmp/opencode/gamebook.777.dev.hdr:server: cloudflare
+/tmp/opencode/gamebook.777.dev.hdr:cf-ray: a3bbc25fdaf4df0a-SJC
+/tmp/opencode/api-test.777.dev.hdr:server: cloudflare
+/tmp/opencode/api-test.777.dev.hdr:cf-ray: a3bbc26e1e12ed36-SJC
+/tmp/opencode/stake.hdr:server: cloudflare
+/tmp/opencode/stake.hdr:server-timing: chlray;desc="a3bbc2a428d29458"
+/tmp/opencode/stake.hdr:cf-ray: a3bbc2a428d29458-SJC
+---
+server: nginx
+[0m
+Sibling 777.dev census done; cross-brand parity falsified. One more cheap read-only pass on remaining cert-name siblings (xtest/testsite/storybook) to see if any other host escapes the challenge gate like api.777.dev does.
+[0m$ [0mUA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"; for h in xtest.777.dev testsite.777.dev storybook.777.dev x.777.dev; do echo "=== $h ==="; curl -sS -o /tmp/opencode/777x.body -D /tmp/opencode/777x.hdr -A "$UA" --max-time 10 "https://$h/" -w "code=%{http_code} size=%{size_download}\n"; grep -i "^server" /tmp/opencode/777x.hdr; head -c 120 /tmp/opencode/777x.body; echo; sleep 1; done
+=== xtest.777.dev ===
+code=403 size=5479
+server: cloudflare
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class
+=== testsite.777.dev ===
+code=403 size=5479
+server: cloudflare
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class
+=== storybook.777.dev ===
+code=403 size=5479
+server: cloudflare
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class
+=== x.777.dev ===
+code=403 size=5479
+server: cloudflare
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class
+[0m
+[0m$ [0mdns=$(for h in gamebook.777.dev promotions.777.dev api-test.777.dev api-lbc.777.dev xtest.777.dev testsite.777.dev storybook.777.dev x.777.dev; do getent ahosts $h | awk 'NR==1{print $1}'; done | sort -u); echo "$dns"
+104.18.43.25
+172.64.144.231
+[0m
+## STEP 1 — DELTA
+- NEW @ 777.dev zone sibling census complete: gamebook/promotions/api-test/api-lbc + xtest/testsite/storybook/x all 403 CF bot-fight (5479B identical, cf-ray SJC, Roobet CF pair 104.18.43.25/172.64.144.231) — api.777.dev is the SOLE ungated sibling; per-host challenge routing confirmed.
+- CHANGED @ cross-brand `/rest/user/details` parity: stake.com → 403 CF "Just a moment" (5621B `chlray`); gamdom.com → 404 Next/React SPA on nginx (gd-lang cookie) — no sibling brand serves the anonymous Spring/Nano user-state model.
+
+## STEP 2 — PRIORITIZE
+- [PRIO] affiliates.betpanda.io/rest 5.45,attack_surface=8/business=9/gate=1 (401-anon)/fresh=5
+- [PRIO] betpandacasino.io/rest/user 4.90,attack_surface=6/business=8/gate=2 (details-anon)/fresh=3
+- [PRIO] api.777.dev/graphql 3.95,attack_surface=4/tech=8(GraphQL)/gate=4 (schema-anon, data-no)/fresh=1
+
+## STEP 3 — HYPOTHESES
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend, endpoint map complete; /rest/public/config 200 398B byte-stable (sha256 cc5f885e, operatorId=1); /rest/player/uid/1 → 401 "You need to be logged in"; authz binds to session, uid-ownership contest untested; no passive sibling-brand parity observed this cycle to alter it.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; diff status/body
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own}, GET /rest/player/uid/{other} → diff
+impact: cross-affiliate player/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+
+[HYP] BetPanda Casino authenticated /rest/user/* census + tenant header behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; OPTIONS /rest/user/authenticate advertises x-site-name-id routing; header inert anonymously (falsified); authed route set + tenant behavior unknown; parity on stake//gamdom falsified so family is BetPanda-specific.
+evidence_needed: one credentialed casino session; authed GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com
+verify_steps: HUMAN: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] 777.dev sibling-service census (was 50): 8/8 additional cert-names 403 CF challenge, exact 5479B identical, same CF pair — only api.777.dev escapes the challenge; per-host routing anomaly fully enumerated, no surface. CLOSED.
+- [PARKED] Cross-brand /rest/user/details parity (was 45): stake CF-challenge blocks anon read (5621B), gamdom 404-nginx proves /rest route absent (distinct React/Next backend, not Spring family); roobet uses /_api not /rest — no observable sibling. FALSIFIED.
+- [FINAL] survivors ranked: (68) Affiliate BOLA — AUTH_HELPED; (45) Casino authed /rest/user census — AUTH_HELPED.
+
+## STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Issue scoped credentialed sessions — two test affiliate accounts (affiliates.betpanda.io) for /rest/player/uid/{own-vs-other} BOLA diff, plus one test player (betpandacasino.io) for authed /rest/user/* census with x-site-name-id header toggles; passive surface fully converged, no PROBE grid remaining.
+
+## STEP 6 — LEARNING
+- [LEARN] REJECTED MISCONFIG @ stake.com/rest/user/details: 403 CF challenge (5621B, chlray) — anonymous parity untestable, fully gated.
+- [LEARN] REJECTED MISCONFIG @ gamdom.com/rest/user/details: 404 Next/React SPA on nginx (gd-lang) — /rest backend absent; gamdom not a member of the Spring/Nano family.
+- [LEARN] ACCEPTED OTHER @ 777.dev zone: 8 sibling cert-names (gamebook/promotions/api-test/api-lbc/xtest/testsite/storybook/x) all 403 CF bot-fight on Roobet pair — api.777.dev confirmed sole ungated sibling; zone census complete, no new anonymous surface.
+
+## STEP 7 — RISK
+[RISK] avatarux-studios: 55 — converged; 12 new read-only probes this cycle (8× 777.dev siblings, stake/gamdom parity, gamdom-type check) produced zero new anonymous exposure; 777.dev zone and cross-brand parity hypotheses now closed; top value paths (BOLA 68, casino authed census 45) remain AUTH_HELPED, blocked on HUMAN credential grant since 2026-09-06; reportable findings are informational/LOW plus MED RabbitMQ broker surface, nothing HIGH without creds; stand-by cost <1% budget.

@@ -4343,3 +4343,24 @@ impact: cross-affiliate player/PII exposure on money platform. HIGH
 testability: AUTH_HELPED
 [NEXT] PROBE: 4 read-only GETs (browser UA, ≤0.2rps): https://gamebook.777.dev/ , https://promotions.777.dev/ , https://api-test.777.dev/ , https://api-lbc.777.dev/ — classify 200-banner / 403-CF-challenge / 302, and if api-test|api-lbc live, GET /_api/currency/balances + /graphql for workload identity. (Standing HUMAN waitlist unchanged: two credentialed affiliate accounts for BOLA proof.)
 [RISK] avatarux-studios: 62 — converged core; this cycle adds only read-only GET census (4 staging-zone requests ≤0.2rps) plus optional 2 GETs on sibling prod brands (stake/gamdom), all non-mutating, no auth-bypass, no customer data touched; top value paths remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; stand-by cost <1% budget.
+## 2026-09-16 00:31:21 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend, endpoint map complete; /rest/public/config 200 398B byte-stable (sha256 cc5f885e, operatorId=1); /rest/player/uid/1 → 401 "You need to be logged in"; authz binds to session, uid-ownership contest untested; no passive sibling-brand parity observed this cycle to alter it.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; diff status/body
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own}, GET /rest/player/uid/{other} → diff
+impact: cross-affiliate player/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authenticated /rest/user/* census + tenant header behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; OPTIONS /rest/user/authenticate advertises x-site-name-id routing; header inert anonymously (falsified); authed route set + tenant behavior unknown; parity on stake//gamdom falsified so family is BetPanda-specific.
+evidence_needed: one credentialed casino session; authed GET /rest/user/*; repeat with x-site-name-id stake_com|roobet_com
+verify_steps: HUMAN: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; compare ACAO/body/status
+impact: tenant-switch or self-data-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Issue scoped credentialed sessions — two test affiliate accounts (affiliates.betpanda.io) for /rest/player/uid/{own-vs-other} BOLA diff, plus one test player (betpandacasino.io) for authed /rest/user/* census with x-site-name-id header toggles; passive surface fully converged, no PROBE grid remaining.
+[RISK] avatarux-studios: 55 — converged; 12 new read-only probes this cycle (8× 777.dev siblings, stake/gamdom parity, gamdom-type check) produced zero new anonymous exposure; 777.dev zone and cross-brand parity hypotheses now closed; top value paths (BOLA 68, casino authed census 45) remain AUTH_HELPED, blocked on HUMAN credential grant since 2026-09-06; reportable findings are informational/LOW plus MED RabbitMQ broker surface, nothing HIGH without creds; stand-by cost <1% budget.

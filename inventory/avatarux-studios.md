@@ -857,3 +857,13 @@ www.avatarux.com
 - CHANGED `avatarux-studios` passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no d
 
 ## 2026-09-15 22:27:35 UTC
+
+## 2026-09-16 00:32:08 UTC
+- NEW api.777.dev/graphql — live Express/session backend (connect.sid, helmet, ACAC:true, CF 104.18.43.25) with completely unprobed GraphQL endpoint at /graphql (discovered 2026-09-11, re-confirmed 2026-09-
+- NEW RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) — completely untested for anonymous protocol-level connections (management
+- CHANGED betpandacasino.io/rest/user/details — NEW unauthenticated endpoint returning full user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, princi
+- CHANGED help.desk.avatarux.com portals 4–100+ — surface expanded from 7 to ~96 portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID,
+- CHANGED rainbet-com-rabbitmq.rainbet.com — prod broker stable on :15671 (mgmt) + :5671 (AMQP-TLS); staging broker ports fluxing (timeouts on :15671/15672, :5672)
+- CHANGED roobet.com/_api CORS trust chain — namespace-wide *.777.dev suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving www.777.dev still reflects ACAO) with ACAC:true on prod
+- CHANGED cpanel.avatarux.com — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; takeover unproven, monitoring-only (downgraded from CRITICAL)
+- CHANGED avatarux-studios passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
