@@ -23853,3 +23853,82 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] avatarux-studios: 55 — converged; read-only surface byte-stable (aff config 398B cc5f885e, casino details 301B, help.desk portal template-drift-only, rmq /api/overview 401, roobet ACAO/ACAC clean); top value paths (BOLA 68, authed census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget.
+===== ANALYST bigpickle 2026-09-16 15:07:43 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "storybook.777.dev: %{http_code} size=%{size_download} time=%{time_total}s\n" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" --max-time 10 https://storybook.777.dev/ 2>&1 &
+curl -s -o /dev/null -w "testsite.777.dev: %{http_code} size=%{size_download} time=%{time_total}s\n" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" --max-time 10 https://testsite.777.dev/ 2>&1 &
+curl -s -o /dev/null -w "x.777.dev: %{http_code} size=%{size_download} time=%{time_total}s\n" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" --max-time 10 https://x.777.dev/ 2>&1 &
+curl -s -o /dev/null -w "xtest.777.dev: %{http_code} size=%{size_download} time=%{time_total}s\n" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" --max-time 10 https://xtest.777.dev/ 2>&1 &
+wait
+storybook.777.dev: 403 size=5479 time=0.115646s
+testsite.777.dev: 403 size=5479 time=0.129158s
+x.777.dev: 403 size=5479 time=0.129252s
+xtest.777.dev: 403 size=5479 time=0.166430s
+[0m
+[0m$ [0mcurl -s -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" --max-time 10 https://storybook.777.dev/ 2>&1 | head -c 2000
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
+<head>
+<title>Attention Required! | Cloudflare</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/cf.errors.css" />
+<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" /><![endif]-->
+<style>body{margin:0;padding:0}</style>
+
+
+<!--[if gte IE 10]><!-->
+<script>
+  if (!navigator.cookieEnabled) {
+    window.addEventListener('DOMContentLoaded', function () {
+      var cookieEl = document.getElementById('cookie-alert');
+      cookieEl.style.display = 'block';
+    })
+  }
+</script>
+<!--<![endif]-->
+
+</head>
+<body>
+  <div id="cf-wrapper">
+    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>
+    <div id="cf-error-details" class="cf-error-details-wrapper">
+      <div class="cf-wrapper cf-header cf-error-overview">
+        <h1 data-translate="block_headline">Sorry, you have been blocked</h1>
+        <h2 class="cf-subheadline"><span data-translate="unable_to_access">You are unable to access</span> 777.dev</h2>
+      </div><!-- /.header -->
+
+      <div class="cf-section cf-highlight">
+        <div class="cf-wrapper">
+          <div class="cf-screenshot-container cf-screenshot-full">
+            
+              <span class="cf-no-screenshot error"></span>
+            
+          </div>
+        </div>
+      </div><!-- /.captcha-container -->
+
+      <div clas
+[0m
+All 4 siblings hit CF 403 block — census complete. Let me also do a quick passive re-verify of the 4 core read-only surfaces to confirm stability before producing output.
+[0m$ [0mcurl -s -o /tmp/aff_config.json -w "aff_config: %{http_code} size=%{size_download}\n" -H "User-Agent: Mozilla/5.0" --max-time 10 https://affiliates.betpanda.io/rest/public/config 2>&1 &
+curl -s -o /tmp/casino_details.json -w "casino_details: %{http_code} size=%{size_download}\n" -H "User-Agent: Mozilla/5.0" --max-time 10 https://betpandacasino.io/rest/user/details 2>&1 &
+curl -s -o /tmp/rmq_overview.json -w "rmq_overview: %{http_code} size=%{size_download}\n" -H "User-Agent: Mozilla/5.0" --max-time 10 https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview 2>&1 &
+curl -s -o /dev/null -w "helpdesk: %{http_code} size=%{size_download}\n" -H "User-Agent: Mozilla/5.0" --max-time 10 https://help.desk.avatarux.com/servicedesk/customer/portal/4 2>&1 &
+wait
+rmq_overview: 401 size=0
+aff_config: 200 size=398
+casino_details: 200 size=301
+helpdesk: 200 size=204951
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0msha256sum /tmp/aff_config.json && cat /tmp/aff_config.json | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin),indent=2))" failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
