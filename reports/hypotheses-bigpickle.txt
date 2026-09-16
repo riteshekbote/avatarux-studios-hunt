@@ -1,19 +1,28 @@
-## 2026-09-16 18:57:59 UTC [target] (model bigpickle)
+## 2026-09-16 21:55:05 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 5.2, IDOR/AUTH_HELPED
+[PRIO] betpandacasino.io/rest/user authed census, 4.75, AUTH/AUTH_HELPED
+[PRIO] avatarux-studios public surface, 3.3, OTHER/PASSIVE — fully converged, stand-by
 [HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
 class: IDOR
 asset: affiliates.betpanda.io/rest/player/uid/{uid}
 confidence: 68
-reasoning: same-origin /rest backend endpoint map complete; /rest/public/config 200 398B byte-stable (operatorId=1, sha256 cc5f885e); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest never tested; passive parity absent elsewhere in scope.
+reasoning: same-origin /rest backend endpoint map complete; /rest/public/config 200 398B byte-stable; /rest/player/uid/1 → 401 anonymously; authz binds to session, uid-ownership contest never tested; no passive variant exists.
 evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; status/body diff.
-verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own} and /rest/player/uid/{other} → diff status/body.
+verify_steps: HUMAN under scoped authorization: register 2 accounts → GET /rest/player/uid/{own} and /rest/player/uid/{other} → diff status/body.
 impact: cross-affiliate player/financial/PII exposure on money platform. HIGH
 testability: AUTH_HELPED
 [HYP] BetPanda Casino authenticated /rest/user/* census + x-site-name-id tenant behavior
 class: AUTH
 asset: betpandacasino.io/rest/user
 confidence: 45
-reasoning: anonymous /rest/user/details 200 301B user-state model (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; {authenticate,refresh,account-balances-and-bonuses,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id schema; header inert anonymously (falsified); authed route set + tenant behavior unknown.
-evidence_needed: one credentialed casino session; authed GET /rest/user/* with and without x-site-name-id stake_com|roobet_com.
-verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; diff ACAO/body/status.
+reasoning: anonymous /rest/user/details 200 301B user-state; /rest/user/settings 401; {authenticate,refresh,balances,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id schema; header inert anonymously (falsified); authed set unknown.
+evidence_needed: one credentialed casino session; authed GETs with/without x-site-name-id toggled.
+verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses} with tenant headers toggled; diff ACAO/body/status.
 impact: tenant-switch or self data-model census on real-money flow. MED unless cross-tenant → HIGH
 testability: AUTH_HELPED
+[PARKED] 777.dev sibling census (25): fully consumed — 8/8 siblings 403-CF-challenge, zero exposure; namespace lead CLOSED.
+[PARKED] RainBet RabbitMQ anonymous AMQP (nemotron3 [65]): already falsified 2026-09-14 (403 ACCESS_REFUSED on 5671/5672, mgmt-API uniformly 401) — not rerankable.
+[FINAL] survivors ranked: BOLA-uid 68 (AUTH_HELPED) > casino-authed-census 45 (AUTH_HELPED). No active PASSIVE hypothesis clears 40; passive investigation is exhausted.
+[NEXT] HUMAN: standing credential grant required — two registered affiliate test accounts (BOLA-uid proof) and one casino session (user-state census); no further passive probe has expected value until credentials arrive.
+[LEARN] ACCEPTED OTHER @ 777.dev siblings storybook/testsite/x/xtest: all 403 Cloudflare challenge 5480B, identical to gamebook/promotions/api-test/api-lbc — 8/8 sibling census complete, staging zone has zero anonymous HTTP surface beyond api.777.dev; namespace thesis closed.
+[RISK] avatarux-studios: 55 — passive surface fully converged and byte-stable (aff config 398B sha256 cc5f885e, casino details 301B, help.desk p4 template-drift-only, rmq /api/overview 401, 777.dev 8/8 gated); top value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget, risk is opportunity-cost of stalled high-value validation, not surface drift.

@@ -2172,3 +2172,8 @@
 
 ## RANKED HYPOTHESES 2026-09-16 19:16:44 UTC
 - [68] affiliates.betpanda.io/rest/player/uid/{uid}: Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (from art/lead_bigpickle.txt)
+
+## RANKED HYPOTHESES 2026-09-16 21:55:49 UTC
+- [68] affiliates.betpanda.io/rest/player/uid/{uid}: Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: standing credential grant required — two registered affiliate test accounts (BOLA-uid proof) and one casino session (user-state census); no further passi
+- LEARN: ACCEPTED OTHER @ 777.dev siblings storybook/testsite/x/xtest: all 403 Cloudflare challenge 5480B, identical to gamebook/promotions/api-test/api-lbc — 8/8 siblin
