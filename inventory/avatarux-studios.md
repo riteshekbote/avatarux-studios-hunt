@@ -867,3 +867,7 @@ www.avatarux.com
 - CHANGED roobet.com/_api CORS trust chain — namespace-wide *.777.dev suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving www.777.dev still reflects ACAO) with ACAC:true on prod
 - CHANGED cpanel.avatarux.com — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; takeover unproven, monitoring-only (downgraded from CRITICAL)
 - CHANGED avatarux-studios passive surface — delta empty across 30+ probes: 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-16 05:15:27 UTC
+- CHANGED ranked [75] api.777.dev/graphql (nemotron3) is stale vs LEARN set — introspection already ACCEPTED (29Q/27M/62-field User schema, stack `api-graphql`), all Query fields uniformly NOT_AUTHENTICATED inc
+- CHANGED 777.dev sibling census (gamebook/promotions/api-test/api-lbc) + stake/gamdom /rest/user/details parity executed last cycle — all falsified/403-challenge-no-exposure; 777.dev-zone and cross-brand parit
