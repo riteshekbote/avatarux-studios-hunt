@@ -4394,3 +4394,40 @@ testability: AUTH_HELPED
 [LEARN] REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings (gamebook/promotions/api-test/api-lbc): parity falsified / CF-challenge or dead routes, zero anonymous exposure — cross-brand and staging-sibling extensions closed.
 [LEARN] ACCEPTED OTHER @ api.777.dev/graphql (ranked [75] resolved): anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields incl. control exchangeRates, CORS *.777.dev-only, mutation-gap REJECTED — lead fully consumed, downgrade to monitoring.
 [RISK] avatarux-studios: 55 — converged core; read-only surface byte-stable (aff config 398B cc5f885e, casino details 301B, help.desk portal template-drift-only, rmq /api/overview 401, roobet ACAO/ACAC clean); top value paths (BOLA 68, authed census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget.
+## 2026-09-16 10:04:25 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 5.2, IDOR/AUTH_HELPED
+[PRIO] betpandacasino.io/rest/user authed census, 4.75, AUTH/AUTH_HELPED
+[PRIO] 777.dev remaining siblings (storybook/testsite/x/xtest), 3.6, OTHER/PASSIVE
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend endpoint map complete; /rest/public/config 200 398B byte-stable (operatorId=1, sha256 cc5f885e); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest never tested; passive parity absent elsewhere in scope.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; status/body diff.
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own} and /rest/player/uid/{other} → diff status/body.
+impact: cross-affiliate player/financial/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authenticated /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B user-state model (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; {authenticate,refresh,account-balances-and-bonuses,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id schema; header inert anonymously (falsified); authed route set + tenant behavior unknown.
+evidence_needed: one credentialed casino session; authed GET /rest/user/* with and without x-site-name-id stake_com|roobet_com.
+verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; diff ACAO/body/status.
+impact: tenant-switch or self data-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+[HYP] 777.dev staging siblings census
+class: OTHER
+asset: 777.dev (storybook/testsite/x/xtest)
+confidence: 25
+reasoning: 11/11 cert-name members resolve to Roobet CF pair; 4/11 probed (gamebook/promotions/api-test/api-lbc) all CF-challenged or dead; api.777.dev live Express session backend; remaining 4 siblings (storybook, testsite, x, xtest) unprobed; storybook likely UI component library, testsite/x/xtest likely experimental.
+evidence_needed: HTTP response from each sibling; classification as 200-banner/403-CF-challenge/302.
+verify_steps: GET https://storybook.777.dev/ , https://testsite.777.dev/ , https://x.777.dev/ , https://xtest.777.dev/ with browser UA, ≤0.2rps.
+impact: staging service discovery, potential anon surface on staging apps. LOW unless live with anon data.
+testability: PASSIVE
+[PARKED] 777.dev staging siblings census (25): confidence <40; pattern of CF-challenged/dead siblings suggests low probability of new exposure; still worth a read-only census to close the gap.
+[FINAL] survivors ranked:
+[NEXT] PROBE: 4 read-only GETs (browser UA, ≤0.2rps): https://storybook.777.dev/ , https://testsite.777.dev/ , https://x.777.dev/ , https://xtest.777.dev/ — classify 200-banner / 403-CF-challenge / 302. If any live (200 non-CF), GET / for workload identity. (Standing HUMAN waitlist unchanged: two credentialed affiliate accounts for BOLA proof.)
+[LEARN] REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings (gamebook/promotions/api-test/api-lbc): parity falsified / CF-challenge or dead routes, zero anonymous exposure — cross-brand and staging-sibling extensions closed.
+[LEARN] ACCEPTED OTHER @ api.777.dev/graphql (ranked [75] resolved): anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields incl. control exchangeRates, CORS *.777.dev-only, mutation-gap REJECTED — lead fully consumed, downgrade to monitoring.
+[RISK] avatarux-studios: 55 — converged; read-only surface byte-stable (aff config 398B cc5f885e, casino details 301B, help.desk portal template-drift-only, rmq /api/overview 401, roobet ACAO/ACAC clean); top value paths (BOLA 68, authed census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget.

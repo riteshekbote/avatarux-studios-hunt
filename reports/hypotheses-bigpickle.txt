@@ -1,9 +1,7 @@
-## 2026-09-16 05:14:02 UTC [target] (model bigpickle)
-[CHANGED] ranked [75] api.777.dev/graphql (nemotron3) is stale vs LEARN set — introspection already ACCEPTED (29Q/27M/62-field User schema, stack `api-graphql`), all Query fields uniformly NOT_AUTHENTICATED incl. control exchangeRates, CORS *.777.dev-only, per-field mutation-gap REJECTED — zero residual work.
-[CHANGED] 777.dev sibling census (gamebook/promotions/api-test/api-lbc) + stake/gamdom /rest/user/details parity executed last cycle — all falsified/403-challenge-no-exposure; 777.dev-zone and cross-brand parity hypotheses now closed.
-[PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 6.1, BOLA/AUTH_HELPED: a8 b9 t6 g3 c2 f3.
-[PRIO] betpandacasino.io/rest/user authed census, 5.4, AUTH/AUTH_HELPED: a6 b7 t6 g4 c2 f4.
-[PRIO] api.777.dev/graphql, 4.8, OTHER/monitor: a5 b4 t8 g4 c2 f5 — held at monitoring; mutation leg REJECTED.
+## 2026-09-16 10:04:25 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 5.2, IDOR/AUTH_HELPED
+[PRIO] betpandacasino.io/rest/user authed census, 4.75, AUTH/AUTH_HELPED
+[PRIO] 777.dev remaining siblings (storybook/testsite/x/xtest), 3.6, OTHER/PASSIVE
 [HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
 class: IDOR
 asset: affiliates.betpanda.io/rest/player/uid/{uid}
@@ -22,9 +20,18 @@ evidence_needed: one credentialed casino session; authed GET /rest/user/* with a
 verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; diff ACAO/body/status.
 impact: tenant-switch or self data-model census on real-money flow. MED unless cross-tenant → HIGH
 testability: AUTH_HELPED
-[PARKED] api.777.dev/graphql anonymous mutations ([75] nemotron3): already resolved by LEARN — introspection done, uniform global auth plugin closes every Query field, per-field mutation-gap REJECTED as contradicting plugin wrap; anonymous reads via any field incl. money defaults NOT_AUTHENTICATED; do not rerank (REJECTED-class leg).
-[FINAL] affiliates BOLA (68) > betpandacasino.io authed /rest/user census + tenant header (45). Both gated on credentialed sessions; no other survivor clears 40 with a passive verify path.
-[NEXT] HUMAN: Issue scoped credentialed sessions — two test affiliate accounts (affiliates.betpanda.io) for /rest/player/uid/{own-vs-other} BOLA diff, plus one test player on betpandacasino.io for authed /rest/user/* census with x-site-name-id stakes; passive grid fully converged, no PROBE remains that clears bar.
+[HYP] 777.dev staging siblings census
+class: OTHER
+asset: 777.dev (storybook/testsite/x/xtest)
+confidence: 25
+reasoning: 11/11 cert-name members resolve to Roobet CF pair; 4/11 probed (gamebook/promotions/api-test/api-lbc) all CF-challenged or dead; api.777.dev live Express session backend; remaining 4 siblings (storybook, testsite, x, xtest) unprobed; storybook likely UI component library, testsite/x/xtest likely experimental.
+evidence_needed: HTTP response from each sibling; classification as 200-banner/403-CF-challenge/302.
+verify_steps: GET https://storybook.777.dev/ , https://testsite.777.dev/ , https://x.777.dev/ , https://xtest.777.dev/ with browser UA, ≤0.2rps.
+impact: staging service discovery, potential anon surface on staging apps. LOW unless live with anon data.
+testability: PASSIVE
+[PARKED] 777.dev staging siblings census (25): confidence <40; pattern of CF-challenged/dead siblings suggests low probability of new exposure; still worth a read-only census to close the gap.
+[FINAL] survivors ranked:
+[NEXT] PROBE: 4 read-only GETs (browser UA, ≤0.2rps): https://storybook.777.dev/ , https://testsite.777.dev/ , https://x.777.dev/ , https://xtest.777.dev/ — classify 200-banner / 403-CF-challenge / 302. If any live (200 non-CF), GET / for workload identity. (Standing HUMAN waitlist unchanged: two credentialed affiliate accounts for BOLA proof.)
 [LEARN] REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings (gamebook/promotions/api-test/api-lbc): parity falsified / CF-challenge or dead routes, zero anonymous exposure — cross-brand and staging-sibling extensions closed.
 [LEARN] ACCEPTED OTHER @ api.777.dev/graphql (ranked [75] resolved): anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields incl. control exchangeRates, CORS *.777.dev-only, mutation-gap REJECTED — lead fully consumed, downgrade to monitoring.
-[RISK] avatarux-studios: 55 — converged core; read-only surface byte-stable (aff config 398B cc5f885e, casino details 301B, help.desk portal template-drift-only, rmq /api/overview 401, roobet ACAO/ACAC clean); top value paths (BOLA 68, authed census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget.
+[RISK] avatarux-studios: 55 — converged; read-only surface byte-stable (aff config 398B cc5f885e, casino details 301B, help.desk portal template-drift-only, rmq /api/overview 401, roobet ACAO/ACAC clean); top value paths (BOLA 68, authed census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget.
