@@ -23932,3 +23932,95 @@ helpdesk: 200 size=204951
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0msha256sum /tmp/aff_config.json && cat /tmp/aff_config.json | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin),indent=2))" failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-16 19:16:44 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor d in betpandecasino.io betpandacasino.io; do echo "== $d"; dig +short "$d" A 2>/dev/null | head -5; dig +short "$d" NS 2>/dev/null | head -5; done
+== betpandecasino.io
+== betpandacasino.io
+104.20.21.21
+172.66.175.171
+augustus.ns.cloudflare.com.
+magdalena.ns.cloudflare.com.
+[0m
+[0m$ [0mfor d in storybook.777.dev testsite.777.dev x.777.dev xtest.777.dev www.777.dev; do echo "== $d"; dig +short "$d" A 2>/dev/null | head -3; done
+== storybook.777.dev
+172.64.144.231
+104.18.43.25
+== testsite.777.dev
+172.64.144.231
+104.18.43.25
+== x.777.dev
+104.18.43.25
+172.64.144.231
+== xtest.777.dev
+172.64.144.231
+104.18.43.25
+== www.777.dev
+[0m
+DNS confirms: `betpandecasino.io` → NXDOMAIN (the "betpandecasino" variant in LEARN lines is a transcription artifact, not a real typo-squat surface). All 4 unprobed 777.dev siblings resolve to the Roobet CF pair. Executing the standing pending PROBE to close that census gap:
+[0m$ [0mfor d in storybook.777.dev testsite.777.dev x.777.dev xtest.777.dev; do
+  echo "== $d"
+  curl -s -o /dev/null -w "%{http_code} | %{redirect_url} | %{content_type}\n" --max-time 15 \
+    -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36" \
+    "https://$d/"
+  sleep 4
+done
+== storybook.777.dev
+403 |  | text/html; charset=UTF-8
+== testsite.777.dev
+403 |  | text/html; charset=UTF-8
+== x.777.dev
+403 |  | text/html; charset=UTF-8
+== xtest.777.dev
+403 |  | text/html; charset=UTF-8
+[0m
+All 4 remaining 777.dev cert-names return 403 (Cloudflare challenge) — sibling census gap closed; the typo variant `betpandecasino.io` is NXDOMAIN (transcription artifact, not a typo-squat). Output below.
+
+STEP 1 — DELTA
+- [CHANGED] 777.dev sibling census CLOSED: storybook/testsite/x/xtest all 403 CF — last 4 unprobed cert-names falsified, 8/8 probed now CF-gated/dead, zero anonymous exposure.
+- [CLOSED] `betpandecasino.io` typo variant: NXDOMAIN (no A/NS) — transcription artifact of betpandacasino.io, NOT a typo-squat surface.
+- [STABLE] Core passive surface byte-stable, no drift (aff config 398B cc5f885e, casino details 301B, help.desk portal template-only, rmq :15671/api/overview 401, cpanel 000, roobet ACAO www.777.dev+ACAC:true).
+
+STEP 2 — PRIORITIZE
+- [PRIO] affiliates.betpanda.io/rest/player/uid/{uid}, 5.2, IDOR/AUTH_HELPED (a0.92 b0.90 t0.4 g0.15 c0.8 f0.5 — unchanged)
+- [PRIO] betpandacasino.io/rest/user authed census, 4.75, AUTH/AUTH_HELPED (a0.70 b0.80 t0.5 g0.15 c0.8 f0.5 — unchanged)
+- [PRIO] 777.dev sibling census, 0.5, OTHER/PASSIVE (falsified 8/8 — scored off the board)
+
+STEP 3 — HYPOTHESES (2 survivors, per critique)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend endpoint map complete; /rest/public/config 200 398B byte-stable (operatorId=1, sha256 cc5f885e); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest never tested; passive parity absent elsewhere in scope.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; status/body diff.
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own} and /rest/player/uid/{other} → diff status/body.
+impact: cross-affiliate player/financial/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authenticated /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B user-state model (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; {authenticate,refresh,account-balances-and-bonuses,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id schema; header inert anonymously (falsified); authed route set + tenant behavior unknown.
+evidence_needed: one credentialed casino session; authed GET /rest/user/* with and without x-site-name-id stake_com|roobet_com.
+verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; diff ACAO/body/status.
+impact: tenant-switch or self data-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] 777.dev sibling census (was 25): 8/8 cert-names now probed, all 403 CF-challenge — hypothesis falsified, do not rerank.
+- [PARKED] RainBet RabbitMQ anonymous AMQP (nemotron3 [65]): pre-falsified — 403 ACCESS_REFUSED + /api/* 401 Basic uniform (LEARN 09-14/15); REJECTED class, must not rerank.
+- [PARKED] betpandecasino.io typo-squat: NXDOMAIN, non-surface.
+- [FINAL] Affiliate BOLA (68) > betpandacasino.io authed /rest/user census + tenant header (45). No other hypothesis clears 40 with a passive verify path.
+
+STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: issue scoped credentialed sessions — two test affiliate accounts (affiliates.betpanda.io) for /rest/player/uid/{own-vs-other} BOLA diff, plus one test player on betpandacasino.io for authed /rest/user/* census with x-site-name-id stakes; passive grid fully converged, no PROBE remains that clears bar.
+
+STEP 6 — LEARNING
+- [LEARN] REJECTED OTHER @ 777.dev siblings (storybook/testsite/x/xtest): all 403 CF-challenge — census closed, zero anonymous exposure; sibling-parity hypothesis fully falsified across 8/8 probes.
+- [LEARN] ACCEPTED OTHER @ 777.dev zone: 11/11 cert-names fully enumerated+classified (8 CF-gated/dead, api live Express/GraphQL, tiki/yeti SPAs) — namespace-trust evidence complete.
+- [LEARN] REJECTED OTHER @ betpandecasino.io: NXDOMAIN — transcription artifact of betpandacasino.io in LEARN lines, no typo-squat surface exists.
+
+STEP 7 — RISK
+- [RISK] avatarux-studios: 50 — passive grid fully closed (777.dev siblings burned, typo non-surface, RabbitMQ/API-auth legs falsified); top value (BOLA 68, authed census 45) remains AUTH_HELPED-gated on HUMAN credential grant pending since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure + informational/LOW; stand-by cost <1% budget, dominant risk is finding attrition (aging findings) not new exposure.

@@ -2169,3 +2169,6 @@
 - LEARN: REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suff
 - LEARN: ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers on Ro
 - LEARN: REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings (gamebook/promotions/api-test/api-lbc): parity falsified / CF-challenge or dead route
+
+## RANKED HYPOTHESES 2026-09-16 19:16:44 UTC
+- [68] affiliates.betpanda.io/rest/player/uid/{uid}: Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration (from art/lead_bigpickle.txt)

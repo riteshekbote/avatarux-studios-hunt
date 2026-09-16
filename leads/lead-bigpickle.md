@@ -4432,3 +4432,22 @@ testability: PASSIVE
 [LEARN] ACCEPTED OTHER @ api.777.dev/graphql (ranked [75] resolved): anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields incl. control exchangeRates, CORS *.777.dev-only, mutation-gap REJECTED — lead fully consumed, downgrade to monitoring.
 [RISK] avatarux-studios: 55 — converged; read-only surface byte-stable (aff config 398B cc5f885e, casino details 301B, help.desk portal template-drift-only, rmq /api/overview 401, roobet ACAO/ACAC clean); top value paths (BOLA 68, authed census 45) remain AUTH_HELPED blocked on HUMAN credential grant since 2026-09-06; reportable = MED RabbitMQ mgmt-UI+AMQP exposure plus informational/LOW; stand-by cost <1% budget.
 ## 2026-09-16 15:02:35 UTC [target] (model bigpickle)
+## 2026-09-16 18:57:59 UTC [target] (model bigpickle)
+[HYP] Affiliate BOLA on /rest/player/uid/{uid} cross-uid iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: same-origin /rest backend endpoint map complete; /rest/public/config 200 398B byte-stable (operatorId=1, sha256 cc5f885e); /rest/player/uid/1 → 401 "You need to be logged in" anonymously; authz binds to session, uid-ownership contest never tested; passive parity absent elsewhere in scope.
+evidence_needed: two credentialed affiliate sessions; cross-uid GET vs own uid; status/body diff.
+verify_steps: HUMAN under scoped authorization: register 2 test accounts → GET /rest/player/uid/{own} and /rest/player/uid/{other} → diff status/body.
+impact: cross-affiliate player/financial/PII exposure on money platform. HIGH
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authenticated /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B user-state model (geo country, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; {authenticate,refresh,account-balances-and-bonuses,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id schema; header inert anonymously (falsified); authed route set + tenant behavior unknown.
+evidence_needed: one credentialed casino session; authed GET /rest/user/* with and without x-site-name-id stake_com|roobet_com.
+verify_steps: HUMAN under scoped authorization: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then with tenant headers toggled; diff ACAO/body/status.
+impact: tenant-switch or self data-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
