@@ -26118,3 +26118,862 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 52 — passive surface fully closed and stable this cycle (5 probes + GraphQL oracle reconfirmed, zero drift). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B / tenant-id portals). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+===== ANALYST bigpickle 2026-09-17 23:55:47 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la art/ 2>/dev/null; echo "---"; ls -la; echo "---"; cat art/lead_nemotron3.txt 2>/dev/null | head -60
+---
+total 544
+drwxr-xr-x 12 runner runner   4096 Sep 17 23:54 .
+drwxr-xr-x  3 runner runner   4096 Sep 17 23:54 ..
+drwxr-xr-x  7 runner runner   4096 Sep 17 23:54 .git
+drwxr-xr-x  3 runner runner   4096 Sep 17 23:54 .github
+-rw-r--r--  1 runner runner   1738 Sep 17 23:54 README.md
+-rw-r--r--  1 runner runner     32 Sep 17 23:54 analyst-out.txt
+-rw-r--r--  1 runner runner 227883 Sep 17 23:54 analyst-prompt.txt
+-rw-r--r--  1 runner runner 224047 Sep 17 23:54 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 leads
+-rw-r--r--  1 runner runner  12649 Sep 17 23:54 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 reports
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 17 23:54 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 scripts
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 triage
+---
+[0m
+[0m$ [0mcat art/lead_bigpickle.txt 2>/dev/null | head -80
+(no output)
+[0m
+I'll start by examining the repo structure and running passive baseline verification probes against the known live surface.
+[0m$ [0mls -la leads/ knowledge/ inventory/ reports/ scripts/ triage/ recon-notes/ 2>/dev/null
+inventory/:
+total 120
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner   4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 113689 Sep 17 23:54 avatarux-studios.md
+
+knowledge/:
+total 104
+drwxr-xr-x  2 runner runner  4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 96953 Sep 17 23:54 index.md
+
+leads/:
+total 1644
+drwxr-xr-x  2 runner runner    4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner    4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner  620681 Sep 17 23:54 lead-bigpickle.md
+-rw-r--r--  1 runner runner    5049 Sep 17 23:54 lead-laguna.md
+-rw-r--r--  1 runner runner    4950 Sep 17 23:54 lead-ling3.md
+-rw-r--r--  1 runner runner    5148 Sep 17 23:54 lead-longcat.md
+-rw-r--r--  1 runner runner      18 Sep 17 23:54 lead-mimo.md
+-rw-r--r--  1 runner runner 1001814 Sep 17 23:54 lead-nemotron3.md
+-rw-r--r--  1 runner runner   18650 Sep 17 23:54 reposcan-avatarux-studios.md
+
+recon-notes/:
+total 20
+drwxr-xr-x  2 runner runner 4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner 4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner  899 Sep 17 23:54 DEDICATED-DEEP.md
+-rw-r--r--  1 runner runner 4779 Sep 17 23:54 DEEPER-FINDINGS.md
+
+reports/:
+total 3868
+drwxr-xr-x  2 runner runner    4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner    4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 2081984 Sep 17 23:54 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   21483 Sep 17 23:54 analyst-laguna.log
+-rw-r--r--  1 runner runner   21384 Sep 17 23:54 analyst-ling3.log
+-rw-r--r--  1 runner runner   21582 Sep 17 23:54 analyst-longcat.log
+-rw-r--r--  1 runner runner 1433932 Sep 17 23:54 analyst-nemotron3.log
+-rw-r--r--  1 runner runner   18014 Sep 17 23:54 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 17 23:54 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 17 23:54 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 17 23:54 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   11373 Sep 17 23:54 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  339657 Sep 17 23:54 hypotheses.md
+-rw-r--r--  1 runner runner    3921 Sep 17 23:54 valid-bugs.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 16987 Sep 17 23:54 sync-issues.py
+
+triage/:
+total 472
+drwxr-xr-x  2 runner runner  4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner     0 Sep 17 23:54 .gitkeep
+-rw-r--r--  1 runner runner   360 Sep 17 23:54 run-2026-09-02-21-54.md
+-rw-r--r--  1 runner runner   176 Sep 17 23:54 run-2026-09-02-23-56.md
+-rw-r--r--  1 runner runner   490 Sep 17 23:54 run-2026-09-03-04-10.md
+-rw-r--r--  1 runner runner   175 Sep 17 23:54 run-2026-09-03-09-01.md
+-rw-r--r--  1 runner runner   143 Sep 17 23:54 run-2026-09-03-13-31.md
+-rw-r--r--  1 runner runner   238 Sep 17 23:54 run-2026-09-03-17-13.md
+-rw-r--r--  1 runner runner   143 Sep 17 23:54 run-2026-09-03-19-56.md
+-rw-r--r--  1 runner runner   336 Sep 17 23:54 run-2026-09-03-22-29.md
+-rw-r--r--  1 runner runner   197 Sep 17 23:54 run-2026-09-04-00-29.md
+-rw-r--r--  1 runner runner   142 Sep 17 23:54 run-2026-09-04-05-06.md
+-rw-r--r--  1 runner runner   195 Sep 17 23:54 run-2026-09-04-09-47.md
+-rw-r--r--  1 runner runner   223 Sep 17 23:54 run-2026-09-04-14-07.md
+-rw-r--r--  1 runner runner   200 Sep 17 23:54 run-2026-09-04-17-40.md
+-rw-r--r--  1 runner runner   159 Sep 17 23:54 run-2026-09-04-19-54.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-04-22-16.md
+-rw-r--r--  1 runner runner   199 Sep 17 23:54 run-2026-09-05-00-14.md
+-rw-r--r--  1 runner runner   253 Sep 17 23:54 run-2026-09-05-04-41.md
+-rw-r--r--  1 runner runner   264 Sep 17 23:54 run-2026-09-05-08-38.md
+-rw-r--r--  1 runner runner   190 Sep 17 23:54 run-2026-09-05-12-06.md
+-rw-r--r--  1 runner runner  1064 Sep 17 23:54 run-2026-09-05-15-23.md
+-rw-r--r--  1 runner runner   231 Sep 17 23:54 run-2026-09-05-17-40.md
+-rw-r--r--  1 runner runner   171 Sep 17 23:54 run-2026-09-05-19-32.md
+-rw-r--r--  1 runner runner   257 Sep 17 23:54 run-2026-09-05-21-42.md
+-rw-r--r--  1 runner runner  7175 Sep 17 23:54 run-2026-09-05-23-43.md
+-rw-r--r--  1 runner runner   179 Sep 17 23:54 run-2026-09-06-04-03.md
+-rw-r--r--  1 runner runner   205 Sep 17 23:54 run-2026-09-06-08-43.md
+-rw-r--r--  1 runner runner  1771 Sep 17 23:54 run-2026-09-06-12-47.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-06-16-06.md
+-rw-r--r--  1 runner runner   232 Sep 17 23:54 run-2026-09-06-18-25.md
+-rw-r--r--  1 runner runner  2437 Sep 17 23:54 run-2026-09-06-20-50.md
+-rw-r--r--  1 runner runner   219 Sep 17 23:54 run-2026-09-06-22-50.md
+-rw-r--r--  1 runner runner 16267 Sep 17 23:54 run-2026-09-07-00-50.md
+-rw-r--r--  1 runner runner   257 Sep 17 23:54 run-2026-09-07-05-53.md
+-rw-r--r--  1 runner runner 11035 Sep 17 23:54 run-2026-09-07-12-09.md
+-rw-r--r--  1 runner runner   191 Sep 17 23:54 run-2026-09-07-17-46.md
+-rw-r--r--  1 runner runner   178 Sep 17 23:54 run-2026-09-07-21-23.md
+-rw-r--r--  1 runner runner  6791 Sep 17 23:54 run-2026-09-07-23-46.md
+-rw-r--r--  1 runner runner   159 Sep 17 23:54 run-2026-09-08-04-03.md
+-rw-r--r--  1 runner runner   177 Sep 17 23:54 run-2026-09-08-08-55.md
+-rw-r--r--  1 runner runner   241 Sep 17 23:54 run-2026-09-08-13-28.md
+-rw-r--r--  1 runner runner   135 Sep 17 23:54 run-2026-09-08-17-30.md
+-rw-r--r--  1 runner runner   600 Sep 17 23:54 run-2026-09-08-20-17.md
+-rw-r--r--  1 runner runner   240 Sep 17 23:54 run-2026-09-08-22-46.md
+-rw-r--r--  1 runner runner   184 Sep 17 23:54 run-2026-09-09-01-08.md
+-rw-r--r--  1 runner runner   205 Sep 17 23:54 run-2026-09-09-06-07.md
+-rw-r--r--  1 runner runner   231 Sep 17 23:54 run-2026-09-09-11-34.md
+-rw-r--r--  1 runner runner   214 Sep 17 23:54 run-2026-09-09-15-17.md
+-rw-r--r--  1 runner runner   174 Sep 17 23:54 run-2026-09-09-18-44.md
+-rw-r--r--  1 runner runner   143 Sep 17 23:54 run-2026-09-09-21-35.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-09-23-32.md
+-rw-r--r--  1 runner runner   183 Sep 17 23:54 run-2026-09-10-01-27.md
+-rw-r--r--  1 runner runner   171 Sep 17 23:54 run-2026-09-10-06-39.md
+-rw-r--r--  1 runner runner   156 Sep 17 23:54 run-2026-09-10-11-51.md
+-rw-r--r--  1 runner runner   154 Sep 17 23:54 run-2026-09-10-16-11.md
+-rw-r--r--  1 runner runner   209 Sep 17 23:54 run-2026-09-10-19-09.md
+-rw-r--r--  1 runner runner   163 Sep 17 23:54 run-2026-09-10-21-42.md
+-rw-r--r--  1 runner runner   216 Sep 17 23:54 run-2026-09-10-23-54.md
+-rw-r--r--  1 runner runner   178 Sep 17 23:54 run-2026-09-11-04-05.md
+-rw-r--r--  1 runner runner   236 Sep 17 23:54 run-2026-09-11-08-58.md
+-rw-r--r--  1 runner runner   161 Sep 17 23:54 run-2026-09-11-13-29.md
+-rw-r--r--  1 runner runner   207 Sep 17 23:54 run-2026-09-11-17-14.md
+-rw-r--r--  1 runner runner   152 Sep 17 23:54 run-2026-09-11-19-50.md
+-rw-r--r--  1 runner runner   198 Sep 17 23:54 run-2026-09-11-22-23.md
+-rw-r--r--  1 runner runner   209 Sep 17 23:54 run-2026-09-12-00-38.md
+-rw-r--r--  1 runner runner   237 Sep 17 23:54 run-2026-09-12-05-05.md
+-rw-r--r--  1 runner runner   343 Sep 17 23:54 run-2026-09-12-09-28.md
+-rw-r--r--  1 runner runner   305 Sep 17 23:54 run-2026-09-12-13-09.md
+-rw-r--r--  1 runner runner   207 Sep 17 23:54 run-2026-09-12-16-23.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-12-18-46.md
+-rw-r--r--  1 runner runner   182 Sep 17 23:54 run-2026-09-12-21-20.md
+-rw-r--r--  1 runner runner   152 Sep 17 23:54 run-2026-09-12-23-21.md
+-rw-r--r--  1 runner runner   174 Sep 17 23:54 run-2026-09-13-01-24.md
+-rw-r--r--  1 runner runner   204 Sep 17 23:54 run-2026-09-13-06-46.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-13-12-39.md
+-rw-r--r--  1 runner runner  9770 Sep 17 23:54 run-2026-09-13-16-39.md
+-rw-r--r--  1 runner runner 11674 Sep 17 23:54 run-2026-09-13-19-00.md
+-rw-r--r--  1 runner runner   175 Sep 17 23:54 run-2026-09-13-21-24.md
+-rw-r--r--  1 runner runner   247 Sep 17 23:54 run-2026-09-13-23-30.md
+-rw-r--r--  1 runner runner   144 Sep 17 23:54 run-2026-09-14-01-40.md
+-rw-r--r--  1 runner runner   282 Sep 17 23:54 run-2026-09-14-07-08.md
+-rw-r--r--  1 runner runner   218 Sep 17 23:54 run-2026-09-14-14-15.md
+-rw-r--r--  1 runner runner   961 Sep 17 23:54 run-2026-09-14-19-31.md
+-rw-r--r--  1 runner runner   191 Sep 17 23:54 run-2026-09-14-22-45.md
+-rw-r--r--  1 runner runner   226 Sep 17 23:54 run-2026-09-15-01-18.md
+-rw-r--r--  1 runner runner   144 Sep 17 23:54 run-2026-09-15-06-14.md
+-rw-r--r--  1 runner runner   171 Sep 17 23:54 run-2026-09-15-11-54.md
+-rw-r--r--  1 runner runner   186 Sep 17 23:54 run-2026-09-15-16-42.md
+-rw-r--r--  1 runner runner   152 Sep 17 23:54 run-2026-09-15-20-05.md
+-rw-r--r--  1 runner runner   178 Sep 17 23:54 run-2026-09-15-22-58.md
+-rw-r--r--  1 runner runner  8302 Sep 17 23:54 run-2026-09-16-01-20.md
+-rw-r--r--  1 runner runner   148 Sep 17 23:54 run-2026-09-16-06-15.md
+-rw-r--r--  1 runner runner   173 Sep 17 23:54 run-2026-09-16-11-49.md
+-rw-r--r--  1 runner runner   215 Sep 17 23:54 run-2026-09-16-16-35.md
+-rw-r--r--  1 runner runner   196 Sep 17 23:54 run-2026-09-16-19-42.md
+-rw-r--r--  1 runner runner  1330 Sep 17 23:54 run-2026-09-16-22-49.md
+-rw-r--r--  1 runner runner 10263 Sep 17 23:54 run-2026-09-17-01-14.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-17-06-12.md
+-rw-r--r--  1 runner runner   220 Sep 17 23:54 run-2026-09-17-11-54.md
+-rw-r--r--  1 runner runner   211 Sep 17 23:54 run-2026-09-17-16-41.md
+-rw-r--r--  1 runner runner   180 Sep 17 23:54 run-2026-09-17-20-07.md
+-rw-r--r--  1 runner runner   239 Sep 17 23:54 run-2026-09-17-22-54.md
+[0m
+[0m$ [0mcat state_bigpickle.json; echo; echo "---analyst-out---"; cat analyst-out.txt; echo; echo "---README---"; cat README.md
+{"phase": "POC", "target": "api"}
+---analyst-out---
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la art/ 2>/dev/null; echo "---"; ls -la; echo "---"; cat art/lead_nemotron3.txt 2>/dev/null | head -60
+---
+total 544
+drwxr-xr-x 12 runner runner   4096 Sep 17 23:54 .
+drwxr-xr-x  3 runner runner   4096 Sep 17 23:54 ..
+drwxr-xr-x  7 runner runner   4096 Sep 17 23:54 .git
+drwxr-xr-x  3 runner runner   4096 Sep 17 23:54 .github
+-rw-r--r--  1 runner runner   1738 Sep 17 23:54 README.md
+-rw-r--r--  1 runner runner     32 Sep 17 23:54 analyst-out.txt
+-rw-r--r--  1 runner runner 227883 Sep 17 23:54 analyst-prompt.txt
+-rw-r--r--  1 runner runner 224047 Sep 17 23:54 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 leads
+-rw-r--r--  1 runner runner  12649 Sep 17 23:54 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 reports
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 reposcan-raw
+-rw-r--r--  1 runner runner   3249 Sep 17 23:54 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 scripts
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 17 23:54 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 triage
+---
+[0m
+[0m$ [0mcat art/lead_bigpickle.txt 2>/dev/null | head -80
+(no output)
+[0m
+I'll start by examining the repo structure and running passive baseline verification probes against the known live surface.
+[0m$ [0mls -la leads/ knowledge/ inventory/ reports/ scripts/ triage/ recon-notes/ 2>/dev/null
+inventory/:
+total 120
+drwxr-xr-x  2 runner runner   4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner   4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 113689 Sep 17 23:54 avatarux-studios.md
+
+knowledge/:
+total 104
+drwxr-xr-x  2 runner runner  4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 96953 Sep 17 23:54 index.md
+
+leads/:
+total 1644
+drwxr-xr-x  2 runner runner    4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner    4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner  620681 Sep 17 23:54 lead-bigpickle.md
+-rw-r--r--  1 runner runner    5049 Sep 17 23:54 lead-laguna.md
+-rw-r--r--  1 runner runner    4950 Sep 17 23:54 lead-ling3.md
+-rw-r--r--  1 runner runner    5148 Sep 17 23:54 lead-longcat.md
+-rw-r--r--  1 runner runner      18 Sep 17 23:54 lead-mimo.md
+-rw-r--r--  1 runner runner 1001814 Sep 17 23:54 lead-nemotron3.md
+-rw-r--r--  1 runner runner   18650 Sep 17 23:54 reposcan-avatarux-studios.md
+
+recon-notes/:
+total 20
+drwxr-xr-x  2 runner runner 4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner 4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner  899 Sep 17 23:54 DEDICATED-DEEP.md
+-rw-r--r--  1 runner runner 4779 Sep 17 23:54 DEEPER-FINDINGS.md
+
+reports/:
+total 3868
+drwxr-xr-x  2 runner runner    4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner    4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 2081984 Sep 17 23:54 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   21483 Sep 17 23:54 analyst-laguna.log
+-rw-r--r--  1 runner runner   21384 Sep 17 23:54 analyst-ling3.log
+-rw-r--r--  1 runner runner   21582 Sep 17 23:54 analyst-longcat.log
+-rw-r--r--  1 runner runner 1433932 Sep 17 23:54 analyst-nemotron3.log
+-rw-r--r--  1 runner runner   18014 Sep 17 23:54 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 17 23:54 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 17 23:54 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 17 23:54 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   11373 Sep 17 23:54 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  339657 Sep 17 23:54 hypotheses.md
+-rw-r--r--  1 runner runner    3921 Sep 17 23:54 valid-bugs.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner 16987 Sep 17 23:54 sync-issues.py
+
+triage/:
+total 472
+drwxr-xr-x  2 runner runner  4096 Sep 17 23:54 .
+drwxr-xr-x 12 runner runner  4096 Sep 17 23:54 ..
+-rw-r--r--  1 runner runner     0 Sep 17 23:54 .gitkeep
+-rw-r--r--  1 runner runner   360 Sep 17 23:54 run-2026-09-02-21-54.md
+-rw-r--r--  1 runner runner   176 Sep 17 23:54 run-2026-09-02-23-56.md
+-rw-r--r--  1 runner runner   490 Sep 17 23:54 run-2026-09-03-04-10.md
+-rw-r--r--  1 runner runner   175 Sep 17 23:54 run-2026-09-03-09-01.md
+-rw-r--r--  1 runner runner   143 Sep 17 23:54 run-2026-09-03-13-31.md
+-rw-r--r--  1 runner runner   238 Sep 17 23:54 run-2026-09-03-17-13.md
+-rw-r--r--  1 runner runner   143 Sep 17 23:54 run-2026-09-03-19-56.md
+-rw-r--r--  1 runner runner   336 Sep 17 23:54 run-2026-09-03-22-29.md
+-rw-r--r--  1 runner runner   197 Sep 17 23:54 run-2026-09-04-00-29.md
+-rw-r--r--  1 runner runner   142 Sep 17 23:54 run-2026-09-04-05-06.md
+-rw-r--r--  1 runner runner   195 Sep 17 23:54 run-2026-09-04-09-47.md
+-rw-r--r--  1 runner runner   223 Sep 17 23:54 run-2026-09-04-14-07.md
+-rw-r--r--  1 runner runner   200 Sep 17 23:54 run-2026-09-04-17-40.md
+-rw-r--r--  1 runner runner   159 Sep 17 23:54 run-2026-09-04-19-54.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-04-22-16.md
+-rw-r--r--  1 runner runner   199 Sep 17 23:54 run-2026-09-05-00-14.md
+-rw-r--r--  1 runner runner   253 Sep 17 23:54 run-2026-09-05-04-41.md
+-rw-r--r--  1 runner runner   264 Sep 17 23:54 run-2026-09-05-08-38.md
+-rw-r--r--  1 runner runner   190 Sep 17 23:54 run-2026-09-05-12-06.md
+-rw-r--r--  1 runner runner  1064 Sep 17 23:54 run-2026-09-05-15-23.md
+-rw-r--r--  1 runner runner   231 Sep 17 23:54 run-2026-09-05-17-40.md
+-rw-r--r--  1 runner runner   171 Sep 17 23:54 run-2026-09-05-19-32.md
+-rw-r--r--  1 runner runner   257 Sep 17 23:54 run-2026-09-05-21-42.md
+-rw-r--r--  1 runner runner  7175 Sep 17 23:54 run-2026-09-05-23-43.md
+-rw-r--r--  1 runner runner   179 Sep 17 23:54 run-2026-09-06-04-03.md
+-rw-r--r--  1 runner runner   205 Sep 17 23:54 run-2026-09-06-08-43.md
+-rw-r--r--  1 runner runner  1771 Sep 17 23:54 run-2026-09-06-12-47.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-06-16-06.md
+-rw-r--r--  1 runner runner   232 Sep 17 23:54 run-2026-09-06-18-25.md
+-rw-r--r--  1 runner runner  2437 Sep 17 23:54 run-2026-09-06-20-50.md
+-rw-r--r--  1 runner runner   219 Sep 17 23:54 run-2026-09-06-22-50.md
+-rw-r--r--  1 runner runner 16267 Sep 17 23:54 run-2026-09-07-00-50.md
+-rw-r--r--  1 runner runner   257 Sep 17 23:54 run-2026-09-07-05-53.md
+-rw-r--r--  1 runner runner 11035 Sep 17 23:54 run-2026-09-07-12-09.md
+-rw-r--r--  1 runner runner   191 Sep 17 23:54 run-2026-09-07-17-46.md
+-rw-r--r--  1 runner runner   178 Sep 17 23:54 run-2026-09-07-21-23.md
+-rw-r--r--  1 runner runner  6791 Sep 17 23:54 run-2026-09-07-23-46.md
+-rw-r--r--  1 runner runner   159 Sep 17 23:54 run-2026-09-08-04-03.md
+-rw-r--r--  1 runner runner   177 Sep 17 23:54 run-2026-09-08-08-55.md
+-rw-r--r--  1 runner runner   241 Sep 17 23:54 run-2026-09-08-13-28.md
+-rw-r--r--  1 runner runner   135 Sep 17 23:54 run-2026-09-08-17-30.md
+-rw-r--r--  1 runner runner   600 Sep 17 23:54 run-2026-09-08-20-17.md
+-rw-r--r--  1 runner runner   240 Sep 17 23:54 run-2026-09-08-22-46.md
+-rw-r--r--  1 runner runner   184 Sep 17 23:54 run-2026-09-09-01-08.md
+-rw-r--r--  1 runner runner   205 Sep 17 23:54 run-2026-09-09-06-07.md
+-rw-r--r--  1 runner runner   231 Sep 17 23:54 run-2026-09-09-11-34.md
+-rw-r--r--  1 runner runner   214 Sep 17 23:54 run-2026-09-09-15-17.md
+-rw-r--r--  1 runner runner   174 Sep 17 23:54 run-2026-09-09-18-44.md
+-rw-r--r--  1 runner runner   143 Sep 17 23:54 run-2026-09-09-21-35.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-09-23-32.md
+-rw-r--r--  1 runner runner   183 Sep 17 23:54 run-2026-09-10-01-27.md
+-rw-r--r--  1 runner runner   171 Sep 17 23:54 run-2026-09-10-06-39.md
+-rw-r--r--  1 runner runner   156 Sep 17 23:54 run-2026-09-10-11-51.md
+-rw-r--r--  1 runner runner   154 Sep 17 23:54 run-2026-09-10-16-11.md
+-rw-r--r--  1 runner runner   209 Sep 17 23:54 run-2026-09-10-19-09.md
+-rw-r--r--  1 runner runner   163 Sep 17 23:54 run-2026-09-10-21-42.md
+-rw-r--r--  1 runner runner   216 Sep 17 23:54 run-2026-09-10-23-54.md
+-rw-r--r--  1 runner runner   178 Sep 17 23:54 run-2026-09-11-04-05.md
+-rw-r--r--  1 runner runner   236 Sep 17 23:54 run-2026-09-11-08-58.md
+-rw-r--r--  1 runner runner   161 Sep 17 23:54 run-2026-09-11-13-29.md
+-rw-r--r--  1 runner runner   207 Sep 17 23:54 run-2026-09-11-17-14.md
+-rw-r--r--  1 runner runner   152 Sep 17 23:54 run-2026-09-11-19-50.md
+-rw-r--r--  1 runner runner   198 Sep 17 23:54 run-2026-09-11-22-23.md
+-rw-r--r--  1 runner runner   209 Sep 17 23:54 run-2026-09-12-00-38.md
+-rw-r--r--  1 runner runner   237 Sep 17 23:54 run-2026-09-12-05-05.md
+-rw-r--r--  1 runner runner   343 Sep 17 23:54 run-2026-09-12-09-28.md
+-rw-r--r--  1 runner runner   305 Sep 17 23:54 run-2026-09-12-13-09.md
+-rw-r--r--  1 runner runner   207 Sep 17 23:54 run-2026-09-12-16-23.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-12-18-46.md
+-rw-r--r--  1 runner runner   182 Sep 17 23:54 run-2026-09-12-21-20.md
+-rw-r--r--  1 runner runner   152 Sep 17 23:54 run-2026-09-12-23-21.md
+-rw-r--r--  1 runner runner   174 Sep 17 23:54 run-2026-09-13-01-24.md
+-rw-r--r--  1 runner runner   204 Sep 17 23:54 run-2026-09-13-06-46.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-13-12-39.md
+-rw-r--r--  1 runner runner  9770 Sep 17 23:54 run-2026-09-13-16-39.md
+-rw-r--r--  1 runner runner 11674 Sep 17 23:54 run-2026-09-13-19-00.md
+-rw-r--r--  1 runner runner   175 Sep 17 23:54 run-2026-09-13-21-24.md
+-rw-r--r--  1 runner runner   247 Sep 17 23:54 run-2026-09-13-23-30.md
+-rw-r--r--  1 runner runner   144 Sep 17 23:54 run-2026-09-14-01-40.md
+-rw-r--r--  1 runner runner   282 Sep 17 23:54 run-2026-09-14-07-08.md
+-rw-r--r--  1 runner runner   218 Sep 17 23:54 run-2026-09-14-14-15.md
+-rw-r--r--  1 runner runner   961 Sep 17 23:54 run-2026-09-14-19-31.md
+-rw-r--r--  1 runner runner   191 Sep 17 23:54 run-2026-09-14-22-45.md
+-rw-r--r--  1 runner runner   226 Sep 17 23:54 run-2026-09-15-01-18.md
+-rw-r--r--  1 runner runner   144 Sep 17 23:54 run-2026-09-15-06-14.md
+-rw-r--r--  1 runner runner   171 Sep 17 23:54 run-2026-09-15-11-54.md
+-rw-r--r--  1 runner runner   186 Sep 17 23:54 run-2026-09-15-16-42.md
+-rw-r--r--  1 runner runner   152 Sep 17 23:54 run-2026-09-15-20-05.md
+-rw-r--r--  1 runner runner   178 Sep 17 23:54 run-2026-09-15-22-58.md
+-rw-r--r--  1 runner runner  8302 Sep 17 23:54 run-2026-09-16-01-20.md
+-rw-r--r--  1 runner runner   148 Sep 17 23:54 run-2026-09-16-06-15.md
+-rw-r--r--  1 runner runner   173 Sep 17 23:54 run-2026-09-16-11-49.md
+-rw-r--r--  1 runner runner   215 Sep 17 23:54 run-2026-09-16-16-35.md
+-rw-r--r--  1 runner runner   196 Sep 17 23:54 run-2026-09-16-19-42.md
+-rw-r--r--  1 runner runner  1330 Sep 17 23:54 run-2026-09-16-22-49.md
+-rw-r--r--  1 runner runner 10263 Sep 17 23:54 run-2026-09-17-01-14.md
+-rw-r--r--  1 runner runner   146 Sep 17 23:54 run-2026-09-17-06-12.md
+-rw-r--r--  1 runner runner   220 Sep 17 23:54 run-2026-09-17-11-54.md
+-rw-r--r--  1 runner runner   211 Sep 17 23:54 run-2026-09-17-16-41.md
+-rw-r--r--  1 runner runner   180 Sep 17 23:54 run-2026-09-17-20-07.md
+-rw-r--r--  1 runner runner   239 Sep 17 23:54 run-2026-09-17-22-54.md
+[0m
+
+---README---
+# avatarux-studios-hunt
+
+24/7 deep multi-model bug-hunting automation for **AvatarUX Studios** (Oliver Maicher bug-bounty hub).
+
+Scope: Brands: Roobet, Stake, Gamdom, BetPanda, RainBet. All infrastructure, game services, APIs and systems operated by AvatarUX Studios and its distributed gaming integrations
+(full exclusion + rules list in `scope.yml`)
+
+Pipeline (all workflows run every 20 minutes):
+
+- **Deep Hunt** (`hunt.yml`): analyst hunts the discovered inventory + hypotheses, emits structured
+  leads, chains primitives, self-critiques. Models: mimo.
+- **Triager** (`triage.yml`): second-model 7-Question Gate validation + live passive probe; keeps
+  running count in `reports/valid-bugs.md`.
+- **Reposcan** (`reposcan.yml`): deep source scan of any public GitHub org (if configured).
+- **Sync Issues** (`sync-issues.yml`): mirrors leads to GitHub issues.
+
+Testing discipline: rate-limited (1 rps), no DoS/account-lockout, writes only on non-prod/test
+assets, no exposure of customer/employee/financial/auth data, secrets committed only as hashes.
+
+> IMPORTANT: the pipeline produces CANDIDATE leads. A reportable, validated finding requires
+> human triage + proof against the program's gate. No finding is fabricated; scanner output alone
+> is never accepted. Active testing is gated behind the in-scope hosts in `inventory/avatarux-studios.md` and
+> must stay within the program's published scope.
+
+Artifacts:
+
+| Artifact | Purpose |
+|---|---|
+| `leads/` | Candidate findings (UNVALIDATED) |
+| `triage/` | Validation verdicts |
+| `reports/valid-bugs.md` | Validated findings + running count |
+| `scope.yml` | Program scope and exclusions (edit to adjust) |
+
+Program description: Online slot game developer for iGaming platforms
+[0m
+[0m$ [0mcat reports/hypotheses-nemotron3.txt; echo "=====BIGPICKLE====="; cat reports/hypotheses-bigpickle.txt
+## 2026-09-17 21:56:39 UTC [target] (model nemotron3)
+[PRIO] rainbet-com-rabbitmq.rainbet.com:5671/5672,7.20,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=7
+[PRIO] betpandacasino.io/rest/user,6.80,attack_surface=7,business_value=9,tech_exposure=7,gate_ease=3,cloud_surface=7,freshness=6
+[PRIO] help.desk.avatarux.com/servicedesk/customer/portal,6.85,attack_surface=8,business_value=6,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=5
+[PRIO] affiliates.betpanda.io/rest/player/uid,6.10,attack_surface=6,business_value=8,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=5
+[PRIO] api.777.dev/graphql,6.20,attack_surface=5,business_value=7,tech_exposure=6,gate_ease=10,cloud_surface=6,freshness=2
+[HYP] RainBet RabbitMQ Anonymous AMQP Wire Protocol Access on Raw DigitalOcean Origins
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671/5672, rainbet-us-staging-rabbitmq.rainbet.com:5671/5672
+confidence: 65
+reasoning: Two live RabbitMQ brokers on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) with Management UI (15671/15672) + AMQP (5671 TLS/5672 plaintext) publicly exposed, no Cloudflare/ACL. Management API uniformly 401 Basic across all /api/* endpoints — HTTP topology disclosure FULLY FALSIFIED. AMQP 0-9-1 wire protocol (5671/5672) completely untested for anonymous protocol-level connections. Default guest:guest credentials commonly enabled on RabbitMQ; protocol-level access would allow queue/exchange enumeration, message consumption, and potential message injection into RainBet messaging backbone.
+evidence_needed: Successful AMQP 0-9-1 handshake on :5671 (TLS) and/or :5672 (plaintext) with anonymous/guest credentials; channel.open + queue.declare + basic.consume demonstrating topology access and message read capability.
+verify_steps: PROBE: openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -quiet < /dev/null 2>&1 | head -20; nc -vz rainbet-com-rabbitmq.rainbet.com 5672 2>&1; python3 -c "import pika; c=pika.BlockingConnection(pika.ConnectionParameters('rainbet-com-rabbitmq.rainbet.com',5672,credentials=pika.PlainCredentials('guest','guest'))); ch=c.channel(); print(ch.queue_declare('',exclusive=True)); print(ch.queue_bind(queue='',exchange='amq.topic',routing_key='#'))" 2>&1 | head -30
+impact: Anonymous access to RainBet messaging backbone (queue enumeration, message consumption, potential injection), credentialed AMQP access with default guest:guest, internal service communication interception — HIGH
+testability: PASSIVE
+[HYP] BetPanda Casino Authenticated /rest/user/* Endpoint Census and Cross-Tenant Header Injection
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 70
+reasoning: Unauthenticated /rest/user/details leaks user state model (loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified). OPTIONS /rest/user/authenticate leaks Access-Control-Allow-Headers: x-site-name-id, x-preferred-app-context with ACAO pinned to https://betpandacasino.io. Spring Boot backend (JSON error format). /rest/user/{me,profile,info} return 404; /rest/user/settings returns 401 "No http-session". Full authenticated surface unknown — requires one credentialed session to enumerate GET /rest/user/* and test x-site-name-id/x-preferred-app-context header injection for cross-tenant access (stake_com, roobet_com).
+evidence_needed: One valid betpandacasino.io session cookie/JWT; authenticated GET /rest/user/me, /rest/user/profile, /rest/user/info, /rest/user/settings, /rest/user/account-balances-and-bonuses; x-site-name-id header tests on authenticated endpoints (stake_com, roobet_com) observing body/ACAO/echo changes.
+verify_steps: HUMAN: obtain scoped credentialed session on betpandacasino.io (register test account); GET /rest/user/me -H "Cookie: <session>"; GET /rest/user/profile -H "Cookie: <session>"; GET /rest/user/settings -H "Cookie: <session>"; GET /rest/user/account-balances-and-bonuses -H "Cookie: <session>"; POST /rest/user/authenticate -H "Cookie: <session>" -H "x-site-name-id: stake_com" -d '{}'
+impact: Cross-tenant PII dump (email, balance, KYC docs, transaction history), privilege escalation via tenant header injection, BOLA on player/agent endpoints — HIGH
+testability: AUTH_HELPED
+[HYP] Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} Cross-UID Iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: API backend confirmed same-origin at /rest; full endpoint map extracted (20+ routes); /rest/public/config leaks operatorId=1, Strapi config, support email; IDOR pattern confirmed on /player/uid/{id} path parameter (template literal render in bundle: Vt.get(Yt()+"/player/uid/${e.id}?currency=${e.curr}")). Endpoint is auth-gated (401 unauthenticated) but any authenticated affiliate can likely supply arbitrary player UIDs. Requires two credentialed affiliate sessions (own vs other) to demonstrate cross-uid data access.
+evidence_needed: Two valid affiliate sessions (different affiliate accounts); authenticated GET /rest/player/uid/1 vs /rest/player/uid/2 vs /rest/player/uid=<other-affiliate-player>; compare response bodies for PII/commission data differential.
+verify_steps: HUMAN: obtain two scoped credentialed affiliate sessions on affiliates.betpanda.io; GET /rest/player/uid/1 -H "Cookie: <session1>"; GET /rest/player/uid/2 -H "Cookie: <session1>"; GET /rest/player/uid=<other-affiliate-player> -H "Cookie: <session2>"; compare JSON response size/fields for cross-uid leakage.
+impact: Cross-affiliate PII dump (username, avatar, metrics, balance, transaction history), commission theft, campaign interference — HIGH
+testability: AUTH_HELPED
+[PARKED] RainBet RabbitMQ Anonymous AMQP Wire Protocol Access: Management API uniformly 401 Basic falsifies HTTP topology disclosure; AMQP wire protocol untested but guest:guest may be disabled — keeping at reduced confidence due to protocol difference (HTTP 401 ≠ AMQP auth). Confidence 65 → effective ~55 until protocol handshake attempted.
+[PARKED] BetPanda Casino Cross-Tenant Header Injection: x-site-name-id tested passively on /rest/user/details and /rest/properties/manifest — body/ACAO/echo unchanged; no passive tenant switch. Header injection only testable with AUTH session. Confidence 70 justified but gate is AUTH_HELPED.
+[PARKED] Affiliates BOLA /rest/player/uid: IDOR pattern confirmed in bundle template literal, 401 unauthenticated boundary intact. Requires TWO credentialed sessions (AUTH_HELPED x2) — high barrier. Confidence 68 justified.
+[FINAL] 1. RainBet RabbitMQ Anonymous AMQP Wire Protocol Access on Raw DigitalOcean Origins (65) — HIGH, PASSIVE
+[FINAL] 2. BetPanda Casino Authenticated /rest/user/* Endpoint Census and Cross-Tenant Header Injection (70) — HIGH, AUTH_HELPED
+[FINAL] 3. Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} Cross-UID Iteration (68) — HIGH, AUTH_HELPED
+[NEXT] PROBE: openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -quiet < /dev/null 2>&1 | head -20 && nc -vz rainbet-com-rabbitmq.rainbet.com 5672 2>&1 && python3 -c "import pika; c=pika.BlockingConnection(pika.ConnectionParameters('rainbet-com-rabbitmq.rainbet.com',5672,credentials=pika.PlainCredentials('guest','guest'))); ch=c.channel(); print(ch.queue_declare('',exclusive=True)); print(ch.queue_bind(queue='',exchange='amq.topic',routing_key='#'))" 2>&1 | head -30
+[LEARN] ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671/5672: Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/* 401 Basic gated uniformly
+[LEARN] ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin UUID 1ce4ff55 leaked through Cloudflare on 200-empty
+[LEARN] ACCEPTED MISCONFIG @ betpandecasino.io/rest/user/details: NEW unauthenticated endpoint returning full user state model (301B JSON)
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded to 96+ portals, all leaking identical tenant-id/atlassianOrgId/Statsig config
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain
+[LEARN] ACCEPTED OTHER @ api.777.dev/graphql: anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+[LEARN] REJECTED MISCONFIG @ betpandecasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch
+[LEARN] REJECTED MISCONFIG @ betpandecasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+[LEARN] REJECTED MISCONFIG @ betpandecasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+[LEARN] REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed
+[LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; management-API auth uniform
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: whitelist is namespace-wide (any *.777.dev incl. dead DNS) with credentials=true — staging-to-prod trust root is the whole staging zone
+[LEARN] REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suffix match
+[LEARN] ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers, NO anonymous HTTP surface
+[LEARN] REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings: parity falsified / CF-challenge or dead routes, zero anonymous exposure
+[RISK] avatarux-studios: 72 — Top exploitable paths: RainBet RabbitMQ AMQP wire protocol anonymous access (65, PASSIVE, HIGH) — raw DigitalOcean origins, management API 401 but wire protocol untested; BetPanda Casino authenticated /rest/user/* census + cross-tenant header injection (70, AUTH_HELPED, HIGH) — full user model leak aids credentialed recon, x-site-name-id injection vector; Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} (68, AUTH_HELPED, HIGH) — IDOR pattern confirmed, requires two credentialed sessions; Help.desk.avatarux.com portal enumeration at scale (60, PASSIVE, MEDIUM) — 96+ portals leaking tenant/org/workspace IDs + Statsig config. All other passive surface converged: cPanel takeover unclaimable (delegation gap), casino config/SSRF falsified, api.777.dev GraphQL consumed (introspection mapped, auth plugin uniform, mutation gap rejected), Roobet CORS trust chain blocked by SameSite=Lax. Risk = MEDIUM-HIGH — three HIGH findings actionable (one PASSIVE immediate, two AUTH_HELPED with minimal auth barriers).
+=====BIGPICKLE=====
+## 2026-09-17 21:56:52 UTC [target] (model bigpickle)
+[HYP] BetPanda Casino authenticated /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B user-state model (country via real CF-attributed egress, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; {authenticate,refresh,account-balances-and-bonuses,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id/x-preferred-app-context schema; header passively inert (falsified); authed route set + tenant behavior unknown.
+evidence_needed: one credentialed casino session; authed GETs with/without x-site-name-id stake_com|roobet_com; diff body/ACAO/status.
+verify_steps: HUMAN under scoped authorization, test account: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then repeat with x-site-name-id toggled (≤1rps); record ACAO/body/status per variant.
+impact: tenant-switch or self-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled). No passive probe has expected value until credentials arrive.
+[RISK] avatarux-studios: 55 — passive surface byte-stable and closed (aff config 398B cc5f885e, casino details 301B, portals template-drift-only, rmq /api/overview 401, 777.dev 8/8 gated, AMQP falsified); reportable = MED RabbitMQ mgmt-UI+AMQP exposure + LOW cluster (config/user-state/tenant-id leaks); top-value paths (BOLA 68, census 45) stalled on HUMAN credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+[HYP] Production GraphQL field/prov argument blind enumeration finds anonymous data beyond tpGames
+class: OTHER
+asset: roobet.com/_api/graphql (POST, Content-Type: application/json, Apollo-Require-Preflight: true)
+confidence: 62
+reasoning: fresh probe returned @tpGames anonymous 7,958-game catalog {id,title,slug,createdAt} with valid args (category:"slots"→6644, limit:2→2); introspection disabled but error-logic behaves as oracle: valid field ⇒ NOT_AUTHENTICATED or data, invalid field ⇒ single INTERNAL_SERVER_ERROR, invalid subfield ⇒ per-error tuple. Same codebase as staging api.777.dev (schema known rich: 29Q/27M/62-field User). Only 4 Query fields + tpGames mapped so far; unknown mutations unverified.
+evidence_needed: systematic field-dictionary probes across Query+TPGame+User sub-types (id/slug pattern mined from staging bundle + tiki21 bundle API_HOST) → any second anonymous data field or an unauthenticated mutation; full arg matrix on tpGames (brand/provider/currency/category) for cross-brand catalog differentials.
+verify_steps: POST {"query":"{__typename}"} baseline; POST {"query":"{tpGames{id}}"} re-verify 200 7958; then per candidate f POST {"query":"{f{__typename}}"} classifying VALID/NOT_AUTHENTICATED/INVALID; arg fuzz on tpGames with valid fields; any mutation candidates (e.g. mutation{auth{...}}) classification same way. No auth data requested; read-only. ≤1 rps.
+impact: anonymous schema/data reach on production money platform beyond public game catalog — LOW→HIGH depending on discoverable fields; at minimum a durable blind-schema oracle for downstream auth'd phases.
+testability: PASSIVE
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UIC iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; 401 unauthenticated intact; /rest/public/config leaks operatorId=1; IDOR only provable with 2 credentialed affiliate sessions (unchanged).
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential with PII/financial fields.
+verify_steps: HUMAN under scoped auth, test accounts: GET /rest/player/uid/{own} then /rest/player/uid/{other} cookie A then B; ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); {me,profile,info} 404; settings 401; financial endpoints POST-gated 405; header passively inert (falsified). authed route set unknown.
+evidence_needed: one casino session; authed GETs with/without x-site-name-id.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+evidence_needed: one casino session; authed GETs with/without x-site-name-id.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; 401 unauthenticated intact; /rest/public/config leaks operatorId=1 (398B, sha256 cc5f885e); IDOR provable only with 2 credentialed affiliate sessions — unchanged.
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential exposing PII/financial fields.
+verify_steps: HUMAN scoped test accounts: GET /rest/player/uid/{own} then uid{other}, cookie A then B, ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); {me,profile,info} 404; settings 401; financial endpoints POST-gated 405; x-site-name-id passively inert (falsified); authed route set + tenant-binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header; diff body/ACAO/status.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+[HYP] Production GraphQL mutation-existence oracle (anonymous mutations)
+class: OTHER
+asset: roobet.com/_api/graphql
+confidence: 35
+reasoning: staging api.777.dev has 27M all under uniform global auth plugin; pre-auth mutation gap already REJECTED; field enumeration just proved prod data-surface = tpGames only.
+evidence_needed: mutation existence (NOT_AUTHENTICATED vs INTERNAL_SERVER_ERROR) for candidates like auth, login, bonusClaim — anonymous mutations would be a jump-the-boundary vector.
+verify_steps: POST {"query":"mutation{m{...}}"} classification at ≤1rps; abort if any mutation returns data instead of NOT_AUTHENTICATED.
+impact: only HIGH if an anonymous mutation exists — contradicted by staging evidence.
+testability: PASSIVE
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled). All passive surfaces now enumerated or falsified (GraphQL tpGames-only, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe has expected value until credentials arrive.
+[RISK] avatarux-studios: 52 — passive surface fully closed this cycle (GraphQL tpGames-only confirmed; AMQP falsified 09-14; 777.dev 8/8 gated; cpanel unclaimable). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP + LOW cluster (config/user-state/tenant-id). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+evidence_needed: one casino session; authed GETs with/without x-site-name-id.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; 401 unauthenticated intact; /rest/public/config leaks operatorId=1 (398B, sha256 cc5f885e); IDOR provable only with 2 credentialed affiliate sessions — unchanged.
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential exposing PII/financial fields.
+verify_steps: HUMAN scoped test accounts: GET /rest/player/uid/{own} then uid{other}, cookie A then B, ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); {me,profile,info} 404; settings 401; financial endpoints POST-gated 405; x-site-name-id passively inert (falsified); authed route set + tenant-binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header; diff body/ACAO/status.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+[HYP] Production GraphQL mutation-existence oracle (anonymous mutations)
+class: OTHER
+asset: roobet.com/_api/graphql
+confidence: 35
+reasoning: staging api.777.dev has 27M all under uniform global auth plugin; pre-auth mutation gap already REJECTED; field enumeration just proved prod data-surface = tpGames only.
+evidence_needed: mutation existence (NOT_AUTHENTICATED vs INTERNAL_SERVER_ERROR) for candidates like auth, login, bonusClaim — anonymous mutations would be a jump-the-boundary vector.
+verify_steps: POST {"query":"mutation{m{...}}"} classification at ≤1rps; abort if any mutation returns data instead of NOT_AUTHENTICATED.
+impact: only HIGH if an anonymous mutation exists — contradicted by staging evidence.
+testability: PASSIVE
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled). All passive surfaces now enumerated or falsified (GraphQL tpGames-only, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe has expected value until credentials arrive.
+[RISK] avatarux-studios: 52 — passive surface fully closed this cycle (GraphQL tpGames-only confirmed; AMQP falsified 09-14; 777.dev 8/8 gated; cpanel unclaimable). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP + LOW cluster (config/user-state/tenant-id). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; anonymous 401 intact (re-audited 09-13); /rest/public/config leaks operatorId=1 (398B, sha256 cc5f885e); provable only with 2 credentialed affiliate sessions — unchanged.
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential exposing PII/financial fields.
+verify_steps: HUMAN scoped test accounts: GET /rest/player/uid/{own} then uid{other}, cookie A then B, ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); settings 401; {me,profile,info} 404; financial endpoints POST-gated 405; x-site-name-id passively inert (falsified); authed route set + tenant-binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header; diff body/ACAO/status.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+[HYP] Production GraphQL mutation-existence oracle (anonymous mutations)
+class: OTHER
+asset: roobet.com/_api/graphql
+confidence: 35
+reasoning: staging api.777.dev 27M all under uniform global auth plugin; pre-auth mutation gap REJECTED; prod Anon-data census = tpGames only (re-confirmed this cycle).
+evidence_needed: mutation existence (NOT_AUTHENTICATED vs INTERNAL_SERVER_ERROR) for auth/login/bonusClaim — anonymous mutation = jump-the-boundary.
+verify_steps: POST {"query":"mutation{m{...}}"} classification ≤1rps; abort if any returns data.
+impact: HIGH only if an anonymous mutation exists — contradicted by staging evidence.
+testability: PASSIVE
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}, cookie A then B) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled stake_com|roobet_com; diff body/ACAO/status). All passive surfaces enumerated or falsified (GraphQL tpGames-only re-confirmed, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe carries expected value until credentials arrive.
+[RISK] avatarux-studios: 52 — passive surface fully closed and stable this cycle (5 probes + GraphQL oracle reconfirmed, zero drift). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B / tenant-id portals). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+[0m
+[0m$ [0mcat scope.yml; echo "=====VALID====="; cat reports/valid-bugs.md; echo "=====LATEST====="; cat triage/run-2026-09-17-22-54.md; echo "=====PROBE====="; tail -60 probe-results.md
+programs:
+  avatarux-studios:
+    name: AvatarUX Studios Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "Brands: Roobet, Stake, Gamdom, BetPanda, RainBet. All infrastructure, game services, APIs and systems operated by AvatarUX Studios and its distributed gaming integrations"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+=====VALID=====
+# Validated findings (running count 0)
+
+- 20 lead(s) marked VALID at 2026-09-05 23:43:00 UTC
+  - | Q1 Scope | **VALID** | `betpandacasino.io` = BetPanda brand, explicitly in scope |
+  - | Q2 Reachable | **VALID** | Public JS bundle, no auth needed |
+  - | Q4 Provable | **VALID** | `curl -s https://betpandacasino.io/ | grep -o 'GLOBAL_CLOUDWATCH_IDENTITY_POOL_ID[^"]*"[^"]*"'` — read-only GET |
+  - | Q1 Scope | **VALID** | BetPanda asset, in scope |
+  - | Q2 Reachable | **VALID** | Public JS bundle |
+  - | Q4 Provable | **VALID** | `curl -s https://betpandacasino.io/ | grep -oP 'nano-public[^"]*\|d3ec3n7kizfkuy[^"]*'` |
+  - | Q1 Scope | **VALID** | `avatarux.com` infrastructure, explicitly in scope |
+  - | Q2 Reachable | **VALID** | Public DNS, Cloudflare error 1001 returned to unauthenticated requests |
+  - | Q3 Impact | **VALID** | Dangling DNS to prohibited Cloudflare IP could enable subdomain takeover → phishing, cookie theft, service impersonation under avatarux.com |
+  - | Q4 Provable | **VALID** | `dig cpanel.avatarux.com` + `curl -sI https://cpanel.avatarux.com/` — read-only, non-invasive. Cloudflare 1001 persists 48h+ across 20+ probe cycles |
+  - | Q5 Novel | **VALID** | Persistent dangling DNS with Cloudflare 1001 is a specific, unreported misconfiguration |
+  - | Q6 Not rejected | **VALID** | Not on always-rejected list (not DoS, not banner grabbing, not error messages) |
+  - | Q7 Reasonable triager | **VALID** | Subdomain takeover via dangling DNS is a well-understood, accepted vulnerability class |
+  - **Verdict: VALID**
+  - | Q1 Scope | **VALID** | AvatarUX infrastructure |
+  - | Q2 Reachable | **VALID** | Publicly accessible, returns HTTP 200/303 |
+  - | Q4 Provable | **VALID** | `curl -sI https://help.desk.avatarux.com/servicedesk/customer/portal/2` |
+  - | Q1 Scope | **VALID** | BetPanda asset, in scope |
+  - | Q2 Reachable | **VALID** | Public REST API endpoints respond to unauthenticated requests |
+  - | cpanel.avatarux.com Dangling DNS | **VALID** | 6.1 (Medium) |
+
+- 4 lead(s) marked VALID at 2026-09-07 12:09:22 UTC
+  - | Q7 Reasonable triager | YES | Stable dangling DNS with clear escalation path is a valid finding |
+  - | Q4 Provable | PARTIAL | Endpoint map confirmed from JS bundle (`/rest/player/uid/{id}?currency={curr}`); but IDOR requires authenticated session to prove — cannot demonstrate without valid affiliate
+  - **Verdict: HOLD** — Blocked on auth. Need a valid affiliate session to test `GET /rest/player/uid/1?currency=EUR` vs `uid/2` for response differentiation. Without credentials, this remains a hypothesi
+  - | Q4 Provable | NO | All endpoints return 405 on GET; OPTIONS leaks header schema but no data; POST requires valid auth |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:46:20 UTC
+  - | Q3 Impact | **YES** | Timing differential could enumerate valid accounts |
+
+- 1 lead(s) marked VALID at 2026-09-13 19:00:05 UTC
+  - | Q7 Reasonable triager | YES — Cloudflare 1001 with stable dangling DNS is accepted by most triagers as a valid subdomain takeover lead |
+
+- 3 lead(s) marked VALID at 2026-09-16 01:20:05 UTC
+  - | Q4 Provable | **PARTIALLY** — endpoints return 405 (GET→POST) or 401 (auth required). Can confirm endpoint existence and header behavior passively, but CANNOT prove IDOR without valid auth tokens (w
+  - | Q7 Reasonable triager | **YES (conditionally)** — the IDOR pattern + financial endpoints + multi-tenant header leak is a credible finding IF you can prove cross-tenant access with valid creds |
+  - **VERDICT: HOLD** — This is the strongest lead. The IDOR pattern on `/rest/player/uid/{id}` combined with financial endpoints and multi-tenant header architecture is a credible security finding. Howev
+
+- 1 lead(s) marked VALID at 2026-09-17 01:14:59 UTC
+  - | Q4 Provable non-invasively? | No — requires valid affiliate session to test. 401 confirmed; no unauthorized data access demonstrated. |
+=====LATEST=====
+
+===== TRIAGE 2026-09-17 22:54:11 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. The LEADS section is empty.
+
+Please paste the probe results and leads from the hunt bot so I can validate them against the 7-Question Gate.
+=====PROBE=====
+## 2026-09-14 18:53:54 UTC
+
+
+## 2026-09-14 22:20:41 UTC
+
+
+## 2026-09-15 00:48:28 UTC
+
+
+## 2026-09-15 05:52:10 UTC
+
+
+## 2026-09-15 11:18:57 UTC
+
+
+## 2026-09-15 15:56:05 UTC
+
+
+## 2026-09-15 19:27:04 UTC
+
+
+## 2026-09-15 22:27:39 UTC
+https://help.desk.avatarux.com/servicedesk/customer/portal/$i -> HTTP 303
+https://help.desk.avatarux.com/servicedesk/customer/portal/4 -> 200 len=?
+
+## 2026-09-16 00:32:08 UTC
+
+
+## 2026-09-16 05:15:27 UTC
+
+
+## 2026-09-16 10:08:39 UTC
+
+
+## 2026-09-16 15:07:43 UTC
+
+
+## 2026-09-16 19:16:44 UTC
+
+
+## 2026-09-16 21:55:49 UTC
+
+
+## 2026-09-17 00:06:13 UTC
+
+
+## 2026-09-17 04:59:47 UTC
+
+
+## 2026-09-17 09:57:25 UTC
+
+
+## 2026-09-17 14:52:13 UTC
+
+
+## 2026-09-17 18:51:56 UTC
+
+
+## 2026-09-17 21:57:02 UTC
+[0m
+Now let me run passive baseline re-verification against the known live surface to ground the delta.
+[0m$ [0mtimeout 15 curl -s -o /tmp/casino.json -w "casino_details %{http_code} %{size_download}\n" https://betpandacasino.io/rest/user/details 2>&1; sleep 1; timeout 15 curl -s -o /tmp/aff.json -w "aff_config %{http_code} %{size_download}\n" https://affiliates.betpanda.io/rest/public/config 2>&1
+casino_details 200 301
+aff_config 200 398
+[0m
+Network live. Continuing baseline probes.
+[0m$ [0mtimeout 20 curl -s -D /tmp/cors1.txt -o /dev/null -H "Origin: https://www.777.dev" https://roobet.com/_api/currency/balances 2>&1; sleep 1; timeout 20 curl -s -D /tmp/cors2.txt -o /dev/null -H "Origin: https://evil777.dev" https://roobet.com/_api/currency/balances 2>&1; echo "=== www.777.dev ACAO ==="; grep -i "access-control-allow-origin\|access-control-allow-credentials" /tmp/cors1.txt; echo "=== evil777.dev ACAO ==="; grep -i "access-control-allow-origin\|access-control-allow-credentials" /tmp/cors2.txt
+=== www.777.dev ACAO ===
+access-control-allow-origin: https://www.777.dev
+access-control-allow-credentials: true
+=== evil777.dev ACAO ===
+access-control-allow-credentials: true
+[0m
+[0m$ [0mtimeout 20 curl -s -o /tmp/hd.html -w "helpdesk_p4 %{http_code} %{size_download}\n" https://help.desk.avatarux.com/servicedesk/customer/portal/4 2>&1; sleep 1; timeout 20 curl -sk -o /dev/null -w "rmq_overview %{http_code}\n" https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview 2>&1; sleep 1; timeout 15 curl -s -o /dev/null -w "cpanel %{http_code}\n" https://cpanel.avatarux.com/ 2>&1
+helpdesk_p4 200 206369
+rmq_overview 401
+cpanel 000
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcd /tmp && cat > gql_probe.sh <<'EOF'
+#!/bin/bash
+q() {
+  desc="$1"; qry="$2"
+  echo "=== $desc ==="
+  timeout 20 curl -s -X POST "https://roobet.com/_api/graphql" \
+    -H "Content-Type: application/json" \
+    -H "Apollo-Require-Preflight: true" \
+    -H "Origin: https://roobet.com" \
+    -d "{\"query\":\"$qry\"}" -w "\n[HTTP %{http_code}]\n" 2>&1 | head -c 500
+  echo; sleep 1
+}
+q "baseline __typename" "{__typename}"
+q "reverify tpGames{id}" '{tpGames{id}}'
+q "cand games" '{games{__typename}}'
+q "cand user" '{user{__typename}}'
+q "cand wallet" '{wallet{__typename}}'
+q "cand provider" '{provider{__typename}}'
+q "cand bonus" '{bonus{__typename}}'
+q "cand race" '{race{__typename}}'
+q "cand jackpot" '{jackpot{__typename}}'
+q "cand config" '{config{__typename}}'
+q "mut login" 'mutation{login{__typename}}'
+q "mut bonusClaim" 'mutation{bonusClaim{__typename}}'
+q "mut auth" 'mutation{auth{__typename}}'
+EOF
+bash gql_probe.sh failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+Baseline stable. Now executing the pending GraphQL oracle probes (read-only field/mutation classification) at ≤1 rps.
