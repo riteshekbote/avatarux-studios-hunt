@@ -24613,3 +24613,50 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 55 — passive surface byte-stable and closed (aff config 398B cc5f885e, casino details 301B, portals template-drift-only, rmq /api/overview 401, 777.dev 8/8 gated, AMQP falsified); reportable = MED RabbitMQ mgmt-UI+AMQP exposure + LOW cluster (config/user-state/tenant-id leaks); top-value paths (BOLA 68, census 45) stalled on HUMAN credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+===== ANALYST bigpickle 2026-09-17 04:59:47 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mfor u in \
+  "https://flags.betpanda.io/health" \
+  "https://flags.betpanda.io/flags" \
+  "https://betpandecasino.io/rest/properties/manifest" \
+  "https://betpandecasino.io/rest/properties/currencies" \
+  "https://betpandecasino.io/rest/user/details" \
+  "https://affiliates.betpanda.io/rest/public/config"; do
+  curl -s -m 12 -o /dev/null -w '%{http_code} %{size_download} %{url_effective}\n' -H 'Origin: https://betpandecasino.io' "$u"
+  sleep 1
+done
+403 22452 https://flags.betpanda.io/health
+403 22471 https://flags.betpanda.io/flags
+000 0 https://betpandecasino.io/rest/properties/manifest
+000 0 https://betpandecasino.io/rest/properties/currencies
+000 0 https://betpandecasino.io/rest/user/details
+200 398 https://affiliates.betpanda.io/rest/public/config
+[0m
+[0m$ [0mfor u in \
+  "https://reviews.roobet.com/" \
+  "https://help.roobet.com/" \
+  "https://edge.roobet.com/" \
+  "https://help.desk.avatarux.com/servicedesk/customer/portal/4" \
+  "https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview"; do
+  curl -sk -m 12 -o /dev/null -w '%{http_code} %{size_download} %{url_effective}\n' -A 'Mozilla/5.0' "$u"
+  sleep 1
+done
+403 17 https://reviews.roobet.com/
+302 0 https://help.roobet.com/
+403 5485 https://edge.roobet.com/
+200 205675 https://help.desk.avatarux.com/servicedesk/customer/portal/4
+401 0 https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mfor h in betpandecasino.io betpandacasino.io; do
+  echo "== $h =="
+  getent hosts "$h" | head -3
+  for p in "/" "/rest/properties/manifest" "/rest/user/details"; do
+    curl -s -m 15 -o /tmp/out.bin -w '%{http_code} %{size_download} %{time_total}s\n' "https://$h$p"
+    rm -f /tmp/out.bin
+    sleep 1
+  done
+done failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
