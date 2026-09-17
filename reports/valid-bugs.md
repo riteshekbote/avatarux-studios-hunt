@@ -38,3 +38,6 @@
   - | Q4 Provable | **PARTIALLY** — endpoints return 405 (GET→POST) or 401 (auth required). Can confirm endpoint existence and header behavior passively, but CANNOT prove IDOR without valid auth tokens (w
   - | Q7 Reasonable triager | **YES (conditionally)** — the IDOR pattern + financial endpoints + multi-tenant header leak is a credible finding IF you can prove cross-tenant access with valid creds |
   - **VERDICT: HOLD** — This is the strongest lead. The IDOR pattern on `/rest/player/uid/{id}` combined with financial endpoints and multi-tenant header architecture is a credible security finding. Howev
+
+- 1 lead(s) marked VALID at 2026-09-17 01:14:59 UTC
+  - | Q4 Provable non-invasively? | No — requires valid affiliate session to test. 401 confirmed; no unauthorized data access demonstrated. |
