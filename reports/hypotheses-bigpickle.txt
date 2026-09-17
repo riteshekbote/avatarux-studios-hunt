@@ -1,4 +1,43 @@
-## 2026-09-17 18:51:45 UTC [target] (model bigpickle)
+## 2026-09-17 21:56:52 UTC [target] (model bigpickle)
+[HYP] BetPanda Casino authenticated /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: anonymous /rest/user/details 200 301B user-state model (country via real CF-attributed egress, spoof headers inert); /rest/user/settings 401 "No http-session"; {me,profile,info} 404; {authenticate,refresh,account-balances-and-bonuses,zendesk/jwt} 405 POST-gated; OPTIONS advertises x-site-name-id/x-preferred-app-context schema; header passively inert (falsified); authed route set + tenant behavior unknown.
+evidence_needed: one credentialed casino session; authed GETs with/without x-site-name-id stake_com|roobet_com; diff body/ACAO/status.
+verify_steps: HUMAN under scoped authorization, test account: authed GET /rest/user/{details,settings,account-balances-and-bonuses} then repeat with x-site-name-id toggled (≤1rps); record ACAO/body/status per variant.
+impact: tenant-switch or self-model census on real-money flow. MED unless cross-tenant → HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled). No passive probe has expected value until credentials arrive.
+[RISK] avatarux-studios: 55 — passive surface byte-stable and closed (aff config 398B cc5f885e, casino details 301B, portals template-drift-only, rmq /api/overview 401, 777.dev 8/8 gated, AMQP falsified); reportable = MED RabbitMQ mgmt-UI+AMQP exposure + LOW cluster (config/user-state/tenant-id leaks); top-value paths (BOLA 68, census 45) stalled on HUMAN credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+[HYP] Production GraphQL field/prov argument blind enumeration finds anonymous data beyond tpGames
+class: OTHER
+asset: roobet.com/_api/graphql (POST, Content-Type: application/json, Apollo-Require-Preflight: true)
+confidence: 62
+reasoning: fresh probe returned @tpGames anonymous 7,958-game catalog {id,title,slug,createdAt} with valid args (category:"slots"→6644, limit:2→2); introspection disabled but error-logic behaves as oracle: valid field ⇒ NOT_AUTHENTICATED or data, invalid field ⇒ single INTERNAL_SERVER_ERROR, invalid subfield ⇒ per-error tuple. Same codebase as staging api.777.dev (schema known rich: 29Q/27M/62-field User). Only 4 Query fields + tpGames mapped so far; unknown mutations unverified.
+evidence_needed: systematic field-dictionary probes across Query+TPGame+User sub-types (id/slug pattern mined from staging bundle + tiki21 bundle API_HOST) → any second anonymous data field or an unauthenticated mutation; full arg matrix on tpGames (brand/provider/currency/category) for cross-brand catalog differentials.
+verify_steps: POST {"query":"{__typename}"} baseline; POST {"query":"{tpGames{id}}"} re-verify 200 7958; then per candidate f POST {"query":"{f{__typename}}"} classifying VALID/NOT_AUTHENTICATED/INVALID; arg fuzz on tpGames with valid fields; any mutation candidates (e.g. mutation{auth{...}}) classification same way. No auth data requested; read-only. ≤1 rps.
+impact: anonymous schema/data reach on production money platform beyond public game catalog — LOW→HIGH depending on discoverable fields; at minimum a durable blind-schema oracle for downstream auth'd phases.
+testability: PASSIVE
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UIC iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; 401 unauthenticated intact; /rest/public/config leaks operatorId=1; IDOR only provable with 2 credentialed affiliate sessions (unchanged).
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential with PII/financial fields.
+verify_steps: HUMAN under scoped auth, test accounts: GET /rest/player/uid/{own} then /rest/player/uid/{other} cookie A then B; ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); {me,profile,info} 404; settings 401; financial endpoints POST-gated 405; header passively inert (falsified). authed route set unknown.
+evidence_needed: one casino session; authed GETs with/without x-site-name-id.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
 evidence_needed: one casino session; authed GETs with/without x-site-name-id.
 verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
 impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
@@ -36,3 +75,69 @@ impact: only HIGH if an anonymous mutation exists — contradicted by staging ev
 testability: PASSIVE
 [NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled). All passive surfaces now enumerated or falsified (GraphQL tpGames-only, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe has expected value until credentials arrive.
 [RISK] avatarux-studios: 52 — passive surface fully closed this cycle (GraphQL tpGames-only confirmed; AMQP falsified 09-14; 777.dev 8/8 gated; cpanel unclaimable). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP + LOW cluster (config/user-state/tenant-id). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+evidence_needed: one casino session; authed GETs with/without x-site-name-id.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; 401 unauthenticated intact; /rest/public/config leaks operatorId=1 (398B, sha256 cc5f885e); IDOR provable only with 2 credentialed affiliate sessions — unchanged.
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential exposing PII/financial fields.
+verify_steps: HUMAN scoped test accounts: GET /rest/player/uid/{own} then uid{other}, cookie A then B, ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); {me,profile,info} 404; settings 401; financial endpoints POST-gated 405; x-site-name-id passively inert (falsified); authed route set + tenant-binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header; diff body/ACAO/status.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+[HYP] Production GraphQL mutation-existence oracle (anonymous mutations)
+class: OTHER
+asset: roobet.com/_api/graphql
+confidence: 35
+reasoning: staging api.777.dev has 27M all under uniform global auth plugin; pre-auth mutation gap already REJECTED; field enumeration just proved prod data-surface = tpGames only.
+evidence_needed: mutation existence (NOT_AUTHENTICATED vs INTERNAL_SERVER_ERROR) for candidates like auth, login, bonusClaim — anonymous mutations would be a jump-the-boundary vector.
+verify_steps: POST {"query":"mutation{m{...}}"} classification at ≤1rps; abort if any mutation returns data instead of NOT_AUTHENTICATED.
+impact: only HIGH if an anonymous mutation exists — contradicted by staging evidence.
+testability: PASSIVE
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled). All passive surfaces now enumerated or falsified (GraphQL tpGames-only, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe has expected value until credentials arrive.
+[RISK] avatarux-studios: 52 — passive surface fully closed this cycle (GraphQL tpGames-only confirmed; AMQP falsified 09-14; 777.dev 8/8 gated; cpanel unclaimable). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP + LOW cluster (config/user-state/tenant-id). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; anonymous 401 intact (re-audited 09-13); /rest/public/config leaks operatorId=1 (398B, sha256 cc5f885e); provable only with 2 credentialed affiliate sessions — unchanged.
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential exposing PII/financial fields.
+verify_steps: HUMAN scoped test accounts: GET /rest/player/uid/{own} then uid{other}, cookie A then B, ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); settings 401; {me,profile,info} 404; financial endpoints POST-gated 405; x-site-name-id passively inert (falsified); authed route set + tenant-binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header; diff body/ACAO/status.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+[HYP] Production GraphQL mutation-existence oracle (anonymous mutations)
+class: OTHER
+asset: roobet.com/_api/graphql
+confidence: 35
+reasoning: staging api.777.dev 27M all under uniform global auth plugin; pre-auth mutation gap REJECTED; prod Anon-data census = tpGames only (re-confirmed this cycle).
+evidence_needed: mutation existence (NOT_AUTHENTICATED vs INTERNAL_SERVER_ERROR) for auth/login/bonusClaim — anonymous mutation = jump-the-boundary.
+verify_steps: POST {"query":"mutation{m{...}}"} classification ≤1rps; abort if any returns data.
+impact: HIGH only if an anonymous mutation exists — contradicted by staging evidence.
+testability: PASSIVE
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}, cookie A then B) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled stake_com|roobet_com; diff body/ACAO/status). All passive surfaces enumerated or falsified (GraphQL tpGames-only re-confirmed, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe carries expected value until credentials arrive.
+[RISK] avatarux-studios: 52 — passive surface fully closed and stable this cycle (5 probes + GraphQL oracle reconfirmed, zero drift). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B / tenant-id portals). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
