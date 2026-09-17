@@ -1,4 +1,4 @@
-## 2026-09-17 04:59:36 UTC [target] (model nemotron3)
+## 2026-09-17 09:57:13 UTC [target] (model nemotron3)
 [PRIO] rainbet-com-rabbitmq.rainbet.com:5671/5672,7.05,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=7
 [PRIO] betpandacasino.io/rest/user,6.65,attack_surface=7,business_value=9,tech_exposure=7,gate_ease=3,cloud_surface=7,freshness=6
 [PRIO] affiliates.betpanda.io/rest/player/uid,5.95,attack_surface=6,business_value=8,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=5
