@@ -4597,3 +4597,32 @@ testability: AUTH_HELPED
 [RISK] avatarux-studios: 55 — passive surface byte-stable and closed (aff config 398B cc5f885e, casino details 301B, portals template-drift-only, rmq /api/overview 401, 777.dev 8/8 gated, AMQP falsified); reportable = MED RabbitMQ mgmt-UI+AMQP exposure + LOW cluster (config/user-state/tenant-id leaks); top-value paths (BOLA 68, census 45) stalled on HUMAN credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
 ## 2026-09-17 04:59:25 UTC [target] (model bigpickle)
 ## 2026-09-17 09:55:36 UTC [target] (model bigpickle)
+## 2026-09-17 14:52:01 UTC [target] (model bigpickle)
+[HYP] Production GraphQL field/prov argument blind enumeration finds anonymous data beyond tpGames
+class: OTHER
+asset: roobet.com/_api/graphql (POST, Content-Type: application/json, Apollo-Require-Preflight: true)
+confidence: 62
+reasoning: fresh probe returned @tpGames anonymous 7,958-game catalog {id,title,slug,createdAt} with valid args (category:"slots"→6644, limit:2→2); introspection disabled but error-logic behaves as oracle: valid field ⇒ NOT_AUTHENTICATED or data, invalid field ⇒ single INTERNAL_SERVER_ERROR, invalid subfield ⇒ per-error tuple. Same codebase as staging api.777.dev (schema known rich: 29Q/27M/62-field User). Only 4 Query fields + tpGames mapped so far; unknown mutations unverified.
+evidence_needed: systematic field-dictionary probes across Query+TPGame+User sub-types (id/slug pattern mined from staging bundle + tiki21 bundle API_HOST) → any second anonymous data field or an unauthenticated mutation; full arg matrix on tpGames (brand/provider/currency/category) for cross-brand catalog differentials.
+verify_steps: POST {"query":"{__typename}"} baseline; POST {"query":"{tpGames{id}}"} re-verify 200 7958; then per candidate f POST {"query":"{f{__typename}}"} classifying VALID/NOT_AUTHENTICATED/INVALID; arg fuzz on tpGames with valid fields; any mutation candidates (e.g. mutation{auth{...}}) classification same way. No auth data requested; read-only. ≤1 rps.
+impact: anonymous schema/data reach on production money platform beyond public game catalog — LOW→HIGH depending on discoverable fields; at minimum a durable blind-schema oracle for downstream auth'd phases.
+testability: PASSIVE
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UIC iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `.../player/uid/${e.id}?currency=${e.curr}`; 401 unauthenticated intact; /rest/public/config leaks operatorId=1; IDOR only provable with 2 credentialed affiliate sessions (unchanged).
+evidence_needed: two sessions; GET uid{own} vs uid{other} → status/body differential with PII/financial fields.
+verify_steps: HUMAN under scoped auth, test accounts: GET /rest/player/uid/{own} then /rest/player/uid/{other} cookie A then B; ≤1rps; diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B user-state); {me,profile,info} 404; settings 401; financial endpoints POST-gated 405; header passively inert (falsified). authed route set unknown.
+evidence_needed: one casino session; authed GETs with/without x-site-name-id.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} ± x-site-name-id stake_com; diff body/ACAO/status.
+impact: tenant-switch or self-model census on money flow — MED unless cross-tenant then HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: continue blind schema enumeration on roobet.com/_api/graphql — POST {"query":"{tpGames{id}}"} re-verify, then field-dictionary probes `{"query":"{<candidate>{__typename}}"} `for candidates mined from staging bundle + tiki21 bundle (game*, user*, wallet*, bet*, provider*, bonus*, race*, jackpot*), plus tpGames arg matrix — classify VALID/NOT_AUTHENTICATED/INVALID to map the full anonymous surface; ≤1 rps, Content-Type: application/json + Apollo-Require-Preflight: true.

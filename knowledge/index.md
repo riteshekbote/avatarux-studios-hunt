@@ -490,3 +490,12 @@
 - 2026-09-17 REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suffix match, no regex bypass
 - 2026-09-17 ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers on Roobet CF pair, NO anonymous HTTP surface; "game-tier HTTP census gap" hypothesis falsified; passive network-tier enumeration closed
 - 2026-09-17 REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings (gamebook/promotions/api-test/api-lbc): parity falsified / CF-challenge or dead routes, zero anonymous exposure — cross-brand and staging-sibling extensions closed
+- 2026-09-17 ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671/5672: Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/* 401 Basic gated uniformly
+- 2026-09-17 ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin UUID 1ce4ff55 leaked through Cloudflare on 200-empty
+- 2026-09-17 ACCEPTED MISCONFIG @ betpandecasino.io/rest/user/details: NEW unauthenticated endpoint returning full user state model (301B JSON)
+- 2026-09-17 ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded to 96+ portals, all leaking identical tenant-id/atlassianOrgId/Statsig config
+- 2026-09-17 ACCEPTED OTHER @ roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain
+- 2026-09-17 ACCEPTED OTHER @ api.777.dev/graphql: anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+- 2026-09-17 ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+- 2026-09-17 ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers, NO anonymous HTTP surface
+- 2026-09-17 REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings: parity falsified / CF-challenge or dead routes, zero anonymous exposure
