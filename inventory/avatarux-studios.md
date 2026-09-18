@@ -928,3 +928,15 @@ www.avatarux.com
 - CHANGED 777.dev siblings (gamebook/promotions/api-test/api-lbc/storybook/testsite/x/xtest) all 403 Cloudflare challenge 5480B — staging zone zero anonymous HTTP surface beyond api.777.dev
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-18 08:24:24 UTC
+- CHANGED RainBet RabbitMQ AMQP wire protocol (5671/5672) on raw DigitalOcean origins remains completely untested for anonymous protocol-level connections; management API uniformly 401 Basic
+- CHANGED betpandacasino.io/rest/user/details confirmed stable 200 (301B JSON user-state model) — NEW unauthenticated endpoint
+- CHANGED affiliates.betpanda.io/rest/player/uid/{uid} IDOR pattern confirmed in bundle template literal, 401 unauthenticated boundary intact
+- CHANGED help.desk.avatarux.com portals 4–100 stable at ~96 portals all HTTP 200 leaking identical tenant-id/atlassianOrgId/Statsig config
+- CHANGED api.777.dev/graphql fully mapped: anonymous introspection 200, uniform auth plugin NOT_AUTHENTICATED on all Query fields
+- CHANGED roobet.com/_api CORS trust chain: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation
+- CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable, CORS controls clean, no drift
+- NEW Roobet CORS trust chain exploitation leg broken by browser cookie policy (SameSite=Lax+HttpOnly on connect.sid)
