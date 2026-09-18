@@ -942,3 +942,14 @@ www.avatarux.com
 - NEW Roobet CORS trust chain exploitation leg broken by browser cookie policy (SameSite=Lax+HttpOnly on connect.sid)
 
 ## 2026-09-18 13:11:53 UTC
+
+## 2026-09-18 17:12:18 UTC
+- NEW RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level connections; mana
+- NEW betpandacasino.io/rest/user/details confirmed stable 200 (301B JSON user-state model: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, e
+- NEW Roobet CORS trust chain exploitation leg broken by browser cookie policy — connect.sid SameSite=Lax+HttpOnly blocks cross-origin credentialed fetch/WS from *.777.dev
+- CHANGED affiliates.betpanda.io/rest/player/uid/{uid} IDOR pattern confirmed in bundle template literal (Vt.get(Yt()+"/player/uid/${e.id}?currency=${e.curr}")), 401 unauthenticated boundary intact; requires tw
+- CHANGED help.desk.avatarux.com portals 4–100 stable at ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID, Statsig config (prod
+- CHANGED api.777.dev/graphql fully mapped: anonymous introspection 200 (29Q/27M/62-field User schema), stack traces expose /opt/roobet/build/workloads/api-graphql (staging = prod codebase); uniform global auth
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; Cloudflare 1001 persists but standard z
+- CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
