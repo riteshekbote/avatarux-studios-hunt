@@ -5007,3 +5007,22 @@ impact: HIGH only if an anonymous mutation exists — contradicted by staging ev
 testability: PASSIVE
 [NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (BOLA proof: GET /rest/player/uid/{own} vs {other}, cookie A then B) + one betpandacasino.io test session (authed /rest/user/{details,settings,account-balances-and-bonuses} with x-site-name-id toggled stake_com|roobet_com; diff body/ACAO/status). All passive surfaces enumerated or falsified (GraphQL tpGames-only re-confirmed, AMQP 403, casino config/callback 404, cable bare-Express, api.777.dev auth-uniform, 777.dev 8/8 gated, cpanel unclaimable). No passive probe carries expected value until credentials arrive.
 [RISK] avatarux-studios: 52 — passive surface fully closed and stable this cycle (5 probes + GraphQL oracle reconfirmed, zero drift). Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B / tenant-id portals). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 2026-09-06 — risk is opportunity cost of unvalidated HIGHs, not live-surface drift.
+## 2026-09-18 03:14:21 UTC [target] (model bigpickle)
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `/player/uid/${e.id}?currency=${e.curr}`; anonymous 401 intact (re-audited 09-13); /rest/public/config leaks operatorId=1 (re-verified 200/398B this cycle, sha256 cc5f885e class); provable only with two credentialed affiliate sessions.
+evidence_needed: GET uid{own} vs uid{other}, cookie A then B → status/body differential exposing PII/financial fields.
+verify_steps: HUMAN scoped test accounts, ≤1rps, diff body.
+impact: cross-affiliate player/financial PII on money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant behavior
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200 (301B re-confirmed this cycle); settings 401; {me,profile,info} 404; x-site-name-id passively inert (falsified); authed route set + tenant-binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com/roobet_com; diff body/ACAO/status.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED

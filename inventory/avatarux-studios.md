@@ -915,3 +915,16 @@ www.avatarux.com
 - CHANGED 777.dev siblings (gamebook/promotions/api-test/api-lbc/storybook/testsite/x/xtest) all 403 Cloudflare challenge 5480B — staging zone zero anonymous HTTP surface beyond api.777.dev
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-18 03:14:32 UTC
+- CHANGED RainBet RabbitMQ AMQP wire protocol (5671/5672) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level connections; management API unifo
+- CHANGED betpandacasino.io/rest/user/details confirmed stable 200 (301B JSON user-state model: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, e
+- CHANGED affiliates.betpanda.io/rest/player/uid/{uid} IDOR pattern confirmed in bundle template literal (Vt.get(Yt()+"/player/uid/${e.id}?currency=${e.curr}")), 401 unauthenticated boundary intact; requires tw
+- CHANGED help.desk.avatarux.com portals 4–100 stable at ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID, Statsig config (prod
+- CHANGED api.777.dev/graphql fully mapped: anonymous introspection 200 (29Q/27M/62-field User schema), stack traces expose /opt/roobet/build/workloads/api-graphql (staging = prod codebase); uniform global auth
+- CHANGED roobet.com/_api CORS trust chain: namespace-wide *.777.dev suffix match (11/11 cert names resolve to Roobet CF pair 104.18.43.25, non-resolving www.777.dev still reflects ACAO) with ACAC:true; connect
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; Cloudflare 1001 persists but standard z
+- CHANGED roobet.com game servers (crash-gs.roobet.com, dice.roobet.com) HTTP root + /health /api /socket.io all curl timeout @12s — WS-transport-only, NO anonymous HTTP surface
+- CHANGED 777.dev siblings (gamebook/promotions/api-test/api-lbc/storybook/testsite/x/xtest) all 403 Cloudflare challenge 5480B — staging zone zero anonymous HTTP surface beyond api.777.dev
+- CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
