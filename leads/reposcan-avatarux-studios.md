@@ -334,3 +334,12 @@ reasoning: |
 impact: N/A — no source code in scope = no source-code findings possible
 verify_steps: |
 TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
+## REPOSCAN 2026-09-18 20:17:19 UTC
+[HYP] No Public GitHub Repositories Available for Source-Code Audit
+class: OTHER
+asset: github.com (avatarux-games-clients, avatarux-com, avatarux)
+confidence: 100
+reasoning: |
+impact: INFO — org keeps repos private; no source-code attack surface on GitHub
+verify_steps: |
+TARGET_ORG not configured for avatarux-studios; skipping public-org deep scan.
