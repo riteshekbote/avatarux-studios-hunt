@@ -940,3 +940,5 @@ www.avatarux.com
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable, CORS controls clean, no drift
 - NEW Roobet CORS trust chain exploitation leg broken by browser cookie policy (SameSite=Lax+HttpOnly on connect.sid)
+
+## 2026-09-18 13:11:53 UTC
