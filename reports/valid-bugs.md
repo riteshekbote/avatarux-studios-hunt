@@ -46,3 +46,11 @@
   - | **Q3 Real impact?** | MEDIUM — potential account enumeration; if timing differential exists, can identify valid accounts |
   - | **Q7 Reasonable triager accept?** | **HOLD** — Legacy mail config with cleartext password field is real, BUT mail host is a WordPress redirect (not functional mail server). Impact depends on whether
   - **Verdict: HOLD** — Real credential disclosure in autoconfig XML, but mail host is decommissioned (301→WordPress). Needs investigation: are the credentials still valid? Is there a secondary mail host 
+
+- 6 lead(s) marked VALID at 2026-09-18 23:25:03 UTC
+  - **Verdict: VALID**
+  - | Q4 Provable | Endpoint map confirmed from JS bundle (`/rest/player/uid/{id}?currency={curr}`); but IDOR requires authenticated session to prove — **cannot demonstrate without valid affiliate creds**
+  - | Q7 Reasonable triager | Credible finding IF cross-tenant access proven with valid creds | **YES (conditional)** |
+  - | Q4 Provable | All financial endpoints (`/rest/user/account-balances-and-bonuses`, `/rest/user/authenticate`, etc.) return **405 on GET**; OPTIONS leaks header schema but no data; POST requires valid
+  - | Q3 Impact | Cleartext credentials for mail.avatarux.com:993/465 | **YES (if credentials valid)** |
+  - | 1 | cpanel.avatarux.com dangling DNS / subdomain takeover | **VALID** | CRITICAL (9.0) |
