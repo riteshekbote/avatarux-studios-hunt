@@ -516,3 +516,6 @@
 - 2026-09-18 REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suffix match
 - 2026-09-18 ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers, NO anonymous HTTP surface
 - 2026-09-18 REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings: parity falsified / CF-challenge or dead routes, zero anonymous exposure
+- 2026-09-18 ACCEPTED OTHER @ blog.betpandacasino.io: full anonymous WP author set = exactly 2 published accounts (per_page=100 confirmed); hidden author slots uid3/uid4 401 (exists, not public) vs uid5 404 — enumeration oracle only, no name/data leak.
+- 2026-09-18 REJECTED MISCONFIG @ blog.betpandacasino.io: author-id slot oracle (401-vs-404 existence) — REJECTED username-enumeration class, non-reportable.
+- 2026-09-18 ACCEPTED OTHER @ avatarux-studios live surface: 7 read-only probes re-verified byte-stable (aff config cc5f885e 398B; casino details 4254af73 301B; help.desk portal/4 200 template-drift-only; cpanel 000; roobet CORS www.777.dev-only ACAO + ACAC:true; rmq :15671 401 + :5671 OPEN) — passive surface converged, controls clean, zero drift.
