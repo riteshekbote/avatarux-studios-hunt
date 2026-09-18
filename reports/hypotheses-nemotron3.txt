@@ -1,13 +1,14 @@
-## 2026-09-18 19:44:30 UTC [target] (model nemotron3)
-[NEW] RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level connections; management API uniformly 401 Basic
-[NEW] betpandacasino.io/rest/user/details confirmed stable 200 (301B JSON user-state model: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified) — NEW unauthenticated endpoint discovered 2026-09-10
-[NEW] Roobet CORS trust chain exploitation leg broken by browser cookie policy — connect.sid SameSite=Lax+HttpOnly blocks cross-origin credentialed fetch/WS from *.777.dev
-[CHANGED] affiliates.betpanda.io/rest/player/uid/{uid} IDOR pattern confirmed in bundle template literal (Vt.get(Yt()+"/player/uid/${e.id}?currency=${e.curr}")), 401 unauthenticated boundary intact; requires two credentialed sessions
-[CHANGED] help.desk.avatarux.com portals 4–100 stable at ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspace ID, Statsig config (prod-euwest, shard jira-prod-eu-3)
-[CHANGED] api.777.dev/graphql fully mapped: anonymous introspection 200 (29Q/27M/62-field User schema), stack traces expose /opt/roobet/build/workloads/api-graphql (staging = prod codebase); uniform global auth plugin NOT_AUTHENTICATED on all Query fields
-[CHANGED] cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; Cloudflare 1001 persists but standard zone claim impossible
-[CHANGED] betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
-[CHANGED] avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no drift
+## 2026-09-18 22:18:23 UTC [target] (model nemotron3)
+[NEW] blog.betpandacasino.io/wp-json/wp/v2/users: 2 published authors (per_page=100), hidden slots uid3/uid4→401, uid5→404 — content-existence oracle only, no name/data leak (REJECTED username-enumeration class)
+[CHANGED] RainBet RabbitMQ AMQP 5671/5672 on raw DO origins: remains completely untested for anonymous protocol-level connections; management API uniformly 401 Basic
+[CHANGED] betpandacasino.io/rest/user/details: stable 200 (301B JSON user-state model: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified)
+[CHANGED] roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
+[CHANGED] affiliates.betpanda.io/rest/player/uid/{uid}: IDOR pattern confirmed in bundle template literal, 401 unauthenticated boundary intact; requires two credentialed sessions
+[CHANGED] help.desk.avatarux.com portals 4–100: stable ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id/atlassianOrgId/workspaceId/Statsig config
+[CHANGED] api.777.dev/graphql: anonymous introspection 200 mapped (29Q/27M/62-field User schema), uniform global auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+[CHANGED] cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring-only
+[CHANGED] betpandacasino.io passive gaps: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+[CHANGED] avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable, CORS controls clean, no drift
 [PRIO] rainbet-com-rabbitmq.rainbet.com:5671/5672,7.20,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=5,cloud_surface=8,freshness=7
 [PRIO] betpandacasino.io/rest/user/details,6.80,attack_surface=7,business_value=9,tech_exposure=7,gate_ease=10,cloud_surface=7,freshness=6
 [PRIO] help.desk.avatarux.com/servicedesk/customer/portal,6.85,attack_surface=8,business_value=6,tech_exposure=5,gate_ease=10,cloud_surface=6,freshness=5
@@ -47,6 +48,9 @@ testability: AUTH_HELPED
 [FINAL] 2. BetPanda Casino Authenticated /rest/user/* Endpoint Census and Cross-Tenant Header Injection (70) — HIGH, AUTH_HELPED
 [FINAL] 3. Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} Cross-UID Iteration (68) — HIGH, AUTH_HELPED
 [NEXT] PROBE: openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -quiet < /dev/null 2>&1 | head -20 && nc -vz rainbet-com-rabbitmq.rainbet.com 5672 2>&1 && python3 -c "import pika; c=pika.BlockingConnection(pika.ConnectionParameters('rainbet-com-rabbitmq.rainbet.com',5672,credentials=pika.PlainCredentials('guest','guest'))); ch=c.channel(); print(ch.queue_declare('',exclusive=True)); print(ch.queue_bind(queue='',exchange='amq.topic',routing_key='#'))" 2>&1 | head -30
+[LEARN] ACCEPTED OTHER @ blog.betpandacasino.io: full anonymous WP author set = exactly 2 published accounts (per_page=100 confirmed); hidden author slots uid3/uid4 401 (exists, not public) vs uid5 404 — enumeration oracle only, no name/data leak.
+[LEARN] REJECTED MISCONFIG @ blog.betpandacasino.io: author-id slot oracle (401-vs-404 existence) — REJECTED username-enumeration class, non-reportable.
+[LEARN] ACCEPTED OTHER @ avatarux-studios live surface: 7 read-only probes re-verified byte-stable (aff config cc5f885e 398B; casino details 4254af73 301B; help.desk portal/4 200; cpanel 000; roobet CORS www.777.dev-only ACAO + ACAC:true; rmq :15671 401 + :5671 OPEN) — passive surface converged, controls clean, zero drift.
 [LEARN] ACCEPTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671/5672: Management UI (15671/15672) + AMQP (5671/5672) public on raw DigitalOcean origins, no CF/ACL; /api/* 401 Basic gated uniformly
 [LEARN] ACCEPTED OTHER @ staging-api.rainbet.com: x-do-app-origin UUID 1ce4ff55 leaked through Cloudflare on 200-empty
 [LEARN] ACCEPTED MISCONFIG @ betpandecasino.io/rest/user/details: NEW unauthenticated endpoint returning full user state model (301B JSON)

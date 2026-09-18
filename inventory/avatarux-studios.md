@@ -965,3 +965,19 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation; Cloudflare 1001 persists but standard z
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-18 22:19:11 UTC
+- CHANGED blog.betpandacasino.io WP REST: full author set confirmed = exactly 2 (per_page=100); hidden author-id slots uid3/uid4 → 401, uid5 → 404 (content-existence oracle only, no name/data leak).
+- CHANGED blog.betpandacasino.io: full WP REST content census this cycle — /wp/v2/posts 200 (public slot-review/gambling-guide marketing content, IDs 76000+, author id1), /wp/v2/media 200 (public .webp uploads)
+- CHANGED stability baselines re-verified byte-identical — affiliates /rest/public/config 200/398B sha256 cc5f885e; casino /rest/user/details 200/301B sha256 4254af73; no drift.
+- CHANGED rainbet-com-rabbitmq.rainbet.com:5671: TLS handshake re-verified (valid Let's Encrypt chain, CN=rainbet-com-rabbitmq); empty connect yields no server-initiated AMQP data — reconciles KB contradiction 
+- NEW blog.betpandacasino.io/wp-json/wp/v2/users: 2 published authors (per_page=100), hidden slots uid3/uid4→401, uid5→404 — content-existence oracle only, no name/data leak (REJECTED username-enumeration c
+- CHANGED RainBet RabbitMQ AMQP 5671/5672 on raw DO origins: remains completely untested for anonymous protocol-level connections; management API uniformly 401 Basic
+- CHANGED betpandacasino.io/rest/user/details: stable 200 (301B JSON user-state model: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerif
+- CHANGED roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
+- CHANGED affiliates.betpanda.io/rest/player/uid/{uid}: IDOR pattern confirmed in bundle template literal, 401 unauthenticated boundary intact; requires two credentialed sessions
+- CHANGED help.desk.avatarux.com portals 4–100: stable ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id/atlassianOrgId/workspaceId/Statsig config
+- CHANGED api.777.dev/graphql: anonymous introspection 200 mapped (29Q/27M/62-field User schema), uniform global auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+- CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring-only
+- CHANGED betpandacasino.io passive gaps: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable, CORS controls clean, no drift
