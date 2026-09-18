@@ -41,3 +41,8 @@
 
 - 1 lead(s) marked VALID at 2026-09-17 01:14:59 UTC
   - | Q4 Provable non-invasively? | No — requires valid affiliate session to test. 401 confirmed; no unauthorized data access demonstrated. |
+
+- 3 lead(s) marked VALID at 2026-09-18 15:13:03 UTC
+  - | **Q3 Real impact?** | MEDIUM — potential account enumeration; if timing differential exists, can identify valid accounts |
+  - | **Q7 Reasonable triager accept?** | **HOLD** — Legacy mail config with cleartext password field is real, BUT mail host is a WordPress redirect (not functional mail server). Impact depends on whether
+  - **Verdict: HOLD** — Real credential disclosure in autoconfig XML, but mail host is decommissioned (301→WordPress). Needs investigation: are the credentials still valid? Is there a secondary mail host 
