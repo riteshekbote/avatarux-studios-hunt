@@ -54,3 +54,11 @@
   - | Q4 Provable | All financial endpoints (`/rest/user/account-balances-and-bonuses`, `/rest/user/authenticate`, etc.) return **405 on GET**; OPTIONS leaks header schema but no data; POST requires valid
   - | Q3 Impact | Cleartext credentials for mail.avatarux.com:993/465 | **YES (if credentials valid)** |
   - | 1 | cpanel.avatarux.com dangling DNS / subdomain takeover | **VALID** | CRITICAL (9.0) |
+
+- 6 lead(s) marked VALID at 2026-09-19 20:26:15 UTC
+  - **Verdict: VALID**
+  - | Q2 Reachable | NO — endpoint returns 401 unauthenticated; requires valid session |
+  - | Q3 Impact | YES — `/autoconfig/v1.1/` returns valid XML exposing `mail.avatarux.com:993` (IMAP/SSL) and `mail.avatarux.com:465` (SMTP/SSL) with password-cleartext auth |
+  - **Verdict: VALID**
+  - | affiliates.betpanda.io `/rest/public/config` | **VALID** | MEDIUM |
+  - | autoconfig.avatarux.com Autoconfig XML | **VALID** | MEDIUM |
