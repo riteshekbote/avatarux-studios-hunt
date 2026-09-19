@@ -981,3 +981,14 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring-only
 - CHANGED betpandacasino.io passive gaps: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable, CORS controls clean, no drift
+
+## 2026-09-19 00:26:41 UTC
+- NEW betpandacasino.io/rest/user/details: stable 200 (301B JSON user-state model: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerif
+- NEW RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level connections; mana
+- CHANGED help.desk.avatarux.com portals 4–100 stable at ~96 portals all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspaceId, Statsig config (prod-
+- CHANGED affiliates.betpanda.io/rest/public/config byte-identical 200 (398B, sha256 cc5f885e) — operatorId=1, supportEmail=deals@bamboopartners.io, strapiApiUrl=/cms, contentfulAccessToken empty
+- CHANGED roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
+- CHANGED api.777.dev/graphql fully mapped: anonymous introspection 200 (29Q/27M/62-field User schema), uniform global auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation
+- CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable, CORS controls clean, no drift
