@@ -1032,3 +1032,5 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring-only
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-19 19:15:25 UTC

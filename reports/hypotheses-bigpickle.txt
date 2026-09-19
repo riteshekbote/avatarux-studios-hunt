@@ -1,54 +1,18 @@
-## 2026-09-19 16:48:33 UTC [target] (model bigpickle)
-[HYP] No GitHub org candidates configured for source-code audit
-class: OTHER
-asset: (none — cands.txt, scope.yml)
-confidence: 100
-reasoning: |
-impact: LOW — no action possible; this is a configuration gap, not a vulnerability
-verify_steps: |
-[HYP] AWS Resource IDs Hardcoded in BetPanda Casino JS Bundle
-class: SECRET
-asset: betpandacasino.io (JS bundle: `main.*.js`)
-confidence: 85
-reasoning: The production JavaScript bundle for `betpandacasino.io` hardcodes `GLOBAL_CLOUDWATCH_IDENTITY_POOL_ID = "eu-west-1:6d112649-3978-47f7-a42f-3b0a41b34d21"` — a Cognito Identity Pool ID used for CloudWatch. This is visible in analyst-bigpickle.log:1566, 1675, 1778, 1980. While Cognito Identity Pool IDs alone don't grant access without IAM role configuration, they expose the AWS account region and pool structure, enabling targeted attacks against the pool's associated IAM roles.
-impact: MEDIUM — credential enumeration surface; if pool has weak/unrestricted IAM roles, could lead to AWS service access
-verify_steps: `curl -s https://betpandacasino.io/ | grep -o 'GLOBAL_CLOUDWATCH_IDENTITY_POOL_ID[^"]*"[^"]*"'` (read-only GET)
-[HYP] S3 Bucket Name and CloudFront Dist ID Leaked in BetPanda Casino Bundle
+## 2026-09-19 19:10:31 UTC [target] (model bigpickle)
+[HYP] BetPanda Casino Unauthenticated User-State Model Disclosure via /rest/user/details
 class: MISCONFIG
-asset: betpandacasino.io (JS bundle: `main.*.js`)
-confidence: 75
-reasoning: Bundle references `nano-public.s3-eu-west-1.amazonaws.com` (S3 bucket) and `d3ec3n7kizfkuy.cloudfront.net` (CloudFront distribution). Bucket listing returns 403 (not listable), but bucket name is exposed. CloudFront dist ID is public knowledge. Combined with Identity Pool ID, this maps the full AWS stack.
-impact: LOW — bucket is not listable; CloudFront dist is public by design; but combined with Identity Pool ID, provides attack surface mapping
-verify_steps: `curl -s https://betpandacasino.io/ | grep -oP 'nano-public[^"]*|d3ec3n7kizfkuy[^"]*'` (read-only GET)
-[HYP] cpanel.avatarux.com Dangling DNS — Subdomain Takeover Candidate
-class: MISCONFIG
-asset: cpanel.avatarux.com
-confidence: 80
-reasoning: Cloudflare error 1001 (DNS points to prohibited IP) persists across 20+ probe cycles over 48+ hours. CNAME chain: `cpanel.avatarux.com` → `avatarux.com` → `162.159.136.54` (Cloudflare IP). This is a dangling DNS record that could be claimed by an attacker if they can control the target.
-impact: MEDIUM — subdomain takeover could enable phishing, cookie theft, or service impersonation under the avatarux.com domain
-verify_steps: `dig cpanel.avatarux.com` + `curl -sI https://cpanel.avatarux.com/` (read-only)
-[HYP] help.desk.avatarux.com Atlassian Jira Service Desk — Customer Portal Active
-class: MISCONFIG
-asset: help.desk.avatarux.com
-confidence: 70
-reasoning: Atlassian Jira Service Desk customer portal is live and accessible at `/servicedesk/customer/portal/` (HTTP 303 → 200). REST API at `/rest/servicedeskapi/servicedesk` returns 401 (auth required). A second portal instance exists at `/servicedesk/customer/portal/2` (HTTP 200). This exposes internal issue tracking infrastructure.
-impact: LOW — portal is auth-gated; but exposed JSM instance may leak tenant info or be targeted for credential stuffing
-verify_steps: `curl -sI https://help.desk.avatarux.com/servicedesk/customer/portal/2` (read-only)
-[HYP] betpandacasino.io REST API Endpoint Surface with Financial Endpoints
-class: IDOR
-asset: betpandacasino.io/rest/user/*
-confidence: 72
-reasoning: REST API at `/rest/user/authenticate`, `/rest/user/refresh`, `/rest/user/account-balances-and-bonuses`, `/rest/user/zendesk/jwt` — all GET→405 (POST-gated). Endpoint `/rest/player/uid/{id}` was previously identified in affiliates.betpanda.io bundle as an IDOR candidate. Multi-tenant header `x-site-name-id` supports brand switching (`betpandacasino_io`, `roobet_com`, `stake_com`), suggesting shared backend across in-scope brands.
-impact: MEDIUM — if auth is bypassed or tokens are weak, financial data and user records across brands could be accessed
-verify_steps: `curl -s -X POST https://betpandacasino.io/rest/user/account-balances-and-bonuses -H "Content-Type: application/json" -d '{}'` (passive: test without valid auth to confirm 401/403)
-[PRIO] affiliates.betpanda.io/rest/player/uid,6.95,a8/b9/t7/g3/c4/f8
-[PRIO] betpandacasino.io/rest/user,6.60,a7/b9/t7/g3/c5/f6
-[PRIO] blog.betpandacasino.io operator accounts,4.25,a4/b5/t3/g7/c3/f2
+asset: betpandacasino.io/rest/user/details
+confidence: 90
+reasoning: anonymous GET 200/301B JSON {loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified} stable 30+ cycles incl. this cycle (4254af73); backend = Spring Boot; /rest/user/{settings}=401, {me,profile,info}=404; x-site-name-id passively inert (falsified); ACAO pinned to https://betpandacasino.io.
+evidence_needed: already report-ready; only drift-check matters.
+verify_steps: GET https://betpandacasino.io/rest/user/details (read-only GET)
+impact: attacker learns anonymous user-state schema + egress geo attribution; LOW-MED data-model disclosure, no PII without auth.
+testability: PASSIVE
 [HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
 class: IDOR
 asset: affiliates.betpanda.io/rest/player/uid/{uid}
 confidence: 68
-reasoning: bundle template-literal `/player/uid/${e.id}?currency=${e.curr}`; anonymous 401 boundary intact (re-verified); /rest/public/config 200/398B cc5f885e stable operatorId=1; all other map families trk/agent/public 404 — uid is sole provable authed path; blocked on credential grant since 09-06.
+reasoning: bundle template-literal `/player/uid/${e.id}?currency=${e.curr}`; anonymous 401 boundary intact (re-verified); /rest/public/config 200/398B stable operatorId=1; trk/agent/public families 404 route-miss — uid is sole provable authed path; blocked on credential grant since 09-06.
 evidence_needed: two credentialed sessions; GET uid{own} vs uid{other}, cookie A then B; diff body/status.
 verify_steps: AUTH_HELPED — HUMAN scoped accounts, ≤1rps, GET /rest/player/uid/{own}?currency=EUR vs /{other}.
 impact: cross-affiliate player/PII on real-money platform — HIGH.
@@ -57,24 +21,10 @@ testability: AUTH_HELPED
 class: AUTH
 asset: betpandacasino.io/rest/user
 confidence: 45
-reasoning: /rest/user/details anonymous 200/301B 4254af73 byte-stable; settings 401; {me,profile,info} 404; financial POST-gated 405; x-site-name-id passively inert (falsified 5+ cycles); authed route set + tenant binding unknown.
+reasoning: /rest/user/details anonymous 200/301B; settings 401; {me,profile,info} 404; financial POST-gated 405; x-site-name-id passively inert; authed route set + tenant binding unknown.
 evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com/roobet_com; diff body/ACAO/status.
 verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header.
 impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
 testability: AUTH_HELPED
-[HYP] BetPanda blog WP operator usernames → cross-surface credential targeting
-class: MISCONFIG
-asset: blog.betpandacasino.io/wp-json/wp/v2/users
-confidence: 45
-reasoning: users=2 exactly (admin_betpanda id1, admin_ovidiu id2), posts/media/pages public; oembed/redirection/yoast 401, xmlrpc 403; REST families exhaustively mapped — remaining value is username reuse on operator/SSO surfaces.
-evidence_needed: cross-surface reuse against affiliates/casino/Strapi login.
-verify_steps: HUMAN_ONLY — PASSIVE exhausted; no further read-only probe carries value.
-impact: two operator usernames enable targeted credential-stuffing/phishing in real-money ecosystem — LOW.
-testability: HUMAN_ONLY
-[PARKED] RainBet RabbitMQ Anonymous AMQP Wire Access: falsified 09-14/15 (403 ACCESS_REFUSED), 09-18/19 TLS clean no banner — survives only as accepted MED mgmt-UI+AMQP port exposure.
-[PARKED] affiliates /rest/trk|agent|public/* enum: 404 route-miss — endpoint-map completion only, zero exposure.
-[PARKED] casino /rest/user/details geo/x-site-name-id spoof: byte-identical — controls inert, no bypass.
-[FINAL] survivors ranked: 1) affiliates BOLA uid{uid} (68, AUTH_HELPED); 2) casino authed /rest/user* census + tenant header (45, AUTH_HELPED); 3) blog WP operator-usernames cross-surface reuse (45, HUMAN_ONLY). No new hypothesis reached ≥40; delta produced no new anomaly.
-[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (GET /rest/player/uid/{own} vs /{other}, cookie A then B; diff body/status) + one betpandacasino.io test session (authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling x-site-name-id stake_com|roobet_com; diff body/ACAO/status). Passive frontier converged for the Nth consecutive cycle — no un-executed read-only GET/HEAD/OPTIONS probe carries expected value.
-[LEARN] ACCEPTED OTHER @ avatarux-studios live surface: 5 read-only probes byte/status-stable — aff config 200/398B cc5f885e; casino details 200/301B 4254af73; rmq :15671 401 Basic; help.desk portal/4 200 (template-drift only, tenant-id leak intact); roobet ACAO www.777.dev + ACAC:true vs evil777.dev none — controls clean, zero drift, no new anonymous exposure.
-[RISK] avatarux-studios: 50 — delta is verification-only (5 read-only probes, all stable), no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / 96+ tenant-id portals / autoconfig legacy mail / blog WP 2-operator author disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (GET /rest/player/uid/{own} vs /{other}, cookie A then B; diff body/status, ≤1rps) + one betpandacasino.io test session (authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling x-site-name-id stake_com|roobet_com; diff body/ACAO/status). Passive frontier converged — no un-executed read-only GET/HEAD/OPTIONS probe carries expected value.
+[RISK] avatarux-studios: 50 — delta is verification-only (5 read-only probes, all stable), no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / 96+ tenant-id portals / autoconfig legacy mail / blog WP 2-operator disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.

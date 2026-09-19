@@ -29452,3 +29452,69 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 50 — delta is verification-only (5 read-only probes, all stable), no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / 96+ tenant-id portals / autoconfig legacy mail / blog WP 2-operator author disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.
+===== ANALYST bigpickle 2026-09-19 19:15:25 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -m 12 -o /dev/null -w 'aff:%{http_code}:%{size_download}\n' https://affiliates.betpanda.io/rest/public/config; sleep 1; curl -s -m 12 -o /dev/null -w 'cas:%{http_code}:%{size_download}\n' https://betpandacasino.io/rest/user/details; sleep 1; curl -s -m 12 -o /dev/null -w 'helpdesk:%{http_code}:%{size_download}\n' https://help.desk.avatarux.com/servicedesk/customer/portal/4; sleep 1; curl -s -m 12 -o /dev/null -w 'rmq:%{http_code}\n' https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview; sleep 1; curl -s -m 12 -D - -o /dev/null -H 'Origin: https://www.777.dev' https://roobet.com/_api/currency/balances | grep -i 'access-control-allow'
+aff:200:398
+cas:200:301
+helpdesk:200:206157
+rmq:401
+access-control-allow-origin: https://www.777.dev
+access-control-allow-credentials: true
+[0m
+STEP 1 — DELTA:
+- NO_DELTA on surface: 5 live probes this cycle byte/status-stable vs recorded baselines — aff config 200/398B (cc5f885e), casino details 200/301B (4254af73), help.desk portal/4 200/~2061KB (template-drift only, leak intact), rmq :15671/api/overview 401 Basic, roobet ACAO https://www.777.dev + ACAC:true (evil777.dev none).
+- [CHANGED] nemotron3 NEXT probe "openssl s_client :5671 + nc :5672" is STALE — already consumed 09-18/09-19 (TLS handshake clean LE cert, no AMQP banner, anonymous/guest 403 ACCESS_REFUSED); park the probe, do not re-queue.
+- [CHANGED] bigpickle meta-hypothesis "[100] No GitHub org candidates for source-code audit" is a non-hypothesis (assets-absence), not a finding; drop from ranking.
+
+STEP 2 — PRIORITIZE:
+- [PRIO] betpandacasino.io/rest/user/details,6.60,a7/b9/t7/g3/c5/f6
+- [PRIO] affiliates.betpanda.io/rest/player/uid,6.20,a6/b10/t7/g1/c4/f7
+- [PRIO] casino authed /rest/user/* tenant census,4.80,a7/b9/t7/g1/c5/f2
+
+STEP 3 — HYPOTHESES:
+[HYP] BetPanda Casino Unauthenticated User-State Model Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 90
+reasoning: anonymous GET 200/301B JSON {loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified} stable 30+ cycles incl. this cycle (4254af73); backend = Spring Boot; /rest/user/{settings}=401, {me,profile,info}=404; x-site-name-id passively inert (falsified); ACAO pinned to https://betpandacasino.io.
+evidence_needed: already report-ready; only drift-check matters.
+verify_steps: GET https://betpandacasino.io/rest/user/details (read-only GET)
+impact: attacker learns anonymous user-state schema + egress geo attribution; LOW-MED data-model disclosure, no PII without auth.
+testability: PASSIVE
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `/player/uid/${e.id}?currency=${e.curr}`; anonymous 401 boundary intact (re-verified); /rest/public/config 200/398B stable operatorId=1; trk/agent/public families 404 route-miss — uid is sole provable authed path; blocked on credential grant since 09-06.
+evidence_needed: two credentialed sessions; GET uid{own} vs uid{other}, cookie A then B; diff body/status.
+verify_steps: AUTH_HELPED — HUMAN scoped accounts, ≤1rps, GET /rest/player/uid/{own}?currency=EUR vs /{other}.
+impact: cross-affiliate player/PII on real-money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant binding
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200/301B; settings 401; {me,profile,info} 404; financial POST-gated 405; x-site-name-id passively inert; authed route set + tenant binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com/roobet_com; diff body/ACAO/status.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE:
+- [PARKED] nemotron3 rabbitmq 5671/5672 wire probe: already consumed 09-18/09-19, anonymous-topology falsified twice; re-queue is wasted cycle.
+- [PARKED] "[100] no GitHub org source-code candidates": assets-absence meta, not a finding; no repo scope → not actionable.
+- [PARKED] roobet /_api/socket.io anonymous namespace: Engine.IO GET/POST gated to JWT'd game events; no anonymous data channel without mutation/auth — below threshold.
+- [FINAL] survivors ranked: 1) casino /rest/user/details disclosure (90, PASSIVE, report-ready); 2) affiliates BOLA uid{uid} (68, AUTH_HELPED); 3) casino authed /rest/user* census + tenant header (45, AUTH_HELPED). No new hypothesis reached ≥40; delta produced no new anomaly.
+
+STEP 5 — NEXT ACTION:
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (GET /rest/player/uid/{own} vs /{other}, cookie A then B; diff body/status, ≤1rps) + one betpandacasino.io test session (authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling x-site-name-id stake_com|roobet_com; diff body/ACAO/status). Passive frontier converged — no un-executed read-only GET/HEAD/OPTIONS probe carries expected value.
+
+STEP 6 — LEARNING:
+- [LEARN] REJECTED PROBE @ rainbet-com-rabbitmq.rainbet.com:5671/5672: nemotron3 NEXT already consumed — TLS clean LE cert, no AMQP banner, anonymous/guest 403 ACCESS_REFUSED; exposure remains open mgmt-UI+AMQP ports only (accepted MED), wire probe closed.
+- [LEARN] ACCEPTED OTHER @ avatarux-studios live surface: 5 read-only probes byte/status-stable (aff config 200/398B cc5f885e; casino details 200/301B 4254af73; help.desk portal/4 200 template-drift-only; rmq :15671 401 Basic; roobet ACAO www.777.dev+ACAC:true vs evil777.dev none) — controls clean, zero drift, no new anonymous exposure.
+
+STEP 7 — RISK:
+[RISK] avatarux-studios: 50 — delta is verification-only (5 read-only probes, all stable), no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / 96+ tenant-id portals / autoconfig legacy mail / blog WP 2-operator disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.

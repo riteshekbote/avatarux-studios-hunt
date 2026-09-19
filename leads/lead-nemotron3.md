@@ -6764,3 +6764,59 @@ testability: PASSIVE
 [LEARN] ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers, NO anonymous HTTP surface
 [LEARN] REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings: parity falsified / CF-challenge or dead routes, zero anonymous exposure
 [RISK] avatarux-studios: 72 — Top exploitable paths: RainBet RabbitMQ AMQP wire protocol anonymous access (70, PASSIVE, HIGH) — raw DigitalOcean origins, management API 401 but wire protocol untested; BetPanda Casino unauthenticated /rest/user/details user state model leak (90, PASSIVE, MEDIUM) — full model aids credentialed recon, Spring Boot stack confirmed; Help.desk.avatarux.com portal enumeration at scale (85, PASSIVE, MEDIUM) — 96+ portals leaking tenant/org/workspace IDs + Statsig config; Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} (68, AUTH_HELPED, HIGH) — IDOR pattern confirmed, requires two credentialed sessions; BetPanda Casino cross-tenant header injection (70, AUTH_HELPED, HIGH)
+## 2026-09-19 19:15:14 UTC [target] (model nemotron3)
+[PRIO] rainbet-com-rabbitmq.rainbet.com:5671/5672,8.15,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=10,cloud_surface=9,freshness=4
+[PRIO] betpandacasino.io/rest/user/details,7.90,attack_surface=7,business_value=8,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=3
+[PRIO] help.desk.avatarux.com/servicedesk/customer/portal/{4..100},7.35,attack_surface=8,business_value=6,tech_exposure=7,gate_ease=10,cloud_surface=6,freshness=5
+[PRIO] api.777.dev/graphql,7.10,attack_surface=8,business_value=7,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=2
+[PRIO] affiliates.betpanda.io/rest/player/uid/{uid},6.80,attack_surface=6,business_value=8,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=5
+[HYP] RainBet RabbitMQ Anonymous AMQP 0-9-1 Wire Protocol Access on Raw DigitalOcean Origins
+class: MISCONFIG
+asset: rainbet-com-rabbitmq.rainbet.com:5671, rainbet-us-staging-rabbitmq.rainbet.com:5671
+confidence: 75
+reasoning: Two live RabbitMQ brokers on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) with AMQP 0-9-1 TLS (5671) publicly exposed, no Cloudflare/ACL. Management API uniformly 401 Basic across all /api/* endpoints — HTTP topology disclosure FULLY FALSIFIED. AMQP wire protocol (5671) completely untested for anonymous protocol-level connections. Default guest:guest credentials commonly enabled on RabbitMQ; protocol-level access would allow queue/exchange enumeration, message consumption, and potential message injection into RainBet messaging backbone.
+evidence_needed: Successful AMQP 0-9-1 handshake on :5671 (TLS) with anonymous/guest credentials; channel.open + queue.declare + basic.consume demonstrating topology access and message read capability
+verify_steps: PROBE: openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -quiet < /dev/null 2>&1 | head -20; python3 -c "import pika; c=pika.BlockingConnection(pika.ConnectionParameters('rainbet-com-rabbitmq.rainbet.com',5671,credentials=pika.PlainCredentials('guest','guest'),ssl_options=pika.SSLOptions(pika.ssl.create_default_context()))); ch=c.channel(); print(ch.queue_declare('',exclusive=True)); print(ch.queue_bind(queue='',exchange='amq.topic',routing_key='#'))" 2>&1 | head -30
+impact: Anonymous access to RainBet messaging backbone (queue enumeration, message consumption, potential injection), credentialed AMQP access with default guest:guest, internal service communication interception — HIGH
+testability: PASSIVE
+[HYP] BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details
+class: MISCONFIG
+asset: betpandacasino.io/rest/user/details
+confidence: 92
+reasoning: Endpoint returns HTTP 200 with full user state JSON (301B) including loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified without any authentication. Spring Boot backend confirmed via JSON error format. OPTIONS on sibling endpoints leaks x-site-name-id header schema. No auth boundary on this endpoint. Stable across 30+ probe cycles, byte-identical response (sha256 4254af73).
+evidence_needed: Confirm endpoint accessible from different geographic egress points (country field changes); verify no rate limiting; test if authenticated session returns PII (email, balance) vs anonymous model
+verify_steps: GET https://betpandacasino.io/rest/user/details (from 3+ vantage points); GET https://betpandacasino.io/rest/user/details -H "X-Forwarded-For: <geo-ip>"; POST https://betpandacasino.io/rest/user/authenticate -H "Cookie: <valid-session>" -d '{}' (AUTH_HELPED) to compare response
+impact: Full user state model disclosure aids reconnaissance for credentialed attacks; country/kyc/level fields enable targeted social engineering; Spring Boot stack confirmed for further endpoint enumeration — MEDIUM
+testability: PASSIVE
+[HYP] Help.desk.avatarux.com Atlassian JSM Portal Enumeration at Scale — Tenant/Org/Workspace ID + Statsig Config Leak
+class: MISCONFIG
+asset: help.desk.avatarux.com/servicedesk/customer/portal/{4..100}
+confidence: 88
+reasoning: 96+ portals (4-100) all return HTTP 200 (~209KB) leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId (ead67a75-...), workspace ID (d4da630a-...), Statsig config (env=prod-euwest, shard=jira-prod-eu-3) in page source. Portals 1-3 return 303. Surface expanded from previously documented 7 portals. All portals byte-normalized (209005-209007B). Atlassian Edge fronting confirmed.
+evidence_needed: Confirm portal count upper bound (test 101-200); extract all unique tenant/org/workspace IDs across portals; verify Statsig config consistency; check for portal-specific data leakage
+verify_steps: for i in {4..200}; do curl -s "https://help.desk.avatarux.com/servicedesk/customer/portal/$i" | grep -E "tenant-id|atlassianOrgId|workspace|Statsig" | head -5; done; curl -s "https://help.desk.avatarux.com/servicedesk/customer/portal/4" | sha256sum
+impact: Internal Atlassian identifiers exposed at scale; Statsig feature flag configuration disclosure; tenant/org/workspace IDs enable targeted social engineering and API enumeration against Atlassian Cloud — MEDIUM
+testability: PASSIVE
+[PARKED] Affiliates.betpanda.io BOLA on /rest/player/uid/{uid}: IDOR pattern confirmed in bundle template literal, 401 unauthenticated boundary intact. Requires TWO credentialed affiliate sessions (AUTH_HELPED x2) — high barrier. Confidence 68 justified but blocked.
+[PARKED] BetPanda Casino Cross-Tenant Header Injection via x-site-name-id: Passive tests on /rest/user/details and /rest/properties/manifest show body/ACAO/echo unchanged with stake_com/roobet_com headers. Header injection only testable with AUTH session. Confidence 70 but gate is AUTH_HELPED — requires valid betpandacasino.io session.
+[PARKED] api.777.dev GraphQL Mutation Auth Bypass: Anonymous introspection mapped (29Q/27M/62-field User schema), uniform global auth plugin NOT_AUTHENTICATED on all Query fields incl. control exchangeRates. Mutation gap hypothesis contradicted by global plugin wrapping — parked at confidence 50.
+[FINAL] 1. RainBet RabbitMQ Anonymous AMQP Wire Protocol Access on Raw DigitalOcean Origins (75) — HIGH, PASSIVE
+[FINAL] 2. BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details (92) — MEDIUM, PASSIVE
+[FINAL] 3. Help.desk.avatarux.com Atlassian JSM Portal Enumeration at Scale (88) — MEDIUM, PASSIVE
+[NEXT] PROBE: openssl s_client -connect rainbet-com-rabbitmq.rainbet.com:5671 -quiet < /dev/null 2>&1 | head -20 && python3 -c "import pika; c=pika.BlockingConnection(pika.ConnectionParameters('rainbet-com-rabbitmq.rainbet.com',5671,credentials=pika.PlainCredentials('guest','guest'),ssl_options=pika.SSLOptions(pika.ssl.create_default_context()))); ch=c.channel(); print(ch.queue_declare('',exclusive=True)); print(ch.queue_bind(queue='',exchange='amq.topic',routing_key='#'))" 2>&1 | head -30
+[LEARN] ACCEPTED MISCONFIG @ betpandacasino.io/rest/user/details: NEW unauthenticated endpoint returning full user state model (301B JSON) — stable across 30+ probes, report-ready
+[LEARN] ACCEPTED MISCONFIG @ help.desk.avatarux.com portals 4–100: surface expanded from 7 to 96+ portals, all leaking identical tenant-id/atlassianOrgId/Statsig config — passive, stable
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain
+[LEARN] ACCEPTED OTHER @ api.777.dev/graphql: anonymous introspection 200 mapped schema, uniform auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/user/details x-site-name-id: stake_com → body/ACAO/echo unchanged — no passive tenant switch
+[LEARN] REJECTED MISCONFIG @ betpandacasino.io/rest/public/config: Spring JSON 404 — casino does NOT mirror affiliates config leak; passive corroboration gap CLOSED
+[LEARN] REJECTED MISCONFIG @ betpandecasino.io/rest/callback|webhook|notify|game/callback|api/game/callback: all 404 — SSRF hypothesis falsified, passive surface exhausted
+[LEARN] ACCEPTED MISCONFIG @ cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring only
+[LEARN] REJECTED AUTH @ affiliates.betpanda.io/rest/public/recover-password: forgot-password timing enumeration is REJECTED class (program scope) — must not be reranked
+[LEARN] REJECTED MISCONFIG @ Stake/Gamdom/RainBet game-tier mirror: no *.games/crash-*/dice CT labels — Roobet stand-alone stack unique, parity hypothesis closed
+[LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:15671/api/queues: anonymous queue enumeration falsified — HTTP 401 Basic identical to /api/overview; management-API auth uniform
+[LEARN] ACCEPTED OTHER @ roobet.com/_api CORS: whitelist is namespace-wide (any *.777.dev incl. dead DNS) with credentials=true — staging-to-prod trust root is the whole staging zone
+[LEARN] REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suffix match
+[LEARN] ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers, NO anonymous HTTP surface
+[LEARN] REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings: parity falsified / CF-challenge or dead routes, zero anonymous exposure
+[RISK] avatarux-studios: 78 — Top exploitable paths: RainBet RabbitMQ AMQP wire protocol anonymous access (75, PASSIVE, HIGH) — raw DigitalOcean origins, management API 401 but wire protocol untested, guest:guest default creds plausible; BetPanda Casino unauthenticated /rest/user/details user state model leak (92, PASSIVE, MEDIUM) — full model aids credentialed recon, Spring Boot stack confirmed; Help.desk.avatarux.com portal enumeration at scale (88, PASSIVE, MEDIUM) — 96+ portals leaking tenant/org/workspace IDs + Statsig config; Affiliates.betpanda.io BOLA on /rest/player/uid/{uid} (68, AUTH_HELPED, HIGH) — IDOR pattern confirmed, requires two credentialed sessions; BetPanda Casino cross-tenant header injection (70, AUTH_HELPED, HIGH)
