@@ -540,3 +540,5 @@
 - 2026-09-19 REJECTED MISCONFIG @ CORS substring/prefix hypothesis: evil777.dev, 777.dev.evil.com, http://777.dev, null all no-reflection — whitelist uses proper domain-suffix match
 - 2026-09-19 ACCEPTED MISCONFIG @ crash-gs.roobet.com / dice.roobet.com: HTTP root + /health /api /socket.io all curl(28) timeout @12s — WS-transport-only game servers, NO anonymous HTTP surface
 - 2026-09-19 REJECTED OTHER @ stake.com/gamdom.com/rest/user/details + 777.dev siblings: parity falsified / CF-challenge or dead routes, zero anonymous exposure
+- 2026-09-19 REJECTED MISCONFIG @ affiliates.betpanda.io/rest/{trk/agent/public/locales}: all 404 Spring XML-Map route-miss — last unmapped endpoint-map families closed anonymously; only /rest/public/config + recover-password live unauth.
+- 2026-09-19 ACCEPTED OTHER @ avatarux-studios live surface: 5 probes byte-stable (aff config cc5f885e 398B; casino details 4254af73 301B; rmq :15671 401 Basic; roobet ACAO www.777.dev + ACAC:true, evil777.dev no ACAO) — controls clean, zero drift.

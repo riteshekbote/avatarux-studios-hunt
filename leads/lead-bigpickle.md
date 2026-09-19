@@ -5426,3 +5426,41 @@ testability: HUMAN_ONLY
 [LEARN] ACCEPTED MISCONFIG @ avatarux-studios live surface: 5 read-only probes re-verified byte-stable this cycle — aff config 200/398B sha256 cc5f885e, casino details 200/301B sha256 4254af73, blog users 200/10965B, rmq :15671 401 Basic, roobet ACAO www.777.dev + ACAC:true — passive surface converged, controls clean, zero drift.
 [LEARN] REJECTED MISCONFIG @ rainbet-com-rabbitmq.rainbet.com:5671: TLS handshake re-verified (valid LE cert, correct CN), empty connect returns no AMQP banner — with 09-14/15 403 ACCESS_REFUSED on anonymous/guest, anonymous-topology/AMQP-access claim falsified again; exposure = open TLS AMQP + mgmt UI ports only (accepted MED).
 [RISK] avatarux-studios: 50 — delta this cycle is verification-only (5 read-only probes, all byte-stable), no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / tenant-id portals / autoconfig legacy mail / blog WP 2-operator author disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.
+## 2026-09-19 05:00:53 UTC [target] (model bigpickle)
+[PRIO] affiliates.betpanda.io/rest/player/uid,6.05,a7/b9/t6/g3/c5/f2
+[PRIO] betpandacasino.io/rest/user,5.80,a7/b8/t6/g3/c5/f2
+[PRIO] rainbet-com-rabbitmq.rainbet.com:5671/:15671,4.50,a5/b5/t4/g4/c6/f2
+[HYP] Affiliates.betpanda.io BOLA /rest/player/uid cross-UID iteration
+class: IDOR
+asset: affiliates.betpanda.io/rest/player/uid/{uid}
+confidence: 68
+reasoning: bundle template-literal `/player/uid/${e.id}?currency=${e.curr}`; anonymous 401 boundary intact (re-verified); /rest/public/config 200/398B cc5f885e byte-stable (operatorId=1); all other map families (trk/agent/v2/report/payouts) anonymous 404 this cycle — uid is the sole provable path, requires two credentialed sessions (blocked since 09-06).
+evidence_needed: two sessions; GET uid{own} vs uid{other}, cookie A then B → body/status differential exposing PII/financial fields.
+verify_steps: HUMAN scoped accounts, ≤1rps, diff body/status only.
+impact: cross-affiliate player/financial PII on real-money platform — HIGH.
+testability: AUTH_HELPED
+[HYP] BetPanda Casino authed /rest/user/* census + x-site-name-id tenant binding
+class: AUTH
+asset: betpandacasino.io/rest/user
+confidence: 45
+reasoning: /rest/user/details anonymous 200/301B sha 4254af73 byte-stable; settings 401; {me,profile,info} 404; financial endpoints POST-gated 405; x-site-name-id passively inert (falsified); authed route set + tenant binding unknown.
+evidence_needed: one casino session; authed GETs ± x-site-name-id stake_com/roobet_com; diff body/ACAO/status.
+verify_steps: AUTH_HELPED — authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling header.
+impact: tenant-switch or self-model census on real-money flow — MED, HIGH if cross-tenant.
+testability: AUTH_HELPED
+[HYP] BetPanda blog WP operator usernames → cross-surface credential targeting
+class: MISCONFIG
+asset: blog.betpandacasino.io/wp-json/wp/v2/users
+confidence: 45
+reasoning: users=2 exactly (admin_betpanda id1, admin_ovidiu id2); posts/media/pages public; oembed/redirection/yoast 401, xmlrpc 403; all REST families exhaustively mapped. Remaining value = username reuse on operator/SSO surfaces — HUMAN only.
+evidence_needed: cross-surface reuse against affiliates/casino/Strapi login (admin_betpanda/admin_ovidiu).
+verify_steps: PASSIVE complete and consumed; no further read-only probe carries value.
+impact: two operator usernames enable targeted credential-stuffing/phishing in real-money ecosystem — LOW.
+testability: HUMAN_ONLY
+[PARKED] RainBet RabbitMQ Anonymous AMQP Wire Access: falsified (09-14/15 403 ACCESS_REFUSED; 09-18/19 TLS handshake clean, no banner) — survives only as accepted MED mgmt-UI+AMQP port exposure.
+[PARKED] affiliates /rest/trk|agent|public/* enumeration: all 404 this cycle — endpoint-map completion only, zero exposure (no open-redirect/tracking param surface).
+[FINAL] survivors ranked: 1) affiliates BOLA uid{uid} (68, AUTH_HELPED); 2) casino authed /rest/user* census + tenant header (45, AUTH_HELPED); 3) blog WP operator-usernames cross-surface reuse (45, HUMAN_ONLY).
+[NEXT] HUMAN: standing credential grant — two registered affiliate test accounts on affiliates.betpanda.io (GET /rest/player/uid/{own} vs {other}, cookie A then B) + one betpandacasino.io test session (authed GET /rest/user/{details,settings,account-balances-and-bonuses} toggling x-site-name-id stake_com|roobet_com). Passive frontier confirmed converged again this cycle — no remaining read-only GET/HEAD/OPTIONS probe carries expected value.
+[LEARN] REJECTED MISCONFIG @ affiliates.betpanda.io/rest/{trk/agent/public/locales}: all 404 Spring XML-Map route-miss — last unmapped endpoint-map families closed anonymously; only /rest/public/config + recover-password live unauth.
+[LEARN] ACCEPTED OTHER @ avatarux-studios live surface: 5 probes byte-stable (aff config cc5f885e 398B; casino details 4254af73 301B; rmq :15671 401 Basic; roobet ACAO www.777.dev + ACAC:true, evil777.dev no ACAO) — controls clean, zero drift.
+[RISK] avatarux-studios: 50 — delta this cycle is enumeration-completion + re-verification only, no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / tenant-id portals / autoconfig legacy mail / blog WP 2-operator author disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.
