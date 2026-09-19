@@ -1012,3 +1012,13 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-19 13:26:15 UTC
+- NEW betpandacasino.io/rest/user/details: stable unauthenticated endpoint returning full user state model (301B JSON: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVer
+- NEW help.desk.avatarux.com portals 4-100: surface expanded from 7 to 96+ portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspaceId, St
+- NEW api.777.dev/graphql: anonymous introspection 200 fully mapped (29Q/27M/62-field User schema), stack traces expose `/opt/roobet/build/workloads/api-graphql` (staging = prod codebase), uniform global au
+- CHANGED roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true confirmed, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
+- CHANGED RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level connections; mana
+- CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation
+- CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri

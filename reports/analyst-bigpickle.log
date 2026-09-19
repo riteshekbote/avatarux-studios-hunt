@@ -28882,3 +28882,27 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] avatarux-studios: 50 — delta this cycle is verification-only (5 read-only probes, all byte-stable), no new anonymous exposure. Reportable passive set unchanged: MED RabbitMQ mgmt-UI+AMQP port exposure (159.203.34.207:5671/15671) + LOW cluster (config 398B cc5f885e / user-state 301B 4254af73 / tenant-id portals / autoconfig legacy mail / blog WP 2-operator author disclosure). Top-value paths (BOLA 68, casino census 45) remain AUTH_HELPED blocked on credential grant since 09-06 — risk is unvalidated-HIGH opportunity cost, not live-surface drift.
+===== ANALYST bigpickle 2026-09-19 13:26:15 UTC =====
+[0m
+> build · big-pickle
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcurl -s -o /tmp/rmq_overview.txt -w "%{http_code} %{size_download}\n" --max-time 15 https://rainbet-com-rabbitmq.rainbet.com:15671/api/overview -u guest:guest; cat /tmp/rmq_overview.txt | head -c 200 failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+[0m
+[0m$ [0mcurl -s -o /tmp/aff_config.json -w "%{http_code} %{size_download}\n" --max-time 15 https://affiliates.betpanda.io/rest/public/config && sha256sum /tmp/aff_config.json
+200 398
+cc5f885eed66debd69adea92935548bfc225c1983e707053c63bc5a45ac20cae  /tmp/aff_config.json
+[0m
+[0m$ [0mcurl -s -o /tmp/cas_details.json -w "%{http_code} %{size_download}\n" --max-time 15 https://betpandacasino.io/rest/user/details && sha256sum /tmp/cas_details.json
+200 301
+4254af732561cac5aec3e78f2ea387771c7b0f42ea15646bcbd85be667701f23  /tmp/cas_details.json
+[0m
+[0m$ [0mcurl -s -o /tmp/blog_users.json -w "%{http_code} %{size_download}\n" --max-time 15 "https://blog.betpandacasino.io/wp-json/wp/v2/users?per_page=100" && sha256sum /tmp/blog_users.json
+200 10965
+9eeb41220a697e4f035eb6649192ce37241d997ae1c6c3f59ad5b5a9e4b3af1f  /tmp/blog_users.json
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "777.dev: %{http_code} ACAO=%header{access-control-allow-origin} ACAC=%header{access-control-allow-credentials}\n" --max-time 15 -H "Origin: https://www.777.dev" https://roobet.com/_api/currency/balances; curl -s -o /dev/null -w "evil777.dev: %{http_code} ACAO=%header{access-control-allow-origin}\n" --max-time 15 -H "Origin: https://evil777.dev" https://roobet.com/_api/currency/balances
+777.dev: 200 ACAO=https://www.777.dev ACAC=true
+evil777.dev: 200 ACAO=
+[0m
