@@ -1022,3 +1022,13 @@ www.avatarux.com
 - CHANGED cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation
 - CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 - CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri
+
+## 2026-09-19 16:51:36 UTC
+- NEW betpandacasino.io/rest/user/details: stable unauthenticated user-state model disclosure (301B JSON) confirmed across 30+ probe cycles, report-ready
+- NEW help.desk.avatarux.com/servicedesk/customer/portal/{4..100}: surface expanded to 96+ portals, all HTTP 200 (~209KB) leaking identical tenant-id/atlassianOrgId/workspaceId/Statsig config
+- NEW rainbet-com-rabbitmq.rainbet.com:5671/5672 + rainbet-us-staging-rabbitmq.rainbet.com:5671/5672: RabbitMQ AMQP wire protocol (TLS/plaintext) on raw DigitalOcean origins completely untested for anonymou
+- NEW api.777.dev/graphql: anonymous introspection 200 fully mapped (29Q/27M/62-field User schema), uniform global auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+- NEW roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
+- CHANGED cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring-only
+- CHANGED betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
+- CHANGED avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no dri

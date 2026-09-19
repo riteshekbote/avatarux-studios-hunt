@@ -1,23 +1,22 @@
-## 2026-09-19 13:26:04 UTC [target] (model nemotron3)
-[NEW] betpandacasino.io/rest/user/details: stable unauthenticated endpoint returning full user state model (301B JSON: loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified) — confirmed across 30+ probes
-[NEW] help.desk.avatarux.com portals 4-100: surface expanded from 7 to 96+ portals, all HTTP 200 (~209KB), leaking identical tenant-id (df607198-7bdc-43c6-8353-9b8a822febc5), atlassianOrgId, workspaceId, Statsig config (prod-euwest, shard jira-prod-eu-3)
-[NEW] api.777.dev/graphql: anonymous introspection 200 fully mapped (29Q/27M/62-field User schema), stack traces expose `/opt/roobet/build/workloads/api-graphql` (staging = prod codebase), uniform global auth plugin NOT_AUTHENTICATED on all Query fields
-[CHANGED] roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true confirmed, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
-[CHANGED] RainBet RabbitMQ AMQP wire protocol (5671 TLS / 5672 plaintext) on raw DigitalOcean origins (159.203.34.207, 165.227.255.111) remains completely untested for anonymous protocol-level connections; management API uniformly 401 Basic
-[CHANGED] cpanel.avatarux.com takeover downgraded to monitoring-only — NS/SOA confirms Bluehost apex delegation (ns1/ns2.bluehost.com), no claimable subdomain delegation
+## 2026-09-19 16:51:28 UTC [target] (model nemotron3)
+[NEW] betpandacasino.io/rest/user/details: stable unauthenticated user-state model disclosure (301B JSON) confirmed across 30+ probe cycles, report-ready
+[NEW] help.desk.avatarux.com/servicedesk/customer/portal/{4..100}: surface expanded to 96+ portals, all HTTP 200 (~209KB) leaking identical tenant-id/atlassianOrgId/workspaceId/Statsig config
+[NEW] rainbet-com-rabbitmq.rainbet.com:5671/5672 + rainbet-us-staging-rabbitmq.rainbet.com:5671/5672: RabbitMQ AMQP wire protocol (TLS/plaintext) on raw DigitalOcean origins completely untested for anonymous protocol-level connections; management API uniformly 401 Basic
+[NEW] api.777.dev/graphql: anonymous introspection 200 fully mapped (29Q/27M/62-field User schema), uniform global auth plugin NOT_AUTHENTICATED on all Query fields, mutation gap REJECTED
+[NEW] roobet.com/_api CORS: namespace-wide *.777.dev suffix match with ACAC:true, but connect.sid SameSite=Lax+HttpOnly breaks cross-origin credentialed chain — exploitation leg BROKEN
+[CHANGED] cpanel.avatarux.com: NS/SOA confirms Bluehost apex delegation, no claimable subdomain delegation — takeover unproven, monitoring-only
 [CHANGED] betpandacasino.io passive gaps closed: /rest/public/config Spring JSON 404, callback/webhook surface all 404, SSRF hypothesis falsified
 [CHANGED] avatarux-studios passive surface: delta empty across 30+ probes — 4 read-only GETs stable (casino details, affiliates config, help.desk portal, rabbitmq /api/overview 401), CORS controls clean, no drift
-[PRIO] betpandacasino.io/rest/user/details,8.50,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=8
+[PRIO] betpandacasino.io
 [PRIO] rainbet-com-rabbitmq.rainbet.com:5671/5672,7.85,attack_surface=8,business_value=8,tech_exposure=9,gate_ease=10,cloud_surface=9,freshness=3
 [PRIO] help.desk.avatarux.com/servicedesk/customer/portal/{4..100},7.20,attack_surface=8,business_value=6,tech_exposure=7,gate_ease=10,cloud_surface=6,freshness=6
 [PRIO] api.777.dev/graphql,6.95,attack_surface=7,business_value=7,tech_exposure=8,gate_ease=10,cloud_surface=7,freshness=2
 [PRIO] affiliates.betpanda.io/rest/player/uid/{uid},6.80,attack_surface=6,business_value=8,tech_exposure=7,gate_ease=3,cloud_surface=6,freshness=5
-[PRIO] roobet.com/_api/socket.io,6.10,attack_surface=5,business_value=6,tech_exposure=7,gate_ease=8,cloud_surface=6,freshness=4
 [HYP] BetPanda Casino Unauthenticated User State Model Disclosure via /rest/user/details
 class: MISCONFIG
 asset: betpandacasino.io/rest/user/details
 confidence: 90
-reasoning: Endpoint returns HTTP 200 with full user state JSON (301B) including loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified without any authentication. Spring Boot backend confirmed via JSON error format. OPTIONS on sibling endpoints leaks x-site-name-id header schema. No auth boundary on this endpoint.
+reasoning: Endpoint returns HTTP 200 with full user state JSON (301B) including loggedIn, country, kycVerified, currentLevel, blockedStatus, currencies, phoneNumberVerified, principalVerified, emailVerified without any authentication. Spring Boot backend confirmed via JSON error format. OPTIONS on sibling endpoints leaks x-site-name-id header schema. No auth boundary on this endpoint. Stable across 30+ probe cycles.
 evidence_needed: Confirm endpoint accessible from different geographic egress points (country field changes); verify no rate limiting; test if authenticated session returns PII (email, balance) vs anonymous model
 verify_steps: GET https://betpandacasino.io/rest/user/details (from 3+ vantage points); GET https://betpandacasino.io/rest/user/details -H "X-Forwarded-For: <geo-ip>"; POST https://betpandacasino.io/rest/user/authenticate -H "Cookie: <valid-session>" -d '{}' (AUTH_HELPED) to compare response
 impact: Full user state model disclosure aids reconnaissance for credentialed attacks; country/kyc/level fields enable targeted social engineering; Spring Boot stack confirmed for further endpoint enumeration — MEDIUM
